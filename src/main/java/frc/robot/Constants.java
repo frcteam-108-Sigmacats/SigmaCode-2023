@@ -66,7 +66,7 @@ public final class Constants {
             //Motor Set Up
             public static final int fLDriveMotor = 1;
             public static final int fLTurnMotor = 2;
-            public static final boolean isFLDriveMotorReversed = false;
+            public static final boolean isFLDriveMotorReversed = true;
             public static final boolean isFLTurnMotorReversed = false;
             //Encoder Set Up
             //public static final int fLAbsoluteEnc = 0;
@@ -100,7 +100,7 @@ public final class Constants {
             //Drive Motor Set Up
             public static final int bLDriveMotor = 5;
             public static final int bLTurnMotor = 6;
-            public static final boolean isBLDriveMotorReversed = false;
+            public static final boolean isBLDriveMotorReversed = true;
             public static final boolean isBLTurnMotorReversed = false;
             //Absolute Encoder Set Up
             //public static final int bLAbsoluteEnc = 2;
@@ -117,7 +117,7 @@ public final class Constants {
             //Motor Set Up
             public static final int bRDriveMotor = 7;
             public static final int bRTurnMotor = 8;
-            public static final boolean isBRDriveMotorReversed = false;
+            public static final boolean isBRDriveMotorReversed = true;
             public static final boolean isBRTurnMotorReversed = false;
             //Absolute Encoder Set Up
             //public static final int bRAbsoluteEnc = 3;
