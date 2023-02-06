@@ -72,12 +72,12 @@ public final class Constants {
             //public static final int fLAbsoluteEnc = 0;
             public static final double fLChassisAngleOffset = 1.571;//Module relative to the chassis
             //PID Controller Set Up
-            public static final double frontLDriveKP = 0.5;
+            public static final double frontLDriveKP = 0.4;
             public static final double frontLDriveKI = 0;
-            public static final double frontLDriveKD = 5;
-            public static final double frontLTurnKP = 0.05;
+            public static final double frontLDriveKD = 0;
+            public static final double frontLTurnKP = 1;
             public static final double frontLTurnKI = 0;
-            public static final double frontLTurnKD = 0;
+            public static final double frontLTurnKD = 0.0;
 
         //Module 2 Constants
             //Motor Set Up
@@ -89,10 +89,10 @@ public final class Constants {
             //public static final int fRAbsoluteEnc = 1;
             public static final double fRChassisAngleOffset = 0;
             //PID Controller Set Up
-            public static final double frontRDriveKP = 0.0;
+            public static final double frontRDriveKP = 0.4;
             public static final double frontRDriveKI = 0;
             public static final double frontRDriveKD = 0;
-            public static final double frontRTurnKP = 0.0;
+            public static final double frontRTurnKP = 1;
             public static final double frontRTurnKI = 0;
             public static final double frontRTurnKD = 0;
 
@@ -106,10 +106,10 @@ public final class Constants {
             //public static final int bLAbsoluteEnc = 2;
             public static final double bLChassisAngleOffset = 0;
             //PID Controller Set Up
-            public static final double backLDriveKP = 0.0;
+            public static final double backLDriveKP = 0.4;
             public static final double backLDriveKI = 0;
             public static final double backLDriveKD = 0;
-            public static final double backLTurnKP = 0.0;
+            public static final double backLTurnKP = 1;
             public static final double backLTurnKI = 0;
             public static final double backLTurnKD = 0;
 
@@ -122,12 +122,12 @@ public final class Constants {
             //Absolute Encoder Set Up
             //public static final int bRAbsoluteEnc = 3;
 
-            public static final double bRChassisAngleOffset = Math.PI / 4;//Module relative to the chassis
+            public static final double bRChassisAngleOffset = Math.PI / 2;//Module relative to the chassis
             //PID Controller Set Up
-            public static final double backRDriveKP = 0.0;
+            public static final double backRDriveKP = 0.4;
             public static final double backRDriveKI = 0;
             public static final double backRDriveKD = 0;
-            public static final double backRTurnKP = 0.0;
+            public static final double backRTurnKP = 1;
             public static final double backRTurnKI = 0;
             public static final double backRTurnKD = 0;
 

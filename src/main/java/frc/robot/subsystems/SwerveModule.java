@@ -56,6 +56,8 @@ public class SwerveModule extends SubsystemBase {
     //Modules angle relative to the chassis
     chassisAngleOffset = absolutePositionOffset;
 
+    turnEncoder.setInverted(true);
+
     drivePID.setP(kDP);
     drivePID.setI(kDI);
     drivePID.setD(kDD);
