@@ -49,16 +49,24 @@ public class SwerveModule extends SubsystemBase {
     drivePID.setFeedbackDevice(driveEncoder);
     turningPID.setFeedbackDevice(turnEncoder);
 
+    turningPID.setPositionPIDWrappingEnabled(true);
+    turningPID.setPositionPIDWrappingMinInput(SwerveConstants.kTurnEncPosPIDMinOutput);
+    turningPID.setPositionPIDWrappingMaxInput(SwerveConstants.kTurnEncPosPIDMaxOutput);
+
     //Modules angle relative to the chassis
     chassisAngleOffset = absolutePositionOffset;
 
     drivePID.setP(kDP);
     drivePID.setI(kDI);
     drivePID.setD(kDD);
+    drivePID.setFF(1 / SwerveConstants.kDriveWheelFreeSpeedRps);
+    drivePID.setOutputRange(-1, 1);
 
     turningPID.setP(kTP);
     turningPID.setI(kTI);
     turningPID.setD(kTD);
+    turningPID.setFF(0);
+    turningPID.setOutputRange(-1, 1);
 
     //Setting motors to brake mode to prevent easy movements of the motors when the robot is on
     driveMotor.setIdleMode(IdleMode.kBrake);
@@ -73,7 +81,7 @@ public class SwerveModule extends SubsystemBase {
 
     //Applying conversion factors for position and velocity
     driveEncoder.setPositionConversionFactor(SwerveConstants.kDriveEncoderRot2Meters);
-    driveEncoder.setPositionConversionFactor(SwerveConstants.kDriveEncoderRPM2MPS);
+    driveEncoder.setVelocityConversionFactor(SwerveConstants.kDriveEncoderRPM2MPS);
     turnEncoder.setPositionConversionFactor(SwerveConstants.kTurnEncoderRot2Rad);
     turnEncoder.setVelocityConversionFactor(SwerveConstants.kTurnEncoderRPM2RadPerSec);
 
