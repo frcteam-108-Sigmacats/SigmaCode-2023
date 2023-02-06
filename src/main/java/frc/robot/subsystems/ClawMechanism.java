@@ -20,6 +20,8 @@ public class ClawMechanism extends SubsystemBase {
   private CANSparkMax leftClawArmMotor;
   private CANSparkMax rightClawArmMotor;
 
+  private CANSparkMax clawIntake;
+
   public SparkMaxPIDController rotateArmPID;
   private DigitalInput gamePieceDetect;
 
@@ -28,9 +30,11 @@ public class ClawMechanism extends SubsystemBase {
   public ClawMechanism() {
     leftClawArmMotor = new CANSparkMax(11, MotorType.kBrushless);
     rightClawArmMotor = new CANSparkMax(12, MotorType.kBrushless);
+    clawIntake = new CANSparkMax(13, MotorType.kBrushless);
 
     leftClawArmMotor.restoreFactoryDefaults();
     rightClawArmMotor.restoreFactoryDefaults();
+    clawIntake.restoreFactoryDefaults();
 
     rotateArmPID = leftClawArmMotor.getPIDController();
  
@@ -46,12 +50,14 @@ public class ClawMechanism extends SubsystemBase {
 
     leftClawArmMotor.setSmartCurrentLimit(40);
     rightClawArmMotor.setSmartCurrentLimit(40);
+    clawIntake.setSmartCurrentLimit(40);
 
     throughBoreAbs.setPositionConversionFactor(360);
     rightClawArmMotor.follow(leftClawArmMotor);
 
     leftClawArmMotor.burnFlash();
     rightClawArmMotor.burnFlash();
+    clawIntake.burnFlash();
 
     gamePieceDetect = new DigitalInput(2);
   }
@@ -80,6 +86,9 @@ public class ClawMechanism extends SubsystemBase {
   public void testClawArms(double speed){
     leftClawArmMotor.set(speed);
 
+  }
+  public void testClawIntake(double speed){
+    clawIntake.set(speed);
   }
 
   /**

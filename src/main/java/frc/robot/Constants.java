@@ -18,7 +18,6 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-<<<<<<< HEAD
   public static class ClawMechConstants{
     public static final int leftClawArmID = 0;
     public static final int rightClawArmID = 0;
@@ -28,7 +27,6 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-=======
     public static final class SwerveConstants{
         //Used to prevent stick drift
         public static double deadband = 0.15;
@@ -145,5 +143,4 @@ public final class Constants {
         //Gyro Set Up
         public static boolean invertedGyro = false;
     }
->>>>>>> origin/3-drivetrain-set-up
 }
