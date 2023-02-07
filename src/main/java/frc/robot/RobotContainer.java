@@ -38,8 +38,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     kA.whileTrue(new ClawArmTester(clawMechanism, 0.1));
-    kB.whileTrue(new ClawIntakeTester(clawMechanism, 0.25));
-    kY.whileTrue(new ClawIntakeTester(clawMechanism, -0.25));
+    kB.whileTrue(new ClawIntakeTester(clawMechanism, 0.75));
+    kY.whileTrue(new ClawIntakeTester(clawMechanism, -0.75));
   }
 
   /**
