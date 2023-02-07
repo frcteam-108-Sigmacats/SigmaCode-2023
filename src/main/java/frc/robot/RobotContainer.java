@@ -5,11 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ClawArmTester;
-import frc.robot.commands.ClawIntakeTester;
 import frc.robot.commands.SwerveDriveTeleop;
-import frc.robot.commands.AutoClaw;
-import frc.robot.subsystems.ClawMechanism;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,9 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ClawMechanism clawMechanism = new ClawMechanism();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private Trigger kA, kB, kY;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
@@ -37,9 +31,6 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
     // Configure the trigger bindings
     configureBindings();
-    kA.whileTrue(new ClawArmTester(clawMechanism, 0.1));
-    kB.whileTrue(new ClawIntakeTester(clawMechanism, 0.75));
-    kY.whileTrue(new ClawIntakeTester(clawMechanism, -0.75));
   }
 
   /**
@@ -52,9 +43,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    kA = driver.a();
-    kB = driver.b();
-    kY = driver.y();
   }
 
   /**
