@@ -5,8 +5,19 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.SwerveDriveTeleop;
 import frc.robot.subsystems.SwerveSubsystem;
+
+import java.util.HashMap;
+import java.util.List;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,7 +62,15 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("2Cones_Charge", new PathConstraints(1, 1));
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("marker1", null);
     // An example command will be run in autonomous
-    return null;
+    
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.01, 0, 0), new PIDConstants(0.01, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+
+    Command fullauto = autoBuilder.fullAuto(pathgroup);
+    return fullauto;
   }
 }

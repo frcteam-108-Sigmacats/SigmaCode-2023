@@ -50,6 +50,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getHeading(){
     return Rotation2d.fromDegrees(Math.IEEEremainder(gyro.getAngle(), 360));
   }
+  public Pose2d getPose(){
+    return odometry.getPoseMeters();
+  }
   //Resets the gyros heading
   public void zeroHeading(){
     gyro.reset();
