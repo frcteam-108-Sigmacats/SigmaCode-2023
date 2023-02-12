@@ -46,7 +46,13 @@ public final class Constants {
 
         //Used to set up speed for both drive and turn motors
         public static double maxDriveSpeed = 4.5;
-        public static double maxTurnSpeed = 2 * Math.PI;
+        public static double maxTurnSpeed = 0.5;
+
+        public static final double kDirectionSlewRate = 1.2; // radians per second
+        public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
+        public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+        public static final double armGearRat = 108.0 / 1;
+        public static final double clawRat = 64.0 / 1;
 
         //Distance between the front and back wheel
         public static double wheelBase = (24.5);

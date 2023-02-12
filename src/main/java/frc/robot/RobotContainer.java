@@ -4,10 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ClawArmTester;
 import frc.robot.commands.ClawIntakeTester;
+import frc.robot.commands.ClawRotateTester;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.setClawStateTest;
 import frc.robot.commands.AutoClaw;
 import frc.robot.subsystems.ClawMechanism;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -25,21 +26,31 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ClawMechanism clawMechanism = new ClawMechanism();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private Trigger kA, kB, kY;
+  private Trigger kA, kB, kY, kX, upPOV, downPOV, leftBumper, leftTrigger, rightBumper, rightTrigger;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
       new CommandXboxController(0);
+      //arm gear ratio: 108:1
+      //rope gear ratio: 64:1
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    boolean fieldRelative = false;
-    swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
+    boolean fieldRelative = true;
+    boolean wantSlewRate = false;
+    swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative, wantSlewRate));
     // Configure the trigger bindings
     configureBindings();
-    kA.whileTrue(new ClawArmTester(clawMechanism, 0.1));
-    kB.whileTrue(new ClawIntakeTester(clawMechanism, 0.75));
-    kY.whileTrue(new ClawIntakeTester(clawMechanism, -0.75));
+    downPOV.whileTrue(new ClawArmTester(clawMechanism, 0.2));
+    rightTrigger.whileTrue(new ClawIntakeTester(clawMechanism, -0.75));
+    rightBumper.whileTrue(new ClawIntakeTester(clawMechanism, 0.75));
+    leftTrigger.whileTrue(new ClawIntakeTester(clawMechanism, 0.75));
+    leftBumper.whileTrue(new ClawIntakeTester(clawMechanism, -0.75));
+    upPOV.whileTrue(new ClawArmTester(clawMechanism, -0.2));
+    kX.whileTrue(new ClawRotateTester(clawMechanism, -0.2));
+    kY.whileTrue(new ClawRotateTester(clawMechanism, 0.2));
+    kA.onTrue(new setClawStateTest(clawMechanism, 383247, 0));
+    kB.onTrue(new setClawStateTest(clawMechanism, -298080, 0));
   }
 
   /**
@@ -55,6 +66,13 @@ public class RobotContainer {
     kA = driver.a();
     kB = driver.b();
     kY = driver.y();
+    kX = driver.x();
+    upPOV = driver.povUp();
+    downPOV = driver.povDown();
+    leftBumper = driver.leftBumper();
+    leftTrigger = driver.leftTrigger();
+    rightBumper = driver.rightBumper();
+    rightTrigger = driver.rightTrigger();
   }
 
   /**

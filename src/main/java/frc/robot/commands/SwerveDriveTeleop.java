@@ -19,6 +19,8 @@ public class SwerveDriveTeleop extends CommandBase {
   private Translation2d translation;
   //Whether or not to use the gyro scope
   private boolean fieldRelative;
+
+  private boolean wantSlewRate;
   
   private SwerveSubsystem swerve;
   private CommandXboxController driver;
@@ -33,13 +35,14 @@ public class SwerveDriveTeleop extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SwerveDriveTeleop(SwerveSubsystem swerve, CommandXboxController driver, boolean fieldRelative) {
+  public SwerveDriveTeleop(SwerveSubsystem swerve, CommandXboxController driver, boolean fieldRelative, boolean wantSlewRate) {
     this.swerve = swerve;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerve);
 
     this.driver = driver;
     this.fieldRelative = fieldRelative;
+    this.wantSlewRate = wantSlewRate;
   }
 
   // Called when the command is initially scheduled.
@@ -53,9 +56,9 @@ public class SwerveDriveTeleop extends CommandBase {
     double xAxis = -driver.getLeftX();
     double rotAxis = -driver.getRightX();
 
-    yAxis = (Math.abs(yAxis) < SwerveConstants.deadband ? 0 : yLim.calculate(yAxis * 0.3));
-    xAxis = (Math.abs(xAxis) < SwerveConstants.deadband ? 0 : xLim.calculate(xAxis * 0.3));
-    rotAxis = (Math.abs(rotAxis) < SwerveConstants.deadband ? 0 : rotLim.calculate(rotAxis * 0.3));
+    yAxis = (Math.abs(yAxis) < SwerveConstants.deadband ? 0 : yAxis);
+    xAxis = (Math.abs(xAxis) < SwerveConstants.deadband ? 0 : xAxis);
+    rotAxis = (Math.abs(rotAxis) < SwerveConstants.deadband ? 0 : rotAxis);
 
     translation = new Translation2d(yAxis, xAxis).times(SwerveConstants.maxDriveSpeed);
     //rotation = rotAxis * SwerveConstants.maxTurnSpeed;

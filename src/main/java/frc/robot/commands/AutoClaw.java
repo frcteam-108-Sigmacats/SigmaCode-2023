@@ -36,10 +36,10 @@ public class AutoClaw extends CommandBase {
   @Override
   public void execute() {
     if(clawMech.isGamePieceIn() == true && clawMech.isRobotInComm()){
-      clawMech.rotateArmPID.setReference(extendArmState, ControlType.kPosition);
+      // clawMech.rotateArmPID.setReference(extendArmState, ControlType.kPosition);
     }
     else{
-      clawMech.rotateArmPID.setReference(startArmConfigState, ControlType.kPosition);
+      // clawMech.rotateArmPID.setReference(startArmConfigState, ControlType.kPosition);
     }
   }
 

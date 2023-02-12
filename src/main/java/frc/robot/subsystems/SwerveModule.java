@@ -71,7 +71,7 @@ public class SwerveModule extends SubsystemBase {
     turningPID.setOutputRange(-1, 1);
 
     //Setting motors to brake mode to prevent easy movements of the motors when the robot is on
-    driveMotor.setIdleMode(IdleMode.kBrake);
+    driveMotor.setIdleMode(IdleMode.kCoast);
     turnMotor.setIdleMode(IdleMode.kBrake);
 
     driveMotor.setInverted(driveMotorReversed);

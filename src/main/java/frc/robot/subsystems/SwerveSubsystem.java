@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -40,10 +41,15 @@ public class SwerveSubsystem extends SubsystemBase {
   SwerveSetUp.backRTurnKP, SwerveSetUp.backRTurnKI, SwerveSetUp.backRTurnKD, SwerveSetUp.bRChassisAngleOffset);
 
   private SwerveDriveOdometry odometry;
-  private WPI_Pigeon2 gyro = new WPI_Pigeon2(0);
+  private WPI_Pigeon2 gyro = new WPI_Pigeon2(1);
+
+  private SlewRateLimiter xLim = new SlewRateLimiter(5);
+  private SlewRateLimiter yLim = new SlewRateLimiter(5);
+  private SlewRateLimiter rotLim = new SlewRateLimiter(0.1);
   /** Creates a new SwerveSubsystem. */
   public SwerveSubsystem() {
     zeroHeading();
+    gyro.configFactoryDefault();
     odometry = new SwerveDriveOdometry(SwerveConstants.swerveKinematics, new Rotation2d(), getModulesPosition());
   }
   //Gets the robots heading based on gyro
@@ -71,15 +77,15 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates =
         SwerveConstants.swerveKinematics.toSwerveModuleStates(
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                translation.getX(), 
-                                translation.getY(), 
-                                rotation, 
+                                xLim.calculate(translation.getX()), 
+                                yLim.calculate(translation.getY()), 
+                                rotLim.calculate(rotation), 
                                 getYaw()
                             )
                             : new ChassisSpeeds(
-                                translation.getX(), 
-                                translation.getY(), 
-                                rotation)
+                                xLim.calculate(translation.getX()), 
+                                yLim.calculate(translation.getY()), 
+                                rotLim.calculate(rotation))
                             );
     setModuleStates(swerveModuleStates);
   }
