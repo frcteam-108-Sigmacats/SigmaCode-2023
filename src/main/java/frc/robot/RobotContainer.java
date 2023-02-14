@@ -17,7 +17,9 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -63,14 +65,20 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("2Cones_Charge", new PathConstraints(1, 1));
+    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("Testing", new PathConstraints(1, 1), new PathConstraints(1, 1));
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("marker1", null);
     // An example command will be run in autonomous
+
+    // new PPSwerveControllerCommand(tryGroup, swerveSubsystem::getPose, Constants.swerveKinematics, 
+    // new PIDController(0.3, 0, 0), new PIDController(0.3, 0, 0), 
+    // new PIDController(0.3, 0, 0), swerveSubsystem::setModuleStates, swerveSubsystem),
+    // new InstantCommand(() -> swerveSubsystem.stopModules()));
     
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.01, 0, 0), new PIDConstants(0.01, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    new PIDConstants(0.0000001, 0, 0), new PIDConstants(-3.0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
-    Command fullauto = autoBuilder.fullAuto(pathgroup);
+    Command fullauto = autoBuilder.fullAuto(tryGroup);
     return fullauto;
   }
 }
