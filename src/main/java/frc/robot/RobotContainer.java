@@ -4,11 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.commands.ClawArmTester;
-import frc.robot.commands.ClawIntakeTester;
-import frc.robot.commands.ClawRotateTester;
 import frc.robot.commands.SwerveDriveTeleop;
-import frc.robot.commands.setClawStateTest;
+import frc.robot.commands.ClawMechTester.ClawArmTester;
+import frc.robot.commands.ClawMechTester.ClawIntakeTester;
+import frc.robot.commands.ClawMechTester.ClawRotateTester;
+import frc.robot.commands.ClawMechTester.setClawStateTest;
 import frc.robot.commands.AutoClaw;
 import frc.robot.subsystems.ClawMechanism;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -31,8 +31,6 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
       new CommandXboxController(0);
-      //arm gear ratio: 108:1
-      //rope gear ratio: 64:1
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -49,8 +47,8 @@ public class RobotContainer {
     upPOV.whileTrue(new ClawArmTester(clawMechanism, -0.2));
     kX.whileTrue(new ClawRotateTester(clawMechanism, -0.2));
     kY.whileTrue(new ClawRotateTester(clawMechanism, 0.2));
-    kA.onTrue(new setClawStateTest(clawMechanism, 383247, 0));
-    kB.onTrue(new setClawStateTest(clawMechanism, -298080, 0));
+    kA.onTrue(new setClawStateTest(clawMechanism, 40, 0));
+    kB.onTrue(new setClawStateTest(clawMechanism, 0, 0));
   }
 
   /**

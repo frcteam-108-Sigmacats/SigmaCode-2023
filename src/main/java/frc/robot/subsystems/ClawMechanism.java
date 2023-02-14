@@ -55,15 +55,10 @@ public class ClawMechanism extends SubsystemBase {
     armEncoder.setPositionConversionFactor(SwerveConstants.armGearRat * 360);
     rotateClawEnc.setPositionConversionFactor(SwerveConstants.clawRat * 360);
 
-    rotateArmPID.setFeedbackDevice(armEncoder);
-    rotateArmPID.setP(0.7);
+    rotateArmPID.setFeedbackDevice(throughBoreAbs);
+    rotateArmPID.setP(0.007);
     rotateArmPID.setI(0);
     rotateArmPID.setD(0);
-
-    rotateClawPID.setFeedbackDevice(rotateClawEnc);
-    rotateClawPID.setP(0.0005);
-    rotateClawPID.setI(0.00001);
-    rotateClawPID.setD(0);
 
     leftClawArmMotor.setIdleMode(IdleMode.kBrake);
     rightClawArmMotor.setIdleMode(IdleMode.kBrake);
@@ -75,8 +70,9 @@ public class ClawMechanism extends SubsystemBase {
     clawRotate.setSmartCurrentLimit(40);
 
     throughBoreAbs.setPositionConversionFactor(360);
-    leftClawArmMotor.setInverted(false);
-    rightClawArmMotor.setInverted(true);
+    leftClawArmMotor.setInverted(true);
+    rightClawArmMotor.setInverted(false);
+    throughBoreAbs.setInverted(true);
 
     leftClawArmMotor.burnFlash();
     rightClawArmMotor.burnFlash();
@@ -120,12 +116,14 @@ public class ClawMechanism extends SubsystemBase {
   }
   public void setArmPosition(double position){
     rotateArmPID.setReference(position, ControlType.kPosition);
+    rightClawArmMotor.follow(leftClawArmMotor, true);
+    
   }
   public void setClawPosition(){
     rotateClawPID.setReference(rotateClawEnc.getPosition(), ControlType.kPosition);
   }
   public void getArmPositon(){
-    System.out.println("Arm Position: " + armEncoder.getPosition());
+    System.out.println("Arm Position: " + throughBoreAbs.getPosition());
   }
   public void getClawPos(){
     System.out.println("Claw Position: " + rotateClawEnc.getPosition());
