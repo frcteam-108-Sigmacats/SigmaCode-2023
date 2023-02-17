@@ -141,7 +141,9 @@ public final class Constants {
         public static boolean invertedGyro = false;
     }
 
-    public static final class SetUpMotors{
-        public static final int clawIntake = 7;
+    public static final class ClawMechSetUp{
+        public static final int clawIntake = 11;
+        public static final int infraSensor = 0;
     }
+
 }

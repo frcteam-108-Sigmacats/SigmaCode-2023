@@ -6,7 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.RunIntake;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.HashMap;
@@ -33,10 +35,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final static Claw m_Claw = new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
       new CommandXboxController(0);
+
+  public Trigger righTrigger, leftTrigger, rightBumper, leftBumper;
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -44,6 +50,10 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
     // Configure the trigger bindings
     configureBindings();
+    leftTrigger.whileTrue(new RunIntake(1, 0.25 ));
+    righTrigger.whileTrue(new RunIntake(2, 0.25));
+    rightBumper.whileTrue(new RunIntake(3, 0.25));
+    leftBumper.whileTrue(new RunIntake(4, 0.25));
   }
 
   /**
@@ -56,6 +66,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    righTrigger = driver.rightTrigger();
+    leftTrigger = driver.leftTrigger();
   }
 
   /**
