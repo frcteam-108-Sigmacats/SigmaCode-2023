@@ -19,30 +19,22 @@ public class SwerveDriveTeleop extends CommandBase {
   private Translation2d translation;
   //Whether or not to use the gyro scope
   private boolean fieldRelative;
-
-  private boolean wantSlewRate;
   
   private SwerveSubsystem swerve;
   private CommandXboxController driver;
-
-  //Giving a rate to which the speed should increase in mps
-  private SlewRateLimiter yLim = new SlewRateLimiter(3);
-  private SlewRateLimiter xLim = new SlewRateLimiter(2);
-  private SlewRateLimiter rotLim = new SlewRateLimiter(1);
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SwerveDriveTeleop(SwerveSubsystem swerve, CommandXboxController driver, boolean fieldRelative, boolean wantSlewRate) {
+  public SwerveDriveTeleop(SwerveSubsystem swerve, CommandXboxController driver, boolean fieldRelative) {
     this.swerve = swerve;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerve);
 
     this.driver = driver;
     this.fieldRelative = fieldRelative;
-    this.wantSlewRate = wantSlewRate;
   }
 
   // Called when the command is initially scheduled.

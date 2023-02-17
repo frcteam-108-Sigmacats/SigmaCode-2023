@@ -4,14 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.SwerveDriveTeleop;
-import frc.robot.commands.ClawMechTester.ClawArmTester;
-import frc.robot.commands.ClawMechTester.ClawIntakeTester;
-import frc.robot.commands.ClawMechTester.ClawRotateTester;
-import frc.robot.commands.ClawMechTester.setClawStateTest;
-import frc.robot.commands.AutoClaw;
-import frc.robot.subsystems.ClawMechanism;
 import frc.robot.subsystems.SwerveSubsystem;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -24,9 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ClawMechanism clawMechanism = new ClawMechanism();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private Trigger kA, kB, kY, kX, upPOV, downPOV, leftBumper, leftTrigger, rightBumper, rightTrigger;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
@@ -35,20 +29,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     boolean fieldRelative = true;
-    boolean wantSlewRate = false;
-    swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative, wantSlewRate));
+    swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
     // Configure the trigger bindings
     configureBindings();
-    downPOV.whileTrue(new ClawArmTester(clawMechanism, 0.2));
-    rightTrigger.whileTrue(new ClawIntakeTester(clawMechanism, -0.75));
-    rightBumper.whileTrue(new ClawIntakeTester(clawMechanism, 0.75));
-    leftTrigger.whileTrue(new ClawIntakeTester(clawMechanism, 0.75));
-    leftBumper.whileTrue(new ClawIntakeTester(clawMechanism, -0.75));
-    upPOV.whileTrue(new ClawArmTester(clawMechanism, -0.2));
-    kX.whileTrue(new ClawRotateTester(clawMechanism, -0.2));
-    kY.whileTrue(new ClawRotateTester(clawMechanism, 0.2));
-    kA.onTrue(new setClawStateTest(clawMechanism, 40, 0));
-    kB.onTrue(new setClawStateTest(clawMechanism, 0, 0));
   }
 
   /**
@@ -61,16 +44,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    kA = driver.a();
-    kB = driver.b();
-    kY = driver.y();
-    kX = driver.x();
-    upPOV = driver.povUp();
-    downPOV = driver.povDown();
-    leftBumper = driver.leftBumper();
-    leftTrigger = driver.leftTrigger();
-    rightBumper = driver.rightBumper();
-    rightTrigger = driver.rightTrigger();
   }
 
   /**
@@ -79,7 +52,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return null;
   }
 }

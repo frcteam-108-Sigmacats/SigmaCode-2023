@@ -56,6 +56,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getHeading(){
     return Rotation2d.fromDegrees(Math.IEEEremainder(gyro.getAngle(), 360));
   }
+  public Pose2d getPose(){
+    return odometry.getPoseMeters();
+  }
   //Resets the gyros heading
   public void zeroHeading(){
     gyro.reset();
@@ -67,6 +70,9 @@ public class SwerveSubsystem extends SubsystemBase {
     odometry.update(
       getHeading(), getModulesPosition());
     SmartDashboard.putNumber("Robot Heading", getHeading().getDegrees());
+    SmartDashboard.putNumber("Robot Degree: ", gyro.getAngle());
+    SmartDashboard.putNumber("Robot Pose X: ", getPose().getX());
+    SmartDashboard.putNumber("Robot Pose Y: ", getPose().getY());
     SmartDashboard.putNumber("FrontL Angle: ", frontLeft.getState().angle.getDegrees());
     SmartDashboard.putNumber("FrontR Angle: ", frontRight.getState().angle.getDegrees());
     SmartDashboard.putNumber("BackL Angle: ", backLeft.getState().angle.getDegrees());
