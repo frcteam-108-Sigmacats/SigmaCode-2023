@@ -16,12 +16,19 @@ import frc.robot.Constants.ClawMechSetUp;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Claw extends SubsystemBase {
-  public static CANSparkMax intakeMotor = new CANSparkMax(ClawMechSetUp.clawIntake, MotorType.kBrushless);
+  public static CANSparkMax intakeMotor;
   public boolean gamePiece, isCone, isCube;
-  public static DigitalInput clawSensor = new DigitalInput(0);
-  public static DoubleSolenoid firstCylinder = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 15);
+  private double coneOuttakeSpd, cubeOuttakeSpd;
+  public static DigitalInput clawSensor;
+  public static DoubleSolenoid clawExtenders;
   /** Creates a new Claw. */
-  public Claw() {}
+  public Claw() {
+    intakeMotor = new CANSparkMax(ClawMechSetUp.clawIntake, MotorType.kBrushless);
+    coneOuttakeSpd = -0.75;
+    cubeOuttakeSpd = 0.5;
+    clawSensor = new DigitalInput(0);
+    clawExtenders = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 15);
+  }
 
   @Override
   public void periodic() {
@@ -43,7 +50,7 @@ public class Claw extends SubsystemBase {
 
       case 0: 
         intakeMotor.set(0);
-        firstCylinder.set(Value.kOff);
+        clawExtenders.set(Value.kOff);
         break;
 
       case 1:
@@ -59,11 +66,11 @@ public class Claw extends SubsystemBase {
 
         if (gamePiece == true && isCone == true){
           intakeMotor.set(0);
-          firstCylinder.set(Value.kReverse);
+          clawExtenders.set(Value.kReverse);
         }
         else{
           intakeMotor.set(speed);
-          firstCylinder.set(Value.kForward);
+          clawExtenders.set(Value.kForward);
         }
         break;
 
@@ -80,11 +87,11 @@ public class Claw extends SubsystemBase {
 
         if (gamePiece == true && isCube == true){
           intakeMotor.set(0);
-          firstCylinder.set(Value.kReverse);
+          clawExtenders.set(Value.kReverse);
         }
         else{
           intakeMotor.set(-speed);
-          firstCylinder.set(Value.kForward);
+          clawExtenders.set(Value.kForward);
         }
 
       case 3:
@@ -124,6 +131,62 @@ public class Claw extends SubsystemBase {
           intakeMotor.set(-speed);
         }
         
+    }
+  }
+  public void setClawStates(int clawStates){
+    switch(clawStates){
+      //Starting config state
+      case 0:
+      //Set Arm Pos
+        intakeMotor.set(0);
+        clawExtenders.set(Value.kReverse);
+        clawExtenders.set(Value.kOff);
+      //Drive config state
+      case 1:
+        if(gamePiece){//and not in community zone
+          //set arm position to drive state
+          intakeMotor.set(0);
+          clawExtenders.set(Value.kReverse);
+          clawExtenders.set(Value.kOff);
+        }
+        else{
+          clawStates = 0;
+        }
+      //Set high arm pos used for auto claw
+      case 2:
+        if(gamePiece){//and in the community zone
+          //set arm position to high peg state
+          intakeMotor.set(0);
+          clawExtenders.set(Value.kReverse);
+          clawExtenders.set(Value.kOff);
+        }
+      //Set mid arm pos
+      case 3:
+        if(gamePiece){
+          //set mid arm pos
+          intakeMotor.set(0);
+          clawExtenders.set(Value.kReverse);
+          clawExtenders.set(Value.kOff);
+        }
+        else{
+          clawStates = 0;
+        }
+      //Set low arm pos
+      case 4:
+        if(gamePiece){
+          //set low arm pos
+          intakeMotor.set(0);
+          clawExtenders.set(Value.kReverse);
+          clawExtenders.set(Value.kOff);
+        }
+    }
+  }
+  public void setOuttakeSpd(){
+    if(isCone == true && isCube == false){
+      intakeMotor.set(coneOuttakeSpd);
+    }
+    else if(isCone == false && isCube == true){
+      intakeMotor.set(cubeOuttakeSpd);
     }
   }
 }

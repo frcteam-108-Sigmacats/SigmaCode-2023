@@ -50,7 +50,7 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
     // Configure the trigger bindings
     configureBindings();
-    leftTrigger.whileTrue(new RunIntake(1, 0.25 ));
+    leftTrigger.whileTrue(new RunIntake(1, 0.25));
     righTrigger.whileTrue(new RunIntake(2, 0.25));
     rightBumper.whileTrue(new RunIntake(3, 0.25));
     leftBumper.whileTrue(new RunIntake(4, 0.25));
