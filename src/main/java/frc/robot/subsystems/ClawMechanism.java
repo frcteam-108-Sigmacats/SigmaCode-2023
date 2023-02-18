@@ -15,6 +15,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
@@ -27,12 +28,9 @@ public class ClawMechanism extends SubsystemBase {
   private CANSparkMax clawRotate;
 
   public SparkMaxPIDController rotateArmPID;
-  public SparkMaxPIDController rotateClawPID;
   private DigitalInput gamePieceDetect;
 
   private AbsoluteEncoder throughBoreAbs;
-  private RelativeEncoder armEncoder;
-  private RelativeEncoder rotateClawEnc;
   /** Creates a new ExampleSubsystem. */
   public ClawMechanism() {
     leftClawArmMotor = new CANSparkMax(11, MotorType.kBrushless);
@@ -46,9 +44,6 @@ public class ClawMechanism extends SubsystemBase {
     rotateArmPID = leftClawArmMotor.getPIDController();
  
     throughBoreAbs = leftClawArmMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    armEncoder = leftClawArmMotor.getEncoder();
-
-    armEncoder.setPositionConversionFactor(SwerveConstants.armGearRat * 360);
 
     rotateArmPID.setFeedbackDevice(throughBoreAbs);
     rotateArmPID.setP(0.007);
@@ -111,14 +106,8 @@ public class ClawMechanism extends SubsystemBase {
     rightClawArmMotor.follow(leftClawArmMotor, true);
     
   }
-  public void setClawPosition(){
-    rotateClawPID.setReference(rotateClawEnc.getPosition(), ControlType.kPosition);
-  }
   public void getArmPositon(){
     System.out.println("Arm Position: " + throughBoreAbs.getPosition());
-  }
-  public void getClawPos(){
-    System.out.println("Claw Position: " + rotateClawEnc.getPosition());
   }
 
   /**
@@ -135,6 +124,7 @@ public class ClawMechanism extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     getArmPositon();
+    SmartDashboard.putNumber("Claw Motor Output: ", clawIntake.getOutputCurrent());
     
   }
 
