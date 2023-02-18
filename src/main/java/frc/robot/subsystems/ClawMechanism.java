@@ -38,22 +38,17 @@ public class ClawMechanism extends SubsystemBase {
     leftClawArmMotor = new CANSparkMax(11, MotorType.kBrushless);
     rightClawArmMotor = new CANSparkMax(12, MotorType.kBrushless);
     clawIntake = new CANSparkMax(13, MotorType.kBrushless);
-    clawRotate = new CANSparkMax(14, MotorType.kBrushless);
 
     leftClawArmMotor.restoreFactoryDefaults();
     rightClawArmMotor.restoreFactoryDefaults();
     clawIntake.restoreFactoryDefaults();
-    clawRotate.restoreFactoryDefaults();
 
     rotateArmPID = leftClawArmMotor.getPIDController();
-    rotateClawPID = clawRotate.getPIDController();
  
     throughBoreAbs = leftClawArmMotor.getAbsoluteEncoder(Type.kDutyCycle);
     armEncoder = leftClawArmMotor.getEncoder();
-    rotateClawEnc = clawRotate.getEncoder();
 
     armEncoder.setPositionConversionFactor(SwerveConstants.armGearRat * 360);
-    rotateClawEnc.setPositionConversionFactor(SwerveConstants.clawRat * 360);
 
     rotateArmPID.setFeedbackDevice(throughBoreAbs);
     rotateArmPID.setP(0.007);
@@ -62,12 +57,10 @@ public class ClawMechanism extends SubsystemBase {
 
     leftClawArmMotor.setIdleMode(IdleMode.kBrake);
     rightClawArmMotor.setIdleMode(IdleMode.kBrake);
-    clawRotate.setIdleMode(IdleMode.kBrake);
 
     leftClawArmMotor.setSmartCurrentLimit(40);
     rightClawArmMotor.setSmartCurrentLimit(40);
     clawIntake.setSmartCurrentLimit(40);
-    clawRotate.setSmartCurrentLimit(40);
 
     throughBoreAbs.setPositionConversionFactor(360);
     leftClawArmMotor.setInverted(true);
@@ -77,7 +70,6 @@ public class ClawMechanism extends SubsystemBase {
     leftClawArmMotor.burnFlash();
     rightClawArmMotor.burnFlash();
     clawIntake.burnFlash();
-    clawRotate.burnFlash();
 
     gamePieceDetect = new DigitalInput(2);
   }

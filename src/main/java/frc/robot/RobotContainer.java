@@ -6,6 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.ClawMechTester.ClawArmTester;
+import frc.robot.commands.ClawMechTester.ClawIntakeTester;
+import frc.robot.subsystems.ClawMechanism;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final ClawMechanism clawMech = new ClawMechanism();
+  private Trigger leftTrigger, rightTrigger, leftBumper, rightBumper, kA, kB, kY, kX, upPov, downPov;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
@@ -32,6 +37,12 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
     // Configure the trigger bindings
     configureBindings();
+    leftTrigger.whileTrue(new ClawIntakeTester(clawMech, 0.75));//Cone intake
+    leftBumper.whileTrue(new ClawIntakeTester(clawMech, -0.75));//Cone outtake
+    rightTrigger.whileTrue(new ClawIntakeTester(clawMech, -0.5));//Cube intake
+    rightBumper.whileTrue(new ClawIntakeTester(clawMech, 0.5));//Cube outtake
+    upPov.whileTrue(new ClawArmTester(clawMech, 0.3));//Should extend arm
+    downPov.whileTrue(new ClawArmTester(clawMech, -0.3));//Should retract arm
   }
 
   /**
@@ -44,6 +55,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    leftTrigger = driver.leftTrigger();
+    rightTrigger = driver.rightTrigger();
+    upPov = driver.povUp();
+    downPov = driver.povDown();
+    kA = driver.a();
+    kB = driver.b();
+    kY = driver.y();
+    kX = driver.x();
   }
 
   /**
