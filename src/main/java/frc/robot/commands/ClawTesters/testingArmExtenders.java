@@ -2,22 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ClawTesters;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 
-public class SetClawStates extends CommandBase {
-  private int clawState;
-  private Claw clawMech;
-  private double speed;
-  /** Creates a new SetClawStates. */
-  public SetClawStates(Claw clawSub, int clawState, double speed) {
-    this.clawState = clawState;
-    clawMech = clawSub;
-    this.speed = speed;
+public class testingArmExtenders extends CommandBase {
+  private Claw claw;
+  private boolean extendState;
+  /** Creates a new testingArmExtenders. */
+  public testingArmExtenders(Claw claw, boolean isFwd) {
+    this.claw = claw;
+    extendState = isFwd;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(clawMech);
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
@@ -27,18 +25,23 @@ public class SetClawStates extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawMech.setClawStates(clawState, speed);
+    if(extendState){
+      claw.forward();
+    }
+    else{
+      claw.reverse();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    clawMech.setClawStates(0, 0);
+    claw.off();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

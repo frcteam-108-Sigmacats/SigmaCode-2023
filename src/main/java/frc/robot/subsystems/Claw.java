@@ -4,8 +4,14 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -16,23 +22,76 @@ import frc.robot.Constants.ClawMechSetUp;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Claw extends SubsystemBase {
-  public static CANSparkMax intakeMotor;
+  public CANSparkMax leftClawArmMotor, rightClawArmMotor;
+  public SparkMaxPIDController rotateArmPID;
+  public AbsoluteEncoder throughBoreAbs;
+  public static CANSparkMax clawIntake;
   public boolean gamePiece, isCone, isCube;
   private double coneOuttakeSpd, cubeOuttakeSpd;
   public static DigitalInput clawSensor;
-  public static DoubleSolenoid clawExtenders;
+  public DoubleSolenoid clawExtenders;
+  private double groundIntakePos = 0;
+  private double loadZoneIntakePos = 0;
+  private double highPos = 0;
+  private double midPos = 0;
+  private double lowPos = 0;
+  private double startConfigPos = 0;
+  private double lastArmPos;
+  public SparkMaxPIDController clawIntakePID;
+  public RelativeEncoder clawIntakeEnc;
   /** Creates a new Claw. */
   public Claw() {
-    intakeMotor = new CANSparkMax(ClawMechSetUp.clawIntake, MotorType.kBrushless);
     coneOuttakeSpd = -0.75;
     cubeOuttakeSpd = 0.5;
     clawSensor = new DigitalInput(0);
     clawExtenders = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 15);
+    leftClawArmMotor = new CANSparkMax(11, MotorType.kBrushless);
+    rightClawArmMotor = new CANSparkMax(12, MotorType.kBrushless);
+    clawIntake = new CANSparkMax(13, MotorType.kBrushless);
+
+    leftClawArmMotor.restoreFactoryDefaults();
+    rightClawArmMotor.restoreFactoryDefaults();
+    clawIntake.restoreFactoryDefaults();
+
+    rotateArmPID = leftClawArmMotor.getPIDController();
+    clawIntakePID = clawIntake.getPIDController();
+    throughBoreAbs = leftClawArmMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    clawIntakeEnc = clawIntake.getEncoder();
+
+    rotateArmPID.setFeedbackDevice(throughBoreAbs);
+    rotateArmPID.setP(0.01);
+    rotateArmPID.setI(0);
+    rotateArmPID.setD(0);
+
+    clawIntakePID.setFeedbackDevice(clawIntakeEnc);
+    clawIntakePID.setP(0.01);
+    clawIntakePID.setI(0);
+    clawIntakePID.setD(0);
+
+    leftClawArmMotor.setIdleMode(IdleMode.kBrake);
+    rightClawArmMotor.setIdleMode(IdleMode.kBrake);
+
+    leftClawArmMotor.setSmartCurrentLimit(40);
+    rightClawArmMotor.setSmartCurrentLimit(40);
+    clawIntake.setSmartCurrentLimit(40);
+
+    throughBoreAbs.setPositionConversionFactor(360);
+    leftClawArmMotor.setInverted(true);
+    rightClawArmMotor.setInverted(false);
+    throughBoreAbs.setInverted(true);
+
+    leftClawArmMotor.burnFlash();
+    rightClawArmMotor.burnFlash();
+    clawIntake.burnFlash();
+    clawExtenders.set(Value.kReverse);
+
+    //gamePieceDetect = new DigitalInput(2);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    System.out.println("Absolute Position " + throughBoreAbs.getPosition());
   }
 
   /*public void intakeGround(double speed, boolean extend, boolean gamePiece){
@@ -46,71 +105,84 @@ public class Claw extends SubsystemBase {
     }
   }*/
   public void intakeStates(int clawStates, double speed){
+ //  if(Math.abs(leftClawArmMotor.get()) > 0){
+      clawExtenders.set(Value.kReverse);
+   // }
     switch (clawStates){
 
       case 0: 
-        intakeMotor.set(0);
+        clawIntake.set(0);
         clawExtenders.set(Value.kOff);
         break;
 
       case 1:
-        if(clawSensor.get() == true){
-           gamePiece = true;
-           isCone = true;
-           isCube = false;
+        // if(clawSensor.get() == true){
+        //    gamePiece = true;
+        //    isCone = true;
+        //    isCube = false;
 
-        }
-        else{
-          gamePiece = false;
-        }
+        // }
+        // else{
+        //   gamePiece = false;
+        // }
 
-        if (gamePiece == true && isCone == true){
-          intakeMotor.set(0);
-          clawExtenders.set(Value.kReverse);
-        }
-        else{
-          intakeMotor.set(speed);
+        // if (gamePiece == true && isCone == true){
+        //   clawIntake.set(0);
+        //   clawExtenders.set(Value.kReverse);
+        // }
+        // else{
+        //   clawIntake.set(speed);
+        //   clawExtenders.set(Value.kForward);
+        // }
+        rotateArmPID.setReference(groundIntakePos, ControlType.kPosition);
+        if(throughBoreAbs.getPosition() == groundIntakePos){
           clawExtenders.set(Value.kForward);
+          clawIntake.set(speed);
         }
         break;
 
       case 2:
-        if(clawSensor.get() == true){
-          gamePiece = true;
-          isCone = false;
-          isCube = true;
+      //   if(clawSensor.get() == true){
+      //     gamePiece = true;
+      //     isCone = false;
+      //     isCube = true;
 
-        }
-        else{
-          gamePiece = false;
-        }
+      //   }
+      //   else{
+      //     gamePiece = false;
+      //   }
 
-        if (gamePiece == true && isCube == true){
-          intakeMotor.set(0);
+      //   if (gamePiece == true && isCube == true){
+      //     clawIntake.set(0);
+      //     clawExtenders.set(Value.kReverse);
+      //   }
+      //   else{
+      //     clawIntake.set(-speed);
+      //     clawExtenders.set(Value.kForward);
+      //   }
+        rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
+        if(throughBoreAbs.getPosition() == loadZoneIntakePos){
           clawExtenders.set(Value.kReverse);
-        }
-        else{
-          intakeMotor.set(-speed);
-          clawExtenders.set(Value.kForward);
+          clawIntake.set(speed);
         }
 
       case 3:
-        if(clawSensor.get() == true){
-          gamePiece = true;
-          isCone = true;
-          isCube = false;
+      //   if(clawSensor.get() == true){
+      //     gamePiece = true;
+      //     isCone = true;
+      //     isCube = false;
 
-        }
-        else{
-          gamePiece = false;
-        }
+      //   }
+      //   else{
+      //     gamePiece = false;
+      //   }
 
-        if (gamePiece == true && isCone == true){
-          intakeMotor.set(0);
-        }
-        else{
-          intakeMotor.set(speed);
-        }
+      //   if (gamePiece == true && isCone == true){
+      //     clawIntake.set(0);
+      //   }
+      //   else{
+      //     clawIntake.set(speed);
+      //   }
         break;
 
       case 4:
@@ -125,68 +197,113 @@ public class Claw extends SubsystemBase {
         }
 
         if (gamePiece == true && isCube == true){
-          intakeMotor.set(0);
+          clawIntake.set(0);
         }
         else{
-          intakeMotor.set(-speed);
+          clawIntake.set(-speed);
         }
         
     }
   }
-  public void setClawStates(int clawStates){
+  public void setClawStates(int clawStates, double speed){
+    if(Math.abs(leftClawArmMotor.get()) > 0){
+      clawExtenders.set(Value.kReverse);
+    }
     switch(clawStates){
       //Starting config state
       case 0:
-      //Set Arm Pos
-        intakeMotor.set(0);
-        clawExtenders.set(Value.kReverse);
+        rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
+        clawIntake.set(speed);
         clawExtenders.set(Value.kOff);
+        break;
       //Drive config state
-      case 1:
-        if(gamePiece){//and not in community zone
-          //set arm position to drive state
-          intakeMotor.set(0);
-          clawExtenders.set(Value.kReverse);
-          clawExtenders.set(Value.kOff);
+      case 1://cube outtake
+        // if(gamePiece){//and not in community zone
+        //   //set arm position to drive state
+        //   clawIntake.set(0);
+        //   clawExtenders.set(Value.kReverse);
+        //   clawExtenders.set(Value.kOff);
+        // }
+        // else{
+        //   clawStates = 0;
+        // }
+        rotateArmPID.setReference(highPos, ControlType.kPosition);
+        if(throughBoreAbs.getPosition() == highPos){
+          clawIntake.set(speed);
         }
-        else{
-          clawStates = 0;
-        }
+        break;
       //Set high arm pos used for auto claw
       case 2:
-        if(gamePiece){//and in the community zone
-          //set arm position to high peg state
-          intakeMotor.set(0);
-          clawExtenders.set(Value.kReverse);
-          clawExtenders.set(Value.kOff);
+        // if(gamePiece){//and in the community zone
+        //   //set arm position to high peg state
+        //   clawIntake.set(0);
+        //   clawExtenders.set(Value.kReverse);
+        //   clawExtenders.set(Value.kOff);
+        // }
+        rotateArmPID.setReference(midPos, ControlType.kPosition);
+        if(throughBoreAbs.getPosition() == midPos){
+          clawIntake.set(speed);
         }
+        break;
       //Set mid arm pos
       case 3:
-        if(gamePiece){
-          //set mid arm pos
-          intakeMotor.set(0);
-          clawExtenders.set(Value.kReverse);
-          clawExtenders.set(Value.kOff);
+        // if(gamePiece){
+        //   //set mid arm pos
+        //   clawIntake.set(0);
+        //   clawExtenders.set(Value.kReverse);
+        //   clawExtenders.set(Value.kOff);
+        // }
+        // else{
+        //   clawStates = 0;
+        // }
+        rotateArmPID.setReference(lowPos, ControlType.kPosition);
+        if(throughBoreAbs.getPosition() == lowPos){
+          clawIntake.set(speed);
         }
-        else{
-          clawStates = 0;
-        }
+        break;
       //Set low arm pos
       case 4:
-        if(gamePiece){
-          //set low arm pos
-          intakeMotor.set(0);
-          clawExtenders.set(Value.kReverse);
-          clawExtenders.set(Value.kOff);
-        }
+        // if(gamePiece){
+        //   //set low arm pos
+        //   clawIntake.set(0);
+        //   clawExtenders.set(Value.kReverse);
+        //   clawExtenders.set(Value.kOff);
+        // }
+        break;
     }
   }
   public void setOuttakeSpd(){
     if(isCone == true && isCube == false){
-      intakeMotor.set(coneOuttakeSpd);
+      clawIntake.set(coneOuttakeSpd);
     }
     else if(isCone == false && isCube == true){
-      intakeMotor.set(cubeOuttakeSpd);
+      clawIntake.set(cubeOuttakeSpd);
     }
+  }
+  public void forward(){
+    clawExtenders.set(Value.kForward);
+  }
+  public void reverse(){
+    clawExtenders.set(Value.kReverse);
+  }
+  public void off(){
+    clawExtenders.set(Value.kOff);
+  }
+  public void moveArm(double speed){
+    leftClawArmMotor.set(speed);
+    rightClawArmMotor.set(speed);
+  }
+  public void intakeTester(double speed){
+    clawIntake.set(speed);
+  }
+  public void intakeHold(){
+    clawIntakePID.setReference(clawIntakeEnc.getPosition(), ControlType.kPosition);
+  }
+  public void holdArm(){
+    rotateArmPID.setReference(lastArmPos, ControlType.kPosition);
+    rightClawArmMotor.follow(leftClawArmMotor, true);
+  }
+  public void setArmPos(){
+    lastArmPos = throughBoreAbs.getPosition();
   }
 }

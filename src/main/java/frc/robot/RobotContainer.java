@@ -7,7 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.RunIntake;
+import frc.robot.commands.SetClawStates;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.ClawTesters.HoldArmTester;
+import frc.robot.commands.ClawTesters.clawArmtester;
+import frc.robot.commands.ClawTesters.clawIntakeHoldTester;
+import frc.robot.commands.ClawTesters.clawIntakeTester;
+import frc.robot.commands.ClawTesters.testingArmExtenders;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -41,19 +47,34 @@ public class RobotContainer {
   private final CommandXboxController driver =
       new CommandXboxController(0);
 
-  public Trigger righTrigger, leftTrigger, rightBumper, leftBumper;
+  public Trigger righTrigger, leftTrigger, rightBumper, leftBumper, kA, kB, kY, kX, upPov, downPov;
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     boolean fieldRelative = false;
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
+    //m_Claw.setDefaultCommand(new SetClawStates(m_Claw, 0, 0));
     // Configure the trigger bindings
     configureBindings();
-    leftTrigger.whileTrue(new RunIntake(1, 0.25));
-    righTrigger.whileTrue(new RunIntake(2, 0.25));
-    rightBumper.whileTrue(new RunIntake(3, 0.25));
-    leftBumper.whileTrue(new RunIntake(4, 0.25));
+    // leftTrigger.whileTrue(new RunIntake(1, 0.25));//Cone intake
+    // righTrigger.whileTrue(new RunIntake(2, -0.25));//Cube intake
+    leftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
+    righTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
+    // rightBumper.whileTrue(new RunIntake(2, 0.25));//Cone intake
+    // leftBumper.whileTrue(new RunIntake(1, -0.25));//Cube intake
+    leftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85));
+    leftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    rightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85));
+    rightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    // kA.whileTrue(new SetClawStates(m_Claw, 1, 0.5));//Cube outtake
+    // kB.whileTrue(new SetClawStates(m_Claw, 1, -0.5));//Cone outtake
+    // kY.whileTrue(new SetClawStates(m_Claw, 2, 0.5));//Cube outtake
+    // kX.whileTrue(new SetClawStates(m_Claw, 2, -0.5));//Cone outtake
+    upPov.onTrue(new clawArmtester(m_Claw, 0.15));
+    upPov.onFalse(new HoldArmTester(m_Claw));
+    downPov.onTrue(new clawArmtester(m_Claw, -0.15));
+    downPov.onFalse(new HoldArmTester(m_Claw));
   }
 
   /**
@@ -68,6 +89,15 @@ public class RobotContainer {
   private void configureBindings() {
     righTrigger = driver.rightTrigger();
     leftTrigger = driver.leftTrigger();
+    leftBumper = driver.leftBumper();
+    rightBumper = driver.rightBumper();
+    kA = driver.a();
+    kB = driver.b();
+    kY = driver.y();
+    kX = driver.x();
+    upPov = driver.povUp();
+    downPov = driver.povDown();
+    
   }
 
   /**

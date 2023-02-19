@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   public PneumaticHub hub = new PneumaticHub();
-  Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
   /**
    * This function is run when the robot is first started up and should be used for any
