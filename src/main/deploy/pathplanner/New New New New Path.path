@@ -28,12 +28,12 @@
         "y": 5.0
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 2.6840268359584982,
+        "y": 5.0
       },
       "nextControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 2.6840268359584982,
+        "y": 5.0
       },
       "holonomicAngle": 0,
       "isReversal": true,
