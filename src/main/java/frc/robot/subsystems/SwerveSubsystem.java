@@ -128,4 +128,7 @@ public class SwerveSubsystem extends SubsystemBase {
     gyro.getYawPitchRoll(ypr);
     return (SwerveSetUp.invertedGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
+  public double getPitch(){
+    return gyro.getPitch();
+  }
 }
