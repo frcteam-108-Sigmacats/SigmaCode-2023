@@ -10,12 +10,10 @@ import frc.robot.subsystems.Claw;
 public class SetClawStates extends CommandBase {
   private int clawState;
   private Claw clawMech;
-  private double speed;
   /** Creates a new SetClawStates. */
-  public SetClawStates(Claw clawSub, int clawState, double speed) {
+  public SetClawStates(Claw clawSub, int clawState) {
     this.clawState = clawState;
     clawMech = clawSub;
-    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(clawMech);
   }
@@ -27,13 +25,13 @@ public class SetClawStates extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    clawMech.setClawStates(clawState, speed);
+    clawMech.setClawStates(clawState);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    clawMech.setClawStates(0, 0);
+    clawMech.setClawStates(clawState);
   }
 
   // Returns true when the command should end.

@@ -5,19 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Claw;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-public class RunIntake extends CommandBase {
-  private double speed;
-  private int clawStates;
-  /** Creates a new RunIntake. */
-  public RunIntake(int clawStates, double speed) {
-    speed = this.speed;
-    clawStates = this.clawStates;
+public class Outtake extends CommandBase {
+  private Claw clawMech;
+  /** Creates a new Outtake. */
+  public Outtake(Claw clawSub) {
+    clawMech = clawSub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.m_Claw);
+    addRequirements(clawMech);
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +23,7 @@ public class RunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_Claw.intakeStates(clawStates, speed);
+    clawMech.setOuttakeSpd();
   }
 
   // Called once the command ends or is interrupted.

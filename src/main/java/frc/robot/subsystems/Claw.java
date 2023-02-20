@@ -13,8 +13,10 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,19 +28,26 @@ public class Claw extends SubsystemBase {
   public SparkMaxPIDController rotateArmPID;
   public AbsoluteEncoder throughBoreAbs;
   public static CANSparkMax clawIntake;
-  public boolean gamePiece, isCone, isCube;
+  public static boolean gamePiece;
+  public static boolean isCone;
+  public static boolean isCube;
   private double coneOuttakeSpd, cubeOuttakeSpd;
   public static DigitalInput clawSensor;
   public DoubleSolenoid clawExtenders;
-  private double groundIntakePos = 0;
+  private double groundIntakeConePos = 0;
+  private double groundIntakeCubePos = 0;
   private double loadZoneIntakePos = 0;
   private double highPos = 0;
   private double midPos = 0;
   private double lowPos = 0;
   private double startConfigPos = 0;
+  private double driveConfigPos = 0;
+  public static boolean isFinished = false;
   private double lastArmPos;
   public SparkMaxPIDController clawIntakePID;
   public RelativeEncoder clawIntakeEnc;
+  private double intakeEncPos = 0;
+  public static int armStates;
   /** Creates a new Claw. */
   public Claw() {
     coneOuttakeSpd = -0.75;
@@ -105,9 +114,7 @@ public class Claw extends SubsystemBase {
     }
   }*/
   public void intakeStates(int clawStates, double speed){
- //  if(Math.abs(leftClawArmMotor.get()) > 0){
-      clawExtenders.set(Value.kReverse);
-   // }
+    clawExtenders.set(Value.kReverse);
     switch (clawStates){
 
       case 0: 
@@ -117,21 +124,37 @@ public class Claw extends SubsystemBase {
 
       case 1:
       //Rotate the arm to the ground position
-        rotateArmPID.setReference(groundIntakePos, ControlType.kPosition);
+        rotateArmPID.setReference(groundIntakeConePos, ControlType.kPosition);
         //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-        if(throughBoreAbs.getPosition() == groundIntakePos && clawSensor.get() == false){
+        if(throughBoreAbs.getPosition() == groundIntakeConePos && clawSensor.get() == false){
           clawExtenders.set(Value.kForward);
           clawIntake.set(speed);
+          intakeEncPos = clawIntakeEnc.getPosition();
+        }
+        else if(clawSensor.get() == true){
+          clawExtenders.set(Value.kReverse);
+          gamePiece = true;
+          isCone = true;
+          isCube = false;
+          isFinished = true;
         }
         break;
 
       case 2:
       //Rotate the arm to the ground position
-        rotateArmPID.setReference(groundIntakePos, ControlType.kPosition);
+        rotateArmPID.setReference(groundIntakeCubePos, ControlType.kPosition);
         //If the arm in the ground position and the sensor reads false then extend the pneumatics and run the cube intake
-        if(throughBoreAbs.getPosition() == groundIntakePos && clawSensor.get() == false){
+        if(throughBoreAbs.getPosition() == groundIntakeCubePos && clawSensor.get() == false){
           clawExtenders.set(Value.kForward);
           clawIntake.set(-speed);
+          intakeEncPos = clawIntakeEnc.getPosition();
+        }
+        else if(clawSensor.get() == true){
+          clawExtenders.set(Value.kReverse);
+          gamePiece = true;
+          isCone = false;
+          isCube = true;
+          isFinished = true;
         }
 
       case 3:
@@ -141,6 +164,12 @@ public class Claw extends SubsystemBase {
         if(throughBoreAbs.getPosition() == loadZoneIntakePos && clawSensor.get() == false){
           clawExtenders.set(Value.kReverse);
           clawIntake.set(speed);
+          intakeEncPos = clawIntakeEnc.getPosition();
+        }
+        else if(clawSensor.get() == true){
+          gamePiece = true;
+          isCone = true;
+          isCube = false;
         }
         break;
 
@@ -152,84 +181,85 @@ public class Claw extends SubsystemBase {
           clawExtenders.set(Value.kReverse);
           clawIntake.set(speed);
         }
+        else if(clawSensor.get() == true){
+          gamePiece = true;
+          isCone = false;
+          isCube = true;
+        }
         
     }
   }
-  public void setClawStates(int clawStates, double speed){
-    if(Math.abs(leftClawArmMotor.get()) > 0){
-      clawExtenders.set(Value.kReverse);
-    }
+  public void setClawStates(int clawStates){
+    //Need a static variable to hold the claws position for when we need to score
+    armStates = clawStates;
+    clawExtenders.set(Value.kReverse);
     switch(clawStates){
       //Starting config state
       case 0:
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
-        clawIntake.set(speed);
+        clawIntake.set(0);
         clawExtenders.set(Value.kOff);
+        isFinished = false;
+        gamePiece = false;
+        isCone = false;
+        isCube = false;
         break;
       //Drive config state
-      case 1://cube outtake
-        // if(gamePiece){//and not in community zone
-        //   //set arm position to drive state
-        //   clawIntake.set(0);
-        //   clawExtenders.set(Value.kReverse);
-        //   clawExtenders.set(Value.kOff);
-        // }
-        // else{
-        //   clawStates = 0;
-        // }
-        rotateArmPID.setReference(highPos, ControlType.kPosition);
-        if(throughBoreAbs.getPosition() == highPos){
-          clawIntake.set(speed);
-        }
+      case 1:
+        rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+        clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
+        isFinished = false;
         break;
       //Set high arm pos used for auto claw
       case 2:
-        // if(gamePiece){//and in the community zone
-        //   //set arm position to high peg state
-        //   clawIntake.set(0);
-        //   clawExtenders.set(Value.kReverse);
-        //   clawExtenders.set(Value.kOff);
-        // }
-        rotateArmPID.setReference(midPos, ControlType.kPosition);
-        if(throughBoreAbs.getPosition() == midPos){
-          clawIntake.set(speed);
-        }
+        rotateArmPID.setReference(highPos, ControlType.kPosition);
+        clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
+        isFinished = false;
         break;
       //Set mid arm pos
       case 3:
-        // if(gamePiece){
-        //   //set mid arm pos
-        //   clawIntake.set(0);
-        //   clawExtenders.set(Value.kReverse);
-        //   clawExtenders.set(Value.kOff);
-        // }
-        // else{
-        //   clawStates = 0;
-        // }
-        rotateArmPID.setReference(lowPos, ControlType.kPosition);
-        if(throughBoreAbs.getPosition() == lowPos){
-          clawIntake.set(speed);
-        }
+        rotateArmPID.setReference(midPos, ControlType.kPosition);
+        clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
         break;
       //Set low arm pos
       case 4:
-        // if(gamePiece){
-        //   //set low arm pos
-        //   clawIntake.set(0);
-        //   clawExtenders.set(Value.kReverse);
-        //   clawExtenders.set(Value.kOff);
-        // }
+        rotateArmPID.setReference(lowPos, ControlType.kPosition);
+        clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
         break;
     }
   }
+  //To set the outtake speed with one button 
   public void setOuttakeSpd(){
     if(isCone == true && isCube == false){
       clawIntake.set(coneOuttakeSpd);
+      if(clawSensor.get() == false){
+        clawIntake.set(0);
+        isCone = false;
+        isFinished = true;
+      }
     }
     else if(isCone == false && isCube == true){
       clawIntake.set(cubeOuttakeSpd);
+      if(clawSensor.get() == false){
+        clawIntake.set(0);
+        isCube = false;
+      }
     }
   }
+  //Needed for auto claw
+  public static boolean getGamePiece(){
+    return gamePiece;
+  }
+  //Needed for auto vision
+  public static boolean getIsCone(){
+    return isCone;
+  }
+  //Needed for auto vision
+  public static boolean getIsCube(){
+    return isCube;
+  }
+  
+  //Override functions
   public void forward(){
     clawExtenders.set(Value.kForward);
   }
@@ -242,6 +272,7 @@ public class Claw extends SubsystemBase {
   public void moveArm(double speed){
     leftClawArmMotor.set(speed);
     rightClawArmMotor.set(speed);
+    lastArmPos = throughBoreAbs.getPosition();
   }
   public void intakeTester(double speed){
     clawIntake.set(speed);
@@ -252,8 +283,5 @@ public class Claw extends SubsystemBase {
   public void holdArm(){
     rotateArmPID.setReference(lastArmPos, ControlType.kPosition);
     rightClawArmMotor.follow(leftClawArmMotor, true);
-  }
-  public void setArmPos(){
-    lastArmPos = throughBoreAbs.getPosition();
   }
 }

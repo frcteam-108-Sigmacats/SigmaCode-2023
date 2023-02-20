@@ -54,7 +54,6 @@ public class RobotContainer {
   public RobotContainer() {
     boolean fieldRelative = false;
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
-    //m_Claw.setDefaultCommand(new SetClawStates(m_Claw, 0, 0));
     // Configure the trigger bindings
     configureBindings();
     // leftTrigger.whileTrue(new RunIntake(1, 0.25));//Cone intake

@@ -26,7 +26,6 @@ public class clawArmtester extends CommandBase {
   @Override
   public void execute() {
     claw.moveArm(speed);
-    claw.setArmPos();
   }
 
   // Called once the command ends or is interrupted.

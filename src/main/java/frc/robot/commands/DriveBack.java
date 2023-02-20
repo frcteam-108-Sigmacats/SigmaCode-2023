@@ -4,30 +4,35 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Claw;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import frc.robot.subsystems.SwerveSubsystem;
 
-public class RunIntake extends CommandBase {
-  private double speed;
-  private int clawStates;
-  /** Creates a new RunIntake. */
-  public RunIntake(int clawStates, double speed) {
-    speed = this.speed;
-    clawStates = this.clawStates;
+public class DriveBack extends CommandBase {
+  private SwerveSubsystem swerveSub;
+  private Claw clawMech;
+  private int counter;
+  private Translation2d translation = new Translation2d(0, 0.4);
+  /** Creates a new DriveBack. */
+  public DriveBack(SwerveSubsystem swerve, Claw clawSub) {
+    swerveSub = swerve;
+    clawMech = clawSub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.m_Claw);
+    addRequirements(swerveSub, clawMech);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    counter = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_Claw.intakeStates(clawStates, speed);
+    swerveSub.drive(translation, 0, true);
+    counter++;
   }
 
   // Called once the command ends or is interrupted.
@@ -37,7 +42,7 @@ public class RunIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Claw.isFinished == true){
+    if(counter >= 25){
       return true;
     }
     return false;
