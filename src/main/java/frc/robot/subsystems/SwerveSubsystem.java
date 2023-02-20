@@ -40,7 +40,7 @@ public class SwerveSubsystem extends SubsystemBase {
   SwerveSetUp.backRTurnKP, SwerveSetUp.backRTurnKI, SwerveSetUp.backRTurnKD, SwerveSetUp.bRChassisAngleOffset);
 
   private SwerveDriveOdometry odometry;
-  private WPI_Pigeon2 gyro = new WPI_Pigeon2(0);
+  private WPI_Pigeon2 gyro = new WPI_Pigeon2(1);
   /** Creates a new SwerveSubsystem. */
   public SwerveSubsystem() {
     zeroHeading();
