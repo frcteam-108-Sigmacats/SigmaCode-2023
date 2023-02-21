@@ -131,6 +131,7 @@ public class Claw extends SubsystemBase {
           clawIntake.set(speed);
           intakeEncPos = clawIntakeEnc.getPosition();
         }
+        //If the sensor does see a game piece, for this case it is a cone, so set booleans to true except cube boolean
         else if(clawSensor.get() == true){
           clawExtenders.set(Value.kReverse);
           gamePiece = true;
@@ -149,6 +150,7 @@ public class Claw extends SubsystemBase {
           clawIntake.set(-speed);
           intakeEncPos = clawIntakeEnc.getPosition();
         }
+        //If the sensor does see a game piece, for this case it is a cube, so set booleans to true except cone boolean
         else if(clawSensor.get() == true){
           clawExtenders.set(Value.kReverse);
           gamePiece = true;
@@ -166,6 +168,7 @@ public class Claw extends SubsystemBase {
           clawIntake.set(speed);
           intakeEncPos = clawIntakeEnc.getPosition();
         }
+        //If the sensor does see a game piece, for this case it is a cone, so set booleans to true except cube boolean
         else if(clawSensor.get() == true){
           gamePiece = true;
           isCone = true;
@@ -181,6 +184,7 @@ public class Claw extends SubsystemBase {
           clawExtenders.set(Value.kReverse);
           clawIntake.set(speed);
         }
+        //If the sensor does see a game piece, for this case it is a cube, so set booleans to true except cone boolean.
         else if(clawSensor.get() == true){
           gamePiece = true;
           isCone = false;

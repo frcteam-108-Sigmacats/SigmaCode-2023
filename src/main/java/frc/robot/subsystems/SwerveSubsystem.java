@@ -142,6 +142,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public void resetOdometry(Pose2d pose){
     odometry.resetPosition(getHeading(), getModulesPosition(), pose);
   }
+
+  public void resetAutoOdometry(Pose2d pose){
+    odometry.resetPosition(getYaw(), getModulesPosition(), pose);
+  }
   public void resetEncoders(){
     frontLeft.resetEncoder();
     frontRight.resetEncoder();

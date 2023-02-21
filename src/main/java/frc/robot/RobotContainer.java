@@ -116,7 +116,7 @@ public class RobotContainer {
     // new PIDController(0.3, 0, 0), swerveSubsystem::setModuleStates, swerveSubsystem),
     // new InstantCommand(() -> swerveSubsystem.stopModules()));
     
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetAutoOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.0000001, 0, 0), new PIDConstants(-3.0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
     Command fullauto = autoBuilder.fullAuto(tryGroup);
