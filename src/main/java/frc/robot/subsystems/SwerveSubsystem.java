@@ -111,19 +111,23 @@ public class SwerveSubsystem extends SubsystemBase {
             fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                                 xLim.calculate(translation.getX()), 
                                 yLim.calculate(translation.getY()), 
-                                rotLim.calculate(rotation), 
+                                rotLim.calculate(rotation) * SwerveConstants.maxTurnSpeed, 
                                 getYaw()
                             )
                             : new ChassisSpeeds(
                                 xLim.calculate(translation.getX()), 
                                 yLim.calculate(translation.getY()), 
-                                rotLim.calculate(rotation))
+                                rotLim.calculate(rotation) * SwerveConstants.maxTurnSpeed)
                             );
-    setModuleStates(swerveModuleStates);
+      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.maxDriveSpeed);
+      frontLeft.setDesiredState(swerveModuleStates[0]);
+      frontRight.setDesiredState(swerveModuleStates[1]);
+      backLeft.setDesiredState(swerveModuleStates[2]);
+      backRight.setDesiredState(swerveModuleStates[3]);
   }
   //Sets the modules states and assures that the speed of the modules never goes beyond the maxDriveSpeed
   public void setModuleStates(SwerveModuleState[] desiredState){
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, SwerveConstants.maxDriveSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, SwerveConstants.autoMaxDriveSpeed);
     frontLeft.setDesiredState(desiredState[0]);
     frontRight.setDesiredState(desiredState[1]);
     backLeft.setDesiredState(desiredState[2]);

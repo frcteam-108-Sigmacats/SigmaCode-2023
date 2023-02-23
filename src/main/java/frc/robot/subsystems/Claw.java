@@ -48,8 +48,8 @@ public class Claw extends SubsystemBase {
   private double lastArmPos;
   public SparkMaxPIDController clawIntakePID;
   public RelativeEncoder clawIntakeEnc;
-  private double intakeEncPos = 0;
-  public static int armStates;
+  public double intakeEncPos = 0;
+  public int armStates;
   public DigitalInput getClawExtenders = new DigitalInput(1);
   /** Creates a new Claw. */
   public Claw() {
@@ -76,7 +76,7 @@ public class Claw extends SubsystemBase {
     rotateArmPID.setD(0);
 
     clawIntakePID.setFeedbackDevice(clawIntakeEnc);
-    clawIntakePID.setP(0.01);
+    clawIntakePID.setP(0.008);
     clawIntakePID.setI(0);
     clawIntakePID.setD(0);
 
@@ -103,7 +103,7 @@ public class Claw extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println("Absolute Position " + throughBoreAbs.getPosition());
+    //System.out.println("Absolute Position " + throughBoreAbs.getPosition());
   }
 
   /*public void intakeGround(double speed, boolean extend, boolean gamePiece){
@@ -153,7 +153,7 @@ public class Claw extends SubsystemBase {
         //If the arm in the ground position and the sensor reads false then extend the pneumatics and run the cube intake
         if(throughBoreAbs.getPosition() >= 76 /*&& clawSensor.get() == false*/){
           clawExtenders.set(Value.kForward);
-          clawIntake.set(-speed);
+          clawIntake.set(speed);
           //intakeEncPos = clawIntakeEnc.getPosition();
         }
         //If the sensor does see a game piece, for this case it is a cube, so set booleans to true except cone boolean
@@ -208,8 +208,7 @@ public class Claw extends SubsystemBase {
     }
   }
   public void setClawStates(int clawStates){
-    //Need a static variable to hold the claws position for when we need to score
-    armStates = clawStates;
+
     clawExtenders.set(Value.kReverse);
     switch(clawStates){
       //Starting config state
@@ -227,8 +226,7 @@ public class Claw extends SubsystemBase {
       case 1:
         rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
-        clawIntake.set(0);
-        //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
+        clawIntake.set(-0.05);
         break;
       //Set high arm position used for auto claw
       case 2:
@@ -269,7 +267,7 @@ public class Claw extends SubsystemBase {
     }
   }
   //Needed for auto claw
-  public static boolean getGamePiece(){
+  public boolean getGamePiece(){
     return gamePiece;
   }
   //Needed for auto vision
@@ -312,5 +310,8 @@ public class Claw extends SubsystemBase {
   public void holdArm(){
     rotateArmPID.setReference(lastArmPos, ControlType.kPosition);
     rightClawArmMotor.follow(leftClawArmMotor, true);
+  }
+  public void setArmState(int armState){
+    armStates = armState;
   }
 }

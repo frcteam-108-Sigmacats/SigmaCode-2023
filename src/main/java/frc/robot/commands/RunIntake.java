@@ -25,14 +25,13 @@ public class RunIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    counter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     RobotContainer.m_Claw.intakeStates(clawStates, speed, counter);
-    counter++;
+    claw.intakeEncPos = claw.clawIntakeEnc.getPosition();
   }
 
   // Called once the command ends or is interrupted.

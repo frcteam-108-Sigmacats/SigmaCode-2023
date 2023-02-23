@@ -48,7 +48,8 @@ public final class Constants {
         / driveGearRat;
 
         //Used to set up speed for both drive and turn motors
-        public static double maxDriveSpeed = 4;
+        public static double maxDriveSpeed = 5;
+        public static double autoMaxDriveSpeed = 2.5;
         public static double maxTurnSpeed = 2 * Math.PI;
 
         //Distance between the front and back wheel

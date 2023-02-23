@@ -16,6 +16,6 @@ public class runClawStateAndOuttake extends ParallelCommandGroup {
   public runClawStateAndOuttake() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SetClawStates(clawMech, Claw.armStates), new Outtake(clawMech));
+    addCommands(new SetClawStates(clawMech, clawMech.armStates), new Outtake(clawMech));
   }
 }

@@ -10,7 +10,7 @@ import frc.robot.subsystems.Claw;
 public class SetClawStates extends CommandBase {
   private int clawState;
   private Claw clawMech;
-  private int counter;
+  int counter;
   /** Creates a new SetClawStates. */
   public SetClawStates(Claw clawSub, int clawState) {
     this.clawState = clawState;
@@ -22,26 +22,25 @@ public class SetClawStates extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    counter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    counter++;
     if(clawState == 1){
       if(counter > 300){
         clawMech.setClawStates(clawState);
+        counter = 0;
       }
     }
-    else{
-      clawMech.setClawStates(clawState);
-    }
+    clawMech.setClawStates(clawState);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    clawMech.setClawStates(clawState);
+    //clawMech.setClawStates(clawState);
   }
 
   // Returns true when the command should end.
