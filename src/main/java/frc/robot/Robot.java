@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  public PneumaticHub hub = new PneumaticHub();
+  public static PneumaticHub hub = new PneumaticHub();
   Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
   /**

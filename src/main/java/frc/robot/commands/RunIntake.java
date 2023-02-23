@@ -12,27 +12,34 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 public class RunIntake extends CommandBase {
   private double speed;
   private int clawStates;
+  private int counter;
+  private Claw claw = RobotContainer.m_Claw;
   /** Creates a new RunIntake. */
   public RunIntake(int clawStates, double speed) {
-    speed = this.speed;
-    clawStates = this.clawStates;
+    this.speed = speed;
+    this.clawStates = clawStates;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.m_Claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    counter = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_Claw.intakeStates(clawStates, speed);
+    RobotContainer.m_Claw.intakeStates(clawStates, speed, counter);
+    counter++;
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    claw.clawExtenders.set(Value.kReverse);
+  }
 
   // Returns true when the command should end.
   @Override

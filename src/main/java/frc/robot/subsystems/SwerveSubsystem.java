@@ -59,7 +59,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private SlewRateLimiter xLim = new SlewRateLimiter(5);
   private SlewRateLimiter yLim = new SlewRateLimiter(5);
-  private SlewRateLimiter rotLim = new SlewRateLimiter(0.1);
+  private SlewRateLimiter rotLim = new SlewRateLimiter(0.5);
   /** Creates a new SwerveSubsystem. */
   public SwerveSubsystem() {
     zeroHeading();

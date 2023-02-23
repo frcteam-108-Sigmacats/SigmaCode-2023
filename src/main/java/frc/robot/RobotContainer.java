@@ -46,8 +46,10 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver =
       new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
 
-  public Trigger righTrigger, leftTrigger, rightBumper, leftBumper, kA, kB, kY, kX, upPov, downPov;
+  public Trigger dRightTrigger, dLeftTrigger, dRightBumper, dLeftBumper, dKA, dKB, dKY, dKX, dUpPov, dDownPov;
+  public Trigger oRightTrigger, oLeftTrigger, oRightBumper, oLeftBumper, oKA, oKB, oKY, oKX, oUpPov, oDownPov;
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -58,22 +60,26 @@ public class RobotContainer {
     configureBindings();
     // leftTrigger.whileTrue(new RunIntake(1, 0.25));//Cone intake
     // righTrigger.whileTrue(new RunIntake(2, -0.25));//Cube intake
-    leftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
-    righTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
+    // leftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
+    // righTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
+    oLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative  is cone intake
+    oLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    oRightTrigger.whileTrue(new RunIntake(2, 0.5));//positive is cube intake
+    oRightTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     // rightBumper.whileTrue(new RunIntake(2, 0.25));//Cone intake
     // leftBumper.whileTrue(new RunIntake(1, -0.25));//Cube intake
-    leftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85));
-    leftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    rightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85));
-    rightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    // kA.whileTrue(new SetClawStates(m_Claw, 1, 0.5));//Cube outtake
-    // kB.whileTrue(new SetClawStates(m_Claw, 1, -0.5));//Cone outtake
-    // kY.whileTrue(new SetClawStates(m_Claw, 2, 0.5));//Cube outtake
-    // kX.whileTrue(new SetClawStates(m_Claw, 2, -0.5));//Cone outtake
-    upPov.onTrue(new clawArmtester(m_Claw, 0.15));
-    upPov.onFalse(new HoldArmTester(m_Claw));
-    downPov.onTrue(new clawArmtester(m_Claw, -0.15));
-    downPov.onFalse(new HoldArmTester(m_Claw));
+    oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85));
+    oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85));
+    oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    oKA.whileTrue(new SetClawStates(m_Claw, 0));//Cube outtake
+    oKB.whileTrue(new SetClawStates(m_Claw, 2));//Cone outtake
+    oKY.whileTrue(new SetClawStates(m_Claw, 3));//Cube outtake
+    oKX.whileTrue(new SetClawStates(m_Claw, 4 ));//Cone outtake
+    dUpPov.whileTrue(new clawArmtester(m_Claw, 0.15));
+    dUpPov.whileFalse(new clawArmtester(m_Claw, 0));
+    dDownPov.whileTrue(new clawArmtester(m_Claw, -0.15));
+    dDownPov.whileFalse(new clawArmtester(m_Claw, 0));
   }
 
   /**
@@ -86,17 +92,27 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    righTrigger = driver.rightTrigger();
-    leftTrigger = driver.leftTrigger();
-    leftBumper = driver.leftBumper();
-    rightBumper = driver.rightBumper();
-    kA = driver.a();
-    kB = driver.b();
-    kY = driver.y();
-    kX = driver.x();
-    upPov = driver.povUp();
-    downPov = driver.povDown();
+    dRightTrigger = driver.rightTrigger();
+    dLeftTrigger = driver.leftTrigger();
+    dLeftBumper = driver.leftBumper();
+    dRightBumper = driver.rightBumper();
+    dKA = driver.a();
+    dKB = driver.b();
+    dKY = driver.y();
+    dKX = driver.x();
+    dUpPov = driver.povUp();
+    dDownPov = driver.povDown();
     
+    oRightTrigger = operator.rightTrigger();
+    oLeftTrigger = operator.leftTrigger();
+    oLeftBumper = operator.leftBumper();
+    oRightBumper = operator.rightBumper();
+    oKA = operator.a();
+    oKB = operator.b();
+    oKY = operator.y();
+    oKX = operator.x();
+    oUpPov = operator.povUp();
+    oDownPov = operator.povDown();
   }
 
   /**
@@ -116,7 +132,7 @@ public class RobotContainer {
     // new PIDController(0.3, 0, 0), swerveSubsystem::setModuleStates, swerveSubsystem),
     // new InstantCommand(() -> swerveSubsystem.stopModules()));
     
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetAutoOdometry, SwerveConstants.swerveKinematics,
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.0000001, 0, 0), new PIDConstants(-3.0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
     Command fullauto = autoBuilder.fullAuto(tryGroup);
