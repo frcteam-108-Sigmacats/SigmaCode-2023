@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
@@ -12,10 +13,12 @@ public class SetClawStates extends CommandBase {
   private int clawState;
   private Claw clawMech;
   int counter;
+  private DigitalInput magnetSensor;
   /** Creates a new SetClawStates. */
   public SetClawStates(Claw clawSub, int clawState) {
     this.clawState = clawState;
     clawMech = clawSub;
+    magnetSensor = Claw.cylinderSensor;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(clawMech);
   }
@@ -23,15 +26,15 @@ public class SetClawStates extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    counter = 0;
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    counter++;
+    
     if(clawState == 1){
-      if(counter > 300){
+      if(magnetSensor.get() == true){
         clawMech.setClawStates(clawState);
       }
     }

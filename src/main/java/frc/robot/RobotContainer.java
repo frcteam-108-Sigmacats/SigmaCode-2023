@@ -63,7 +63,7 @@ public class RobotContainer {
     // dLeftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
     // dRightTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
     dLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative  is cone intake
-    dLeftTrigger.whileFalse(new RunIntake(1, -0.02));
+    dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     //dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     dRightTrigger.whileTrue(new RunIntake(2, 0.5));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 1));
@@ -77,10 +77,12 @@ public class RobotContainer {
     oKY.whileTrue(new SetClawStates(m_Claw, 2));//Cone outtake
     oKB.whileTrue(new SetClawStates(m_Claw, 3));//Cube outtake
     oKX.whileTrue(new SetClawStates(m_Claw, 4 ));//Cone outtake
-    oUpPov.whileTrue(new clawArmtester(m_Claw, 0.15));
-    oUpPov.whileFalse(new clawArmtester(m_Claw, 0));
-    oDownPov.whileTrue(new clawArmtester(m_Claw, -0.15));
-    oDownPov.whileFalse(new clawArmtester(m_Claw, 0));
+    // oUpPov.whileTrue(new clawArmtester(m_Claw, 0.15));
+    // oUpPov.whileFalse(new clawArmtester(m_Claw, 0));
+    // oDownPov.whileTrue(new clawArmtester(m_Claw, -0.15));
+    // oDownPov.whileFalse(new clawArmtester(m_Claw, 0));
+    oUpPov.whileTrue(new testingArmExtenders(m_Claw, true));
+    oUpPov.whileFalse(new testingArmExtenders(m_Claw, false));
   }
 
   /**
@@ -123,7 +125,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("2Cones_Charge", new PathConstraints(1, 1));
-    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("Testing", new PathConstraints(1, 1), new PathConstraints(1, 1));
+    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(1, 1));
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("marker1", null);
     // An example command will be run in autonomous
@@ -134,7 +136,7 @@ public class RobotContainer {
     // new InstantCommand(() -> swerveSubsystem.stopModules()));
     
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.0000001, 0, 0), new PIDConstants(-3.0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    new PIDConstants(0.0000001, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
     Command fullauto = autoBuilder.fullAuto(tryGroup);
     return fullauto;
