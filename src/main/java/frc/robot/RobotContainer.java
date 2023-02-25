@@ -63,7 +63,8 @@ public class RobotContainer {
     // dLeftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
     // dRightTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
     dLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative  is cone intake
-    dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    dLeftTrigger.whileFalse(new RunIntake(1, -0.02));
+    //dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     dRightTrigger.whileTrue(new RunIntake(2, 0.5));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     // rightBumper.whileTrue(new RunIntake(2, 0.25));//Cone intake

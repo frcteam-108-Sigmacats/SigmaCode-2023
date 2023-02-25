@@ -25,6 +25,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.ClawMechSetUp;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import javax.lang.model.util.ElementScanner14;
+
 public class Claw extends SubsystemBase {
   public CANSparkMax leftClawArmMotor, rightClawArmMotor;
   public SparkMaxPIDController rotateArmPID;
@@ -42,7 +44,7 @@ public class Claw extends SubsystemBase {
   private double highPos = 178;
   private double midPos = 130;
   private double lowPos = 99;//switch to 60 later
-  private double startConfigPos = 29;
+  private double startConfigPos = 20;
   private double driveConfigPos = 53;
   public static boolean isFinished = false;
   private double lastArmPos;
@@ -125,29 +127,38 @@ public class Claw extends SubsystemBase {
         break;
 
       case 1:
+      if (clawSensor.get() == true)
+      {
       //Rotate the arm to the ground position
         rotateArmPID.setReference(groundIntakeConePos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
+
         //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-        if(throughBoreAbs.getPosition() >= 84 /*&& clawSensor.get() == false*/){
+        if(throughBoreAbs.getPosition() >= (groundIntakeConePos - 20)){
           clawExtenders.set(Value.kForward);
           clawIntake.set(speed);
+          System.out.println("Picking up cone!");
           //intakeEncPos = clawIntakeEnc.getPosition();
         }
-        //If the sensor does see a game piece, for this case it is a cone, so set booleans to true except cube boolean
-        //  else if(clawSensor.get() == true){
-        //    clawExtenders.set(Value.kReverse);
-        //    gamePiece = true;
-        //    isCone = true;
-        //    isCube = false;
-        //    if (cylinderSensor.get() == true){
-        //     rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-        //     rightClawArmMotor.follow(leftClawArmMotor, true);
-        //    }
-        //    if(counter > 500){
-        //      isFinished = true;
-        //    }
-        //}
+      }
+      else
+      {
+        clawExtenders.set(Value.kReverse);
+/* 
+        try {
+          wait(100);
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      */
+        if(counter > 100){
+          rotateArmPID.setReference( driveConfigPos, ControlType.kPosition);
+          rightClawArmMotor.follow(leftClawArmMotor, true);
+          clawIntake.set(speed);
+        }
+      }
+
         break;
 
       case 2:
