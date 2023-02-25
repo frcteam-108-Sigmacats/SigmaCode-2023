@@ -12,6 +12,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class AutoClaw extends CommandBase {
   private Claw claw;
   private SwerveSubsystem swerve;
+  private int counter;
   /** Creates a new AutoClaw. */
   public AutoClaw(Claw claw, SwerveSubsystem swerve) {
     this.claw = claw;
@@ -22,22 +23,29 @@ public class AutoClaw extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    counter = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if(Robot.hub.getPressure(0) >= 90){
-    //   if(swerve.canArmExtend() && claw.getGamePiece() == true){
-    //     claw.setClawStates(claw.armStates);
-    //   }
-    //   else if(swerve.canArmExtend() && claw.getGamePiece() == false){
-    //     claw.setClawStates(1);
-    //   }
-    //   else if(swerve.canArmExtend() == false && claw.getGamePiece() == true){
-    //     claw.setClawStates(1);
-    //   }
-    // }
+    counter++;
+    if(Robot.hub.getPressure(0) >= 90){
+      if(swerve.canArmExtend() && claw.getGamePiece() == true){
+        claw.setClawStates(claw.armStates);
+      }
+      else if(swerve.canArmExtend() && claw.getGamePiece() == false){
+        if(counter > 300){
+          claw.setClawStates(1);
+        }
+      }
+      else if(swerve.canArmExtend() == false && claw.getGamePiece() == true){
+        if(counter > 300){
+          claw.setClawStates(1);
+        }
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.

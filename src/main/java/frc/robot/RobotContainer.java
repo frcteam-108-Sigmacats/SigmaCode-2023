@@ -44,8 +44,7 @@ public class RobotContainer {
   public final static Claw m_Claw = new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driver =
-      new CommandXboxController(0);
+  private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
   public Trigger dRightTrigger, dLeftTrigger, dRightBumper, dLeftBumper, dKA, dKB, dKY, dKX, dUpPov, dDownPov;
@@ -61,26 +60,26 @@ public class RobotContainer {
     configureBindings();
     // leftTrigger.whileTrue(new RunIntake(1, 0.25));//Cone intake
     // righTrigger.whileTrue(new RunIntake(2, -0.25));//Cube intake
-    // leftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
-    // righTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
+    // dLeftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
+    // dRightTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
     dLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative  is cone intake
     dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     dRightTrigger.whileTrue(new RunIntake(2, 0.5));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     // rightBumper.whileTrue(new RunIntake(2, 0.25));//Cone intake
     // leftBumper.whileTrue(new RunIntake(1, -0.25));//Cube intake
-    dLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85));
-    dLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    dRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85));
-    dRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    dKA.whileTrue(new SetClawStates(m_Claw, 0));//Cube outtake
-    dKB.whileTrue(new SetClawStates(m_Claw, 2));//Cone outtake
-    dKY.whileTrue(new SetClawStates(m_Claw, 3));//Cube outtake
-    dKX.whileTrue(new SetClawStates(m_Claw, 4 ));//Cone outtake
-    dUpPov.whileTrue(new clawArmtester(m_Claw, 0.15));
-    dUpPov.whileFalse(new clawArmtester(m_Claw, 0));
-    dDownPov.whileTrue(new clawArmtester(m_Claw, -0.15));
-    dDownPov.whileFalse(new clawArmtester(m_Claw, 0));
+    oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85));
+    oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85));
+    oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    oKA.whileTrue(new SetClawStates(m_Claw, 0));//Cube outtake
+    oKY.whileTrue(new SetClawStates(m_Claw, 2));//Cone outtake
+    oKB.whileTrue(new SetClawStates(m_Claw, 3));//Cube outtake
+    oKX.whileTrue(new SetClawStates(m_Claw, 4 ));//Cone outtake
+    oUpPov.whileTrue(new clawArmtester(m_Claw, 0.15));
+    oUpPov.whileFalse(new clawArmtester(m_Claw, 0));
+    oDownPov.whileTrue(new clawArmtester(m_Claw, -0.15));
+    oDownPov.whileFalse(new clawArmtester(m_Claw, 0));
   }
 
   /**

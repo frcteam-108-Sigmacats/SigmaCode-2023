@@ -36,14 +36,14 @@ public class Claw extends SubsystemBase {
   private double coneOuttakeSpd, cubeOuttakeSpd;
   public static DigitalInput clawSensor;
   public DoubleSolenoid clawExtenders;
-  private double groundIntakeConePos = 93;
-  private double groundIntakeCubePos = 85;
+  private double groundIntakeConePos = 101;
+  private double groundIntakeCubePos = 93;
   private double loadZoneIntakePos = 0;
-  private double highPos = 170;
-  private double midPos = 123;
-  private double lowPos = 60;
-  private double startConfigPos = 20;
-  private double driveConfigPos = 40;
+  private double highPos = 178;
+  private double midPos = 130;
+  private double lowPos = 99;//switch to 60 later
+  private double startConfigPos = 29;
+  private double driveConfigPos = 53;
   public static boolean isFinished = false;
   private double lastArmPos;
   public SparkMaxPIDController clawIntakePID;
@@ -129,25 +129,25 @@ public class Claw extends SubsystemBase {
         rotateArmPID.setReference(groundIntakeConePos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-        if(throughBoreAbs.getPosition() >= 84 && clawSensor.get() == false){
+        if(throughBoreAbs.getPosition() >= 84 /*&& clawSensor.get() == false*/){
           clawExtenders.set(Value.kForward);
           clawIntake.set(speed);
           //intakeEncPos = clawIntakeEnc.getPosition();
         }
         //If the sensor does see a game piece, for this case it is a cone, so set booleans to true except cube boolean
-         else if(clawSensor.get() == true){
-           clawExtenders.set(Value.kReverse);
-           gamePiece = true;
-           isCone = true;
-           isCube = false;
-           if (cylinderSensor.get() == true){
-            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-            rightClawArmMotor.follow(leftClawArmMotor, true);
-           }
-           if(counter > 500){
-             isFinished = true;
-           }
-        }
+        //  else if(clawSensor.get() == true){
+        //    clawExtenders.set(Value.kReverse);
+        //    gamePiece = true;
+        //    isCone = true;
+        //    isCube = false;
+        //    if (cylinderSensor.get() == true){
+        //     rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+        //     rightClawArmMotor.follow(leftClawArmMotor, true);
+        //    }
+        //    if(counter > 500){
+        //      isFinished = true;
+        //    }
+        //}
         break;
 
       case 2:
@@ -155,25 +155,25 @@ public class Claw extends SubsystemBase {
         rotateArmPID.setReference(groundIntakeCubePos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         //If the arm in the ground position and the sensor reads false then extend the pneumatics and run the cube intake
-        if(throughBoreAbs.getPosition() >= 76 && clawSensor.get() == false){
+        if(throughBoreAbs.getPosition() >= 76 /*&& clawSensor.get() == false*/){
           clawExtenders.set(Value.kForward);
           clawIntake.set(speed);
           //intakeEncPos = clawIntakeEnc.getPosition();
         }
         //If the sensor does see a game piece, for this case it is a cube, so set booleans to true except cone boolean
-         else if(clawSensor.get() == true){
-           clawExtenders.set(Value.kReverse);
-           gamePiece = true;
-           isCone = false;
-           isCube = true;
-           if(cylinderSensor.get() == true){
-            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-            rightClawArmMotor.follow(leftClawArmMotor, true);
-           }
-           if(counter > 500){
-             isFinished = true;
-           }
-         }
+        //  else if(clawSensor.get() == true){
+        //    clawExtenders.set(Value.kReverse);
+        //    gamePiece = true;
+        //    isCone = false;
+        //    isCube = true;
+        //    if(cylinderSensor.get() == true){
+        //     rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+        //     rightClawArmMotor.follow(leftClawArmMotor, true);
+        //    }
+        //    if(counter > 500){
+        //      isFinished = true;
+        //    }
+        //  }
         break;
       case 3:
       //Rotate the arm to the loading zone position
@@ -260,6 +260,9 @@ public class Claw extends SubsystemBase {
       case 4:
         rotateArmPID.setReference(lowPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
+        if(throughBoreAbs.getPosition() >= 85){
+          clawExtenders.set(Value.kForward);
+        }
         //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
         break;
     }
