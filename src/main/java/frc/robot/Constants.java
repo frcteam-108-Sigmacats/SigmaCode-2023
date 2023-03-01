@@ -48,7 +48,8 @@ public final class Constants {
         / driveGearRat;
 
         //Used to set up speed for both drive and turn motors
-        public static double maxDriveSpeed = 4.5;
+        public static double maxDriveSpeed = 8;
+        public static double autoMaxDriveSpeed = 1.5;
         public static double maxTurnSpeed = 2 * Math.PI;
 
         //Distance between the front and back wheel
@@ -75,10 +76,10 @@ public final class Constants {
             //public static final int fLAbsoluteEnc = 0;
             public static final double fLChassisAngleOffset = 1.571;//Module relative to the chassis
             //PID Controller Set Up
-            public static final double frontLDriveKP = 0.4;
+            public static final double frontLDriveKP = 0.2;
             public static final double frontLDriveKI = 0;
             public static final double frontLDriveKD = 0;
-            public static final double frontLTurnKP = 1;
+            public static final double frontLTurnKP = 0.8;
             public static final double frontLTurnKI = 0;
             public static final double frontLTurnKD = 0.0;
 
@@ -92,10 +93,10 @@ public final class Constants {
             //public static final int fRAbsoluteEnc = 1;
             public static final double fRChassisAngleOffset = 0;
             //PID Controller Set Up
-            public static final double frontRDriveKP = 0.4;
+            public static final double frontRDriveKP = 0.2;
             public static final double frontRDriveKI = 0;
             public static final double frontRDriveKD = 0;
-            public static final double frontRTurnKP = 1;
+            public static final double frontRTurnKP = 0.8;
             public static final double frontRTurnKI = 0;
             public static final double frontRTurnKD = 0;
 
@@ -109,10 +110,10 @@ public final class Constants {
             //public static final int bLAbsoluteEnc = 2;
             public static final double bLChassisAngleOffset = 0;
             //PID Controller Set Up
-            public static final double backLDriveKP = 0.4;
+            public static final double backLDriveKP = 0.2;
             public static final double backLDriveKI = 0;
             public static final double backLDriveKD = 0;
-            public static final double backLTurnKP = 1;
+            public static final double backLTurnKP = 0.8;
             public static final double backLTurnKI = 0;
             public static final double backLTurnKD = 0;
 
@@ -127,14 +128,23 @@ public final class Constants {
 
             public static final double bRChassisAngleOffset = Math.PI / 2;//Module relative to the chassis
             //PID Controller Set Up
-            public static final double backRDriveKP = 0.4;
+            public static final double backRDriveKP = 0.2;
             public static final double backRDriveKI = 0;
             public static final double backRDriveKD = 0;
-            public static final double backRTurnKP = 1;
+            public static final double backRTurnKP = 0.8;
             public static final double backRTurnKI = 0;
             public static final double backRTurnKD = 0;
+
+
+            
 
         //Gyro Set Up
         public static boolean invertedGyro = false;
     }
+
+    public static final class ClawMechSetUp{
+        public static final int clawIntake = 11;
+        public static final int infraSensor = 0;
+    }
+
 }

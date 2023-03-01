@@ -6,7 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.RunIntake;
+import frc.robot.commands.SetClawStates;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.ClawTesters.HoldArmTester;
+import frc.robot.commands.ClawTesters.clawArmtester;
+import frc.robot.commands.ClawTesters.clawIntakeHoldTester;
+import frc.robot.commands.ClawTesters.clawIntakeTester;
+import frc.robot.commands.ClawTesters.testingArmExtenders;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.HashMap;
@@ -33,17 +41,48 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final static Claw m_Claw = new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driver =
-      new CommandXboxController(0);
+  private final CommandXboxController driver = new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
+
+  public Trigger dRightTrigger, dLeftTrigger, dRightBumper, dLeftBumper, dKA, dKB, dKY, dKX, dUpPov, dDownPov;
+  public Trigger oRightTrigger, oLeftTrigger, oRightBumper, oLeftBumper, oKA, oKB, oKY, oKX, oUpPov, oDownPov;
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     boolean fieldRelative = false;
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
+    //m_Claw.setDefaultCommand(new SetClawStates(m_Claw, 1));
     // Configure the trigger bindings
     configureBindings();
+    // leftTrigger.whileTrue(new RunIntake(1, 0.25));//Cone intake
+    // righTrigger.whileTrue(new RunIntake(2, -0.25));//Cube intake
+    // dLeftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
+    // dRightTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
+    dLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative  is cone intake
+    dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    //dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    dRightTrigger.whileTrue(new RunIntake(2, 0.5));//positive is cube intake
+    dRightTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    // rightBumper.whileTrue(new RunIntake(2, 0.25));//Cone intake
+    // leftBumper.whileTrue(new RunIntake(1, -0.25));//Cube intake
+    oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85));
+    oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85));
+    oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    oKA.whileTrue(new SetClawStates(m_Claw, 0));//Cube outtake
+    oKY.whileTrue(new SetClawStates(m_Claw, 2));//Cone outtake
+    oKB.whileTrue(new SetClawStates(m_Claw, 3));//Cube outtake
+    oKX.whileTrue(new SetClawStates(m_Claw, 4 ));//Cone outtake
+    // oUpPov.whileTrue(new clawArmtester(m_Claw, 0.15));
+    // oUpPov.whileFalse(new clawArmtester(m_Claw, 0));
+    // oDownPov.whileTrue(new clawArmtester(m_Claw, -0.15));
+    // oDownPov.whileFalse(new clawArmtester(m_Claw, 0));
+    oUpPov.whileTrue(new testingArmExtenders(m_Claw, true));
+    oUpPov.whileFalse(new testingArmExtenders(m_Claw, false));
   }
 
   /**
@@ -56,6 +95,27 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    dRightTrigger = driver.rightTrigger();
+    dLeftTrigger = driver.leftTrigger();
+    dLeftBumper = driver.leftBumper();
+    dRightBumper = driver.rightBumper();
+    dKA = driver.a();
+    dKB = driver.b();
+    dKY = driver.y();
+    dKX = driver.x();
+    dUpPov = driver.povUp();
+    dDownPov = driver.povDown();
+    
+    oRightTrigger = operator.rightTrigger();
+    oLeftTrigger = operator.leftTrigger();
+    oLeftBumper = operator.leftBumper();
+    oRightBumper = operator.rightBumper();
+    oKA = operator.a();
+    oKB = operator.b();
+    oKY = operator.y();
+    oKX = operator.x();
+    oUpPov = operator.povUp();
+    oDownPov = operator.povDown();
   }
 
   /**
@@ -65,7 +125,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("2Cones_Charge", new PathConstraints(1, 1));
-    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("Testing", new PathConstraints(1, 1), new PathConstraints(1, 1));
+    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(1, 1));
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("marker1", null);
     // An example command will be run in autonomous
@@ -76,7 +136,7 @@ public class RobotContainer {
     // new InstantCommand(() -> swerveSubsystem.stopModules()));
     
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.0000001, 0, 0), new PIDConstants(-3.0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    new PIDConstants(0.0000001, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
     Command fullauto = autoBuilder.fullAuto(tryGroup);
     return fullauto;
