@@ -29,7 +29,7 @@ public class clawArmtester extends CommandBase {
   @Override
   public void execute() {
     //claw.clawExtenders.set(Value.kReverse);
-    claw.moveArm(speed);
+    claw.armMove(speed);
   }
 
   // Called once the command ends or is interrupted.

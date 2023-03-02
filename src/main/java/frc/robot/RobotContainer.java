@@ -79,7 +79,7 @@ public class RobotContainer {
     //Operator's buttons
     oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85)); //Positive is Outtake cone
     oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.65)); //Negative is Outtake cube
+    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.35)); //Negative is Outtake cube
     oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
     oKA.whileTrue(new SetClawStates(m_Claw, 0));
     oKY.whileTrue(new SetClawStates(m_Claw, 2));

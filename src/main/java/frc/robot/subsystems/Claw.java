@@ -260,7 +260,7 @@ public class Claw extends SubsystemBase {
       case 1:
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
-        clawIntake.set(-0.02);
+        // clawIntake.set(-0.02);
         break;
 
       //Set high arm position used for auto claw
@@ -361,6 +361,9 @@ public class Claw extends SubsystemBase {
   // }
   public void intakeTester(double speed){
     clawIntake.set(speed);
+    if(clawSensor.get() == false){
+      clawIntake.set(0);
+    }
   }
   public void intakeHold(){
     clawIntakePID.setReference(clawIntakeEnc.getPosition(), ControlType.kPosition);
