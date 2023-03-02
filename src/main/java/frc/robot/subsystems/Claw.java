@@ -38,9 +38,9 @@ public class Claw extends SubsystemBase {
   private double coneOuttakeSpd, cubeOuttakeSpd;
   public static DigitalInput clawSensor;
   public DoubleSolenoid clawExtenders;
-  private double groundIntakeConePos = 101;
+  private double groundIntakeConePos = 107;
   private double groundIntakeCubePos = 93;
-  private double loadZoneIntakePos = 0;
+  private double loadZoneIntakePos = 195; //10 more degrees from high peg
   private double highPos = 185;
   private double midPos = 130;
   private double lowPos = 99;//switch to 60 later
@@ -53,6 +53,8 @@ public class Claw extends SubsystemBase {
   public double intakeEncPos = 0;
   public int armStates;
   public static DigitalInput cylinderSensor = new DigitalInput(1);
+
+  int newcounter = 0;
 
   /** Creates a new Claw. */
   public Claw() {
@@ -101,17 +103,18 @@ public class Claw extends SubsystemBase {
     clawExtenders.set(Value.kReverse);
 
     
+    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //System.out.println("Absolute Position " + throughBoreAbs.getPosition());
+    System.out.println("Absolute Position " + throughBoreAbs.getPosition());
   }
 
   
   //Intake Positions
-  public void intakeStates(int intakeState, double speed){
+  public void intakeStates(int intakeState, double speed, int counter){
     switch (intakeState){
       //Default
       case 0: 
@@ -134,16 +137,26 @@ public class Claw extends SubsystemBase {
           System.out.println("Picking up cone!");
           //intakeEncPos = clawIntakeEnc.getPosition();
         }
+        newcounter = 0;
       }
       else
       {
+        newcounter++;
         clawExtenders.set(Value.kReverse);
-        System.out.println("mag = " + cylinderSensor.get());
+        // clawIntake.set(-0.1);
+        System.out.println("mag = " + cylinderSensor.get() + "counter = " + newcounter);
+      //    if(newcounter < 300){
+      //  //    clawIntake.set(0);
+      //  System.out.println("delay!");
+      //       clawIntake.set(-.1);
+            clawIntake.set(-0.3);
+      //   }
 
         if (cylinderSensor.get() == true)
         {
-          rotateArmPID.setReference( driveConfigPos, ControlType.kPosition);
+          rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
           rightClawArmMotor.follow(leftClawArmMotor, true);
+          
         }
       }
 
@@ -167,62 +180,118 @@ public class Claw extends SubsystemBase {
       }
       else
       {
+        counter++;
         clawExtenders.set(Value.kReverse);
+        clawIntake.set(0.1);
         System.out.println("mag = " + cylinderSensor.get());
 
         if (cylinderSensor.get() == true)
         {
-          clawIntake.set(0);
-          rotateArmPID.setReference( driveConfigPos, ControlType.kPosition);
+          if(counter > 60){
+            clawIntake.set(0);
+          }
+          rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
           rightClawArmMotor.follow(leftClawArmMotor, true);
+          
         }
       }
         break;
 
       //Loading Zone Cone Intake
       case 3:
-      //Rotate the arm to the loading zone position
+      if (clawSensor.get() == true)
+      {
+      //Rotate the arm to the ground position
         rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
-        //If the arm is in the loading zone position and the sensor reads false, then do not extend pneumatics and run intake for cone
-        if(throughBoreAbs.getPosition() == loadZoneIntakePos && clawSensor.get() == false){
-          clawExtenders.set(Value.kReverse);
-          clawIntake.set(speed);
-          intakeEncPos = clawIntakeEnc.getPosition();
-        }
-        //If the sensor does see a game piece, for this case it is a cone, so set booleans to true except cube boolean
-        else if(clawSensor.get() == true){
-          gamePiece = true;
-          isCone = true;
-          isCube = false;
-          if(cylinderSensor.get() == true){
-            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-            rightClawArmMotor.follow(leftClawArmMotor, true);
-          }
-          
-        }
-        break;
+        rightClawArmMotor.follow(leftClawArmMotor, true);
 
+        //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
+        if(throughBoreAbs.getPosition() >= (loadZoneIntakePos - 20)){
+          clawIntake.set(speed);
+          System.out.println("Picking up cone!");
+          //intakeEncPos = clawIntakeEnc.getPosition();
+        }
+        newcounter = 0;
+      }
+      else
+      {
+        newcounter++;
+        clawExtenders.set(Value.kReverse);
+        // clawIntake.set(-0.1);
+        System.out.println("mag = " + cylinderSensor.get() + "counter = " + newcounter);
+      //    if(newcounter < 300){
+      //  //    clawIntake.set(0);
+      //  System.out.println("delay!");
+      //       clawIntake.set(-.1);
+            clawIntake.set(-0.2);
+      //   }
+
+        
+      }
+
+        break;
+      // //Rotate the arm to the loading zone position
+      //   rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
+      //   //If the arm is in the loading zone position and the sensor reads false, then do not extend pneumatics and run intake for cone
+      //   if(throughBoreAbs.getPosition() == loadZoneIntakePos && clawSensor.get() == false){
+      //     clawExtenders.set(Value.kReverse);
+      //     clawIntake.set(speed);
+      //     intakeEncPos = clawIntakeEnc.getPosition();
+      //   }
+      //   //If the sensor does see a game piece, for this case it is a cone, so set booleans to true except cube boolean
+      //   else if(clawSensor.get() == true){
+      //     gamePiece = true;
+      //     isCone = true;
+      //     isCube = false;
+      //     if(cylinderSensor.get() == true){
+      //       rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+      //       rightClawArmMotor.follow(leftClawArmMotor, true);
+      //     }
+          
+      //   }
+      
       //Loading Zone Cube Intake
       case 4:
-      //Rotate the arm to the loading zone position
+      if (clawSensor.get() == true)
+      {
+      //Rotate the arm to the ground position
         rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
-        //If the arm is in the loading zone position and the sensor reads false, then do not extend pneumatics and run intake for cube
-        if(throughBoreAbs.getPosition() == loadZoneIntakePos && clawSensor.get() == false){
-          clawExtenders.set(Value.kReverse);
+        rightClawArmMotor.follow(leftClawArmMotor, true);
+
+        //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
+        if(throughBoreAbs.getPosition() >= (loadZoneIntakePos - 20)){
           clawIntake.set(speed);
+          System.out.println("Picking up cube!");
+          //intakeEncPos = clawIntakeEnc.getPosition();
         }
-        //If the sensor does see a game piece, for this case it is a cube, so set booleans to true except cone boolean.
-        else if(clawSensor.get() == true){
-          gamePiece = true;
-          isCone = false;
-          isCube = true;
-          if(cylinderSensor.get() == true){
-            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-            rightClawArmMotor.follow(leftClawArmMotor, true);
-          }
-          
-        }
+      }
+      else
+      {
+        counter++;
+        clawExtenders.set(Value.kReverse);
+        clawIntake.set(0.1);
+        System.out.println("mag = " + cylinderSensor.get());
+      }
         break;
+      //Rotate the arm to the loading zone position
+        // rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
+        // //If the arm is in the loading zone position and the sensor reads false, then do not extend pneumatics and run intake for cube
+        // if(throughBoreAbs.getPosition() == loadZoneIntakePos && clawSensor.get() == false){
+        //   clawExtenders.set(Value.kReverse);
+        //   clawIntake.set(speed);
+        // }
+        // //If the sensor does see a game piece, for this case it is a cube, so set booleans to true except cone boolean.
+        // else if(clawSensor.get() == true){
+        //   gamePiece = true;
+        //   isCone = false;
+        //   isCube = true;
+        //   if(cylinderSensor.get() == true){
+        //     rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+        //     rightClawArmMotor.follow(leftClawArmMotor, true);
+        //   }
+          
+        // }
+        // break;
 
       //Autonomus Cases. Do not touch!!!
       case 5:
@@ -260,6 +329,7 @@ public class Claw extends SubsystemBase {
       case 1:
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
+        clawIntake.set(-0.1);
         // clawIntake.set(-0.02);
         break;
 
@@ -301,6 +371,17 @@ public class Claw extends SubsystemBase {
           clawIntake.set(0);
           rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
           rightClawArmMotor.follow(leftClawArmMotor, true);
+        break;
+      
+      case 7:
+        rotateArmPID.setP(0.006);
+        rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
+        rightClawArmMotor.follow(leftClawArmMotor, true);
+        clawIntake.set(-0.1);
+        // clawIntake.set(-0.02);
+        break;
+      
+      
     }
   }
   //To set the outtake speed with one button 
@@ -361,9 +442,7 @@ public class Claw extends SubsystemBase {
   // }
   public void intakeTester(double speed){
     clawIntake.set(speed);
-    if(clawSensor.get() == false){
-      clawIntake.set(0);
-    }
+    
   }
   public void intakeHold(){
     clawIntakePID.setReference(clawIntakeEnc.getPosition(), ControlType.kPosition);

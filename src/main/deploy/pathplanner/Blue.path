@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "try1"
+          "highpos"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "deadline",
@@ -44,11 +44,11 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "try2"
+          "outtakecube"
         ],
         "executionBehavior": "parallelDeadline",
         "waitBehavior": "deadline",
-        "waitTime": 0.5
+        "waitTime": 1.0
       }
     },
     {
@@ -71,7 +71,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "new"
+          "drivecube"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "deadline",
@@ -81,21 +81,21 @@
     {
       "anchorPoint": {
         "x": 2.320865401973145,
-        "y": 3.2440680849165786
+        "y": 3.1
       },
       "prevControl": {
         "x": 2.28470330872093,
-        "y": 3.2440680849165786
+        "y": 3.1
       },
       "nextControl": {
         "x": 2.6783035025792676,
-        "y": 3.2440680849165786
+        "y": 3.1
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -105,12 +105,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.2,
-        "y": 3.2742172366650304
+        "x": 4.75,
+        "y": 3.1
       },
       "prevControl": {
-        "x": 5.696320324267407,
-        "y": 3.2742172366650304
+        "x": 4.246320324267407,
+        "y": 3.1
       },
       "nextControl": null,
       "holonomicAngle": 180.0,

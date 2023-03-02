@@ -19,6 +19,7 @@ import frc.robot.commands.ClawTesters.testingArmExtenders;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,10 +66,14 @@ public class RobotContainer {
     //Driver's buttons
     dDownPov.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
-    dLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative is cone
+    dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
     dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
-    dRightTrigger.whileTrue(new RunIntake(2, 0.5));//positive is cube intake
+    dRightTrigger.whileTrue(new RunIntake(2, 0.65));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 5));//Sensor needs to be fixed in order to change the state to 2
+    dLeftBumper.whileTrue(new RunIntake(3, -0.75));
+    dLeftBumper.whileFalse(new SetClawStates(m_Claw, 7));
+    dRightBumper.whileTrue(new RunIntake(4, 0.65));
+    //dRightBumper.whileFalse(new SetClawStates(m_Claw, 7));
     // dKA.whileTrue(new SetClawStates(m_Claw, 0));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
@@ -79,7 +84,7 @@ public class RobotContainer {
     //Operator's buttons
     oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85)); //Positive is Outtake cone
     oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.35)); //Negative is Outtake cube
+    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.5 )); //Negative is Outtake cube
     oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
     oKA.whileTrue(new SetClawStates(m_Claw, 0));
     oKY.whileTrue(new SetClawStates(m_Claw, 2));
@@ -138,17 +143,23 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("Try3", new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(3, 4));
+    // List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("Try3", new PathConstraints(4, 4));
+    // List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(3, 4));
+    List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Blue", new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Red", new PathConstraints(4, 4), 
+    new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(0.5, 0.5));
+    List<PathPlannerTrajectory> try1 = PathPlanner.loadPathGroup("Backup", new PathConstraints(0.5, 0.5));
     HashMap<String, Command> eventMap = new HashMap<>();
     
-    // eventMap.put("intakecone", new RunIntake(1, -0.5));
-    // eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
-    // eventMap.put("drivecone", new SetClawStates(m_Claw, 1));//Cone
-    // eventMap.put("drivecube", new SetClawStates(m_Claw, 5));//Cube
-    // eventMap.put("highpos", new SetClawStates(m_Claw, 2));
-    // eventMap.put("midpos", new SetClawStates(m_Claw, 3));
-    // eventMap.put("lowpos", new SetClawStates(m_Claw, 4));
+    eventMap.put("intakecone", new RunIntake(1, -0.5));
+    eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
+    eventMap.put("drivecone", new SetClawStates(m_Claw, 1));//Cone
+    eventMap.put("drivecube", new SetClawStates(m_Claw, 6));//Cube
+    eventMap.put("highpos", new SetClawStates(m_Claw, 2));
+    eventMap.put("midpos", new SetClawStates(m_Claw, 3));
+    eventMap.put("lowpos", new SetClawStates(m_Claw, 4));
+    eventMap.put("outtakecube", new clawIntakeTester(m_Claw, -0.75));
+    eventMap.put("outtakecone", new clawIntakeTester(m_Claw, 0.85));
 
     eventMap.put("try1", new SetClawStates(m_Claw, 2));
     eventMap.put("try2", new clawIntakeTester(m_Claw, 0.8));
@@ -165,7 +176,7 @@ public class RobotContainer {
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
-    Command fullauto = autoBuilder.fullAuto(pathgroup);
+    Command fullauto = autoBuilder.fullAuto(blue);
     return fullauto;
   }
 }

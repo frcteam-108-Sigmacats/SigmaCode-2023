@@ -13,6 +13,7 @@ public class RunIntake extends CommandBase {
   private double speed;
   private int intakeState;
   private Claw claw = RobotContainer.m_Claw;
+  private int counter;
   /** Creates a new RunIntake. */
   public RunIntake(int intakeState, double speed) {
     this.speed = speed;
@@ -25,13 +26,14 @@ public class RunIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    counter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_Claw.intakeStates(intakeState, speed);
+    RobotContainer.m_Claw.intakeStates(intakeState, speed, counter);
+    System.out.println("Counter is: " + counter);
   }
 
   // Called once the command ends or is interrupted.
@@ -43,9 +45,9 @@ public class RunIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Claw.isFinished == true){
-      return true;
-    }
+    // if(Claw.isFinished == true){
+    //   return true;
+    // }
     return false;
   }
 }
