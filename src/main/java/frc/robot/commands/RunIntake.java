@@ -13,14 +13,14 @@ public class RunIntake extends CommandBase {
   private double speed;
   private int clawStates;
   private int counter;
-  private Claw claw = RobotContainer.m_Claw;
+  private Claw claw = new Claw();
   /** Creates a new RunIntake. */
   public RunIntake(int clawStates, double speed) {
     this.speed = speed;
     this.clawStates = clawStates;
     
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.m_Claw);
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +32,7 @@ public class RunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_Claw.intakeStates(clawStates, speed, counter);
+    claw.intakeStates(clawStates, speed, counter);
   }
 
   // Called once the command ends or is interrupted.
