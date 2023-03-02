@@ -162,6 +162,12 @@ public class SwerveSubsystem extends SubsystemBase {
     gyro.getYawPitchRoll(ypr);
     return (SwerveSetUp.invertedGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
+  public void zeroModules(){
+    frontLeft.zeroModules();
+    frontRight.zeroModules();
+    backLeft.zeroModules();
+    backRight.zeroModules();
+  }
   //Gets the pitch of the gyro needed for auto balance
   public double getPitch(){
     return gyro.getPitch();

@@ -12,7 +12,6 @@ import frc.robot.subsystems.Claw;
 public class SetClawStates extends CommandBase {
   private int clawState;
   private Claw clawMech;
-  int counter;
   private DigitalInput magnetSensor;
   /** Creates a new SetClawStates. */
   public SetClawStates(Claw clawSub, int clawState) {

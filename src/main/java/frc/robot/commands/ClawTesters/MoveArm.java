@@ -2,50 +2,39 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ClawTesters;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Claw;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-public class RunIntake extends CommandBase {
+public class MoveArm extends CommandBase {
+  private Claw claw;
   private double speed;
-  private int intakeState;
-  private Claw claw = RobotContainer.m_Claw;
-  /** Creates a new RunIntake. */
-  public RunIntake(int intakeState, double speed) {
+  /** Creates a new MoveArm. */
+  public MoveArm(Claw claw, double speed) {
     this.speed = speed;
-    this.intakeState = intakeState;
-    
+    this.claw = claw;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.m_Claw);
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_Claw.intakeStates(intakeState, speed);
+    claw.armMove(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    claw.clawExtenders.set(Value.kReverse);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Claw.isFinished == true){
-      return true;
-    }
     return false;
   }
 }

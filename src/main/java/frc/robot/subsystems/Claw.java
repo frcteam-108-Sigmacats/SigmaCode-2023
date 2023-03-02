@@ -53,6 +53,7 @@ public class Claw extends SubsystemBase {
   public double intakeEncPos = 0;
   public int armStates;
   public static DigitalInput cylinderSensor = new DigitalInput(1);
+
   /** Creates a new Claw. */
   public Claw() {
     coneOuttakeSpd = -0.75;
@@ -99,7 +100,7 @@ public class Claw extends SubsystemBase {
     clawIntake.burnFlash();
     clawExtenders.set(Value.kReverse);
 
-    //gamePieceDetect = new DigitalInput(2);
+    
   }
 
   @Override
@@ -108,24 +109,17 @@ public class Claw extends SubsystemBase {
     //System.out.println("Absolute Position " + throughBoreAbs.getPosition());
   }
 
-  /*public void intakeGround(double speed, boolean extend, boolean gamePiece){
-    if (extend && gamePiece){
-      firstCylinder.set(Value.kForward);
-      intakeMotor.set(speed);
-    }
-    else if (extend && !gamePiece){
-      firstCylinder.set(Value.kForward);
-      intakeMotor.set(-speed);
-    }
-  }*/
-  public void intakeStates(int clawStates, double speed, int counter){
-    switch (clawStates){
-
+  
+  //Intake Positions
+  public void intakeStates(int intakeState, double speed){
+    switch (intakeState){
+      //Default
       case 0: 
         clawIntake.set(0);
         clawExtenders.set(Value.kOff);
         break;
 
+      //Cone Ground Intake
       case 1:
       if (clawSensor.get() == true)
       {
@@ -155,6 +149,7 @@ public class Claw extends SubsystemBase {
 
         break;
 
+      //Cube Ground Intake
       case 2:
       if (clawSensor.get() == true)
       {
@@ -166,7 +161,7 @@ public class Claw extends SubsystemBase {
         if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 20)){
           clawExtenders.set(Value.kForward);
           clawIntake.set(speed);
-          System.out.println("Picking up cone!");
+          System.out.println("Picking up cube!");
           //intakeEncPos = clawIntakeEnc.getPosition();
         }
       }
@@ -177,11 +172,14 @@ public class Claw extends SubsystemBase {
 
         if (cylinderSensor.get() == true)
         {
+          clawIntake.set(0);
           rotateArmPID.setReference( driveConfigPos, ControlType.kPosition);
           rightClawArmMotor.follow(leftClawArmMotor, true);
         }
       }
         break;
+
+      //Loading Zone Cone Intake
       case 3:
       //Rotate the arm to the loading zone position
         rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
@@ -200,12 +198,11 @@ public class Claw extends SubsystemBase {
             rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
             rightClawArmMotor.follow(leftClawArmMotor, true);
           }
-          if(counter > 500){
-            isFinished = true;
-          }
+          
         }
         break;
 
+      //Loading Zone Cube Intake
       case 4:
       //Rotate the arm to the loading zone position
         rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
@@ -223,13 +220,27 @@ public class Claw extends SubsystemBase {
             rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
             rightClawArmMotor.follow(leftClawArmMotor, true);
           }
-          if(counter > 500){
-            isFinished = true;
-          }
+          
+        }
+        break;
+
+      //Autonomus Cases. Do not touch!!!
+      case 5:
+        rotateArmPID.setReference(groundIntakeCubePos, ControlType.kPosition);
+        rightClawArmMotor.follow(leftClawArmMotor, true);
+
+      //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cube intake
+        if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 20)){
+          clawExtenders.set(Value.kForward);
+          clawIntake.set(speed);
+          
         }
         break;
     }
   }
+
+
+  //Arm Positions
   public void setClawStates(int clawStates){
 
     clawExtenders.set(Value.kReverse);
@@ -247,22 +258,25 @@ public class Claw extends SubsystemBase {
         break;
       //Drive config state
       case 1:
-        rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+        rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         clawIntake.set(-0.02);
         break;
+
       //Set high arm position used for auto claw
       case 2:
         rotateArmPID.setReference(highPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
         break;
+
       //Set mid arm position used for auto claw
       case 3:
         rotateArmPID.setReference(midPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
         break;
+
       //Set low arm position used for auto claw
       case 4:
         rotateArmPID.setReference(lowPos, ControlType.kPosition);
@@ -272,26 +286,42 @@ public class Claw extends SubsystemBase {
         }
         //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
         break;
+
+      //Autonomus Cases Do not touch!!!
+      case 5:
+        //Stop the intake and if cylinders are in return to driving config
+        clawIntake.set(0);
+        if(cylinderSensor.get() == true){
+          rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
+          rightClawArmMotor.follow(leftClawArmMotor, true);
+        }
+        break;
+      //Driving configuration after scroring in autonomous
+      case 6:
+          clawIntake.set(0);
+          rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
+          rightClawArmMotor.follow(leftClawArmMotor, true);
     }
   }
   //To set the outtake speed with one button 
-  public void setOuttakeSpd(){
-    if(isCone == true && isCube == false){
-      clawIntake.set(coneOuttakeSpd);
-      if(clawSensor.get() == false){
-        clawIntake.set(0);
-        isCone = false;
-        isFinished = true;
-      }
-    }
-    else if(isCone == false && isCube == true){
-      clawIntake.set(cubeOuttakeSpd);
-      if(clawSensor.get() == false){
-        clawIntake.set(0);
-        isCube = false;
-      }
-    }
-  }
+  // public void setOuttakeSpd(){
+  //   if(isCone == true && isCube == false){
+  //     clawIntake.set(coneOuttakeSpd);
+  //     if(clawSensor.get() == false){
+  //       clawIntake.set(0);
+  //       isCone = false;
+  //       isFinished = true;
+  //     }
+  //   }
+  //   else if(isCone == false && isCube == true){
+  //     clawIntake.set(cubeOuttakeSpd);
+  //     if(clawSensor.get() == false){
+  //       clawIntake.set(0);
+  //       isCube = false;
+  //     }
+  //   }
+  // }
+
   //Needed for auto claw
   public boolean getGamePiece(){
     return gamePiece;
@@ -317,18 +347,18 @@ public class Claw extends SubsystemBase {
   public void off(){
     clawExtenders.set(Value.kOff);
   }
-  public void moveArm(double speed){
-    // if(!cylinderSensor.get()){
-    //   leftClawArmMotor.set(speed);
-    //   rightClawArmMotor.set(speed);
-    //   lastArmPos = throughBoreAbs.getPosition();
-    // }
-    System.out.println("Limit Switch is Pressed: " + cylinderSensor.get());
-    // else{
-    //   leftClawArmMotor.set(0);
-    //   rightClawArmMotor.set(0);
-    // }
-  }
+  // public void moveArm(double speed){
+  //   // if(!cylinderSensor.get()){
+  //   //   leftClawArmMotor.set(speed);
+  //   //   rightClawArmMotor.set(speed);
+  //   //   lastArmPos = throughBoreAbs.getPosition();
+  //   // }
+  //   System.out.println("Limit Switch is Pressed: " + cylinderSensor.get());
+  //   // else{
+  //   //   leftClawArmMotor.set(0);
+  //   //   rightClawArmMotor.set(0);
+  //   // }
+  // }
   public void intakeTester(double speed){
     clawIntake.set(speed);
   }
@@ -341,5 +371,12 @@ public class Claw extends SubsystemBase {
   }
   public void setArmState(int armState){
     armStates = armState;
+  }
+
+  public void armMove(double speed){
+    if(cylinderSensor.get() == true){
+      leftClawArmMotor.set(speed);
+      rightClawArmMotor.set(speed);
+    }
   }
 }

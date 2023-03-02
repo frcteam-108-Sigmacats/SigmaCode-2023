@@ -123,6 +123,9 @@ public class SwerveModule extends SubsystemBase {
   public void resetEncoder(){
     driveEncoder.setPosition(0);
   }
+  public void zeroModules(){
+    turningPID.setReference(chassisAngleOffset, ControlType.kPosition);
+  }
 
   @Override
   public void periodic() {

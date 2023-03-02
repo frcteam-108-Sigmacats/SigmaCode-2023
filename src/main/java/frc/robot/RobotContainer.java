@@ -9,7 +9,9 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetClawStates;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.ZeroModules;
 import frc.robot.commands.ClawTesters.HoldArmTester;
+import frc.robot.commands.ClawTesters.MoveArm;
 import frc.robot.commands.ClawTesters.clawArmtester;
 import frc.robot.commands.ClawTesters.clawIntakeHoldTester;
 import frc.robot.commands.ClawTesters.clawIntakeTester;
@@ -29,6 +31,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,8 +50,8 @@ public class RobotContainer {
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
-  public Trigger dRightTrigger, dLeftTrigger, dRightBumper, dLeftBumper, dKA, dKB, dKY, dKX, dUpPov, dDownPov;
-  public Trigger oRightTrigger, oLeftTrigger, oRightBumper, oLeftBumper, oKA, oKB, oKY, oKX, oUpPov, oDownPov;
+  public Trigger dRightTrigger, dLeftTrigger, dRightBumper, dLeftBumper, dKA, dKB, dKY, dKX, dUpPov, dDownPov, dLeftPov, dRightPov;
+  public Trigger oRightTrigger, oLeftTrigger, oRightBumper, oLeftBumper, oKA, oKB, oKY, oKX, oUpPov, oDownPov, oLeftPov, oRightPov;
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -58,31 +61,36 @@ public class RobotContainer {
     //m_Claw.setDefaultCommand(new SetClawStates(m_Claw, 1));
     // Configure the trigger bindings
     configureBindings();
-    // leftTrigger.whileTrue(new RunIntake(1, 0.25));//Cone intake
-    // righTrigger.whileTrue(new RunIntake(2, -0.25));//Cube intake
-    // dLeftTrigger.whileTrue(new testingArmExtenders(m_Claw, true));
-    // dRightTrigger.whileTrue(new testingArmExtenders(m_Claw, false));
-    dLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative  is cone intake
+
+    //Driver's buttons
+    dDownPov.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
+    dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
+    dLeftTrigger.whileTrue(new RunIntake(1, -0.5));//negative is cone
     dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
-    //dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     dRightTrigger.whileTrue(new RunIntake(2, 0.5));//positive is cube intake
-    dRightTrigger.whileFalse(new SetClawStates(m_Claw, 1));
-    // rightBumper.whileTrue(new RunIntake(2, 0.25));//Cone intake
-    // leftBumper.whileTrue(new RunIntake(1, -0.25));//Cube intake
-    oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85));
+    dRightTrigger.whileFalse(new SetClawStates(m_Claw, 5));//Sensor needs to be fixed in order to change the state to 2
+    // dKA.whileTrue(new SetClawStates(m_Claw, 0));
+    // dKY.whileTrue(new SetClawStates(m_Claw, 2));
+    // dKB.whileTrue(new SetClawStates(m_Claw, 3));
+    // dKX.whileTrue(new SetClawStates(m_Claw, 4));
+    // dLeftPov.whileTrue(new MoveArm(m_Claw, 0.5));
+    // dRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
+
+    //Operator's buttons
+    oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85)); //Positive is Outtake cone
     oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85));
+    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.65)); //Negative is Outtake cube
     oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    oKA.whileTrue(new SetClawStates(m_Claw, 0));//Cube outtake
-    oKY.whileTrue(new SetClawStates(m_Claw, 2));//Cone outtake
-    oKB.whileTrue(new SetClawStates(m_Claw, 3));//Cube outtake
-    oKX.whileTrue(new SetClawStates(m_Claw, 4 ));//Cone outtake
-    // oUpPov.whileTrue(new clawArmtester(m_Claw, 0.15));
-    // oUpPov.whileFalse(new clawArmtester(m_Claw, 0));
-    // oDownPov.whileTrue(new clawArmtester(m_Claw, -0.15));
-    // oDownPov.whileFalse(new clawArmtester(m_Claw, 0));
-    oUpPov.whileTrue(new testingArmExtenders(m_Claw, true));
-    oUpPov.whileFalse(new testingArmExtenders(m_Claw, false));
+    oKA.whileTrue(new SetClawStates(m_Claw, 0));
+    oKY.whileTrue(new SetClawStates(m_Claw, 2));
+    oKB.whileTrue(new SetClawStates(m_Claw, 3));
+    oKX.whileTrue(new SetClawStates(m_Claw, 4 ));
+    oLeftPov.whileTrue(new MoveArm(m_Claw, 0.5));
+    oRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
+    oDownPov.onTrue(new testingArmExtenders(m_Claw, true));
+    oUpPov.onTrue(new testingArmExtenders(m_Claw, false));
+    
+    
   }
 
   /**
@@ -105,6 +113,9 @@ public class RobotContainer {
     dKX = driver.x();
     dUpPov = driver.povUp();
     dDownPov = driver.povDown();
+    dLeftPov = driver.povLeft();
+    dRightPov = driver.povRight();
+    
     
     oRightTrigger = operator.rightTrigger();
     oLeftTrigger = operator.leftTrigger();
@@ -116,6 +127,8 @@ public class RobotContainer {
     oKX = operator.x();
     oUpPov = operator.povUp();
     oDownPov = operator.povDown();
+    oLeftPov = operator.povLeft();
+    oRightPov = operator.povLeft();
   }
 
   /**
@@ -123,12 +136,26 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand() {
-    List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("2Cones_Charge", new PathConstraints(1, 1));
-    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(1, 1));
+    List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("Try3", new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(3, 4));
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("marker1", null);
-    // An example command will be run in autonomous
+    
+    // eventMap.put("intakecone", new RunIntake(1, -0.5));
+    // eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
+    // eventMap.put("drivecone", new SetClawStates(m_Claw, 1));//Cone
+    // eventMap.put("drivecube", new SetClawStates(m_Claw, 5));//Cube
+    // eventMap.put("highpos", new SetClawStates(m_Claw, 2));
+    // eventMap.put("midpos", new SetClawStates(m_Claw, 3));
+    // eventMap.put("lowpos", new SetClawStates(m_Claw, 4));
+
+    eventMap.put("try1", new SetClawStates(m_Claw, 2));
+    eventMap.put("try2", new clawIntakeTester(m_Claw, 0.8));
+    eventMap.put("new", new SetClawStates(m_Claw, 6));
+    eventMap.put("try4", new RunIntake(5, 0.5));
+    eventMap.put("try5", new SetClawStates(m_Claw, 5));
+    
 
     // new PPSwerveControllerCommand(tryGroup, swerveSubsystem::getPose, Constants.swerveKinematics, 
     // new PIDController(0.3, 0, 0), new PIDController(0.3, 0, 0), 
@@ -136,9 +163,9 @@ public class RobotContainer {
     // new InstantCommand(() -> swerveSubsystem.stopModules()));
     
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.0000001, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
-    Command fullauto = autoBuilder.fullAuto(tryGroup);
+    Command fullauto = autoBuilder.fullAuto(pathgroup);
     return fullauto;
   }
 }

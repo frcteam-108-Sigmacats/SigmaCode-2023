@@ -49,7 +49,7 @@ public final class Constants {
 
         //Used to set up speed for both drive and turn motors
         public static double maxDriveSpeed = 8;
-        public static double autoMaxDriveSpeed = 1.5;
+        public static double autoMaxDriveSpeed = 2.5;
         public static double maxTurnSpeed = 2 * Math.PI;
 
         //Distance between the front and back wheel
