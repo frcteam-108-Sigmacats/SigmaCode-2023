@@ -30,6 +30,8 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final SendableChooser<Command> chooser = new SendableChooser<>();
   public final static Claw m_Claw = new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -166,6 +169,11 @@ public class RobotContainer {
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
 
     Command fullauto = autoBuilder.fullAuto(pathgroup);
-    return fullauto;
+
+    chooser.addOption("Blue", fullauto);
+    chooser.setDefaultOption("Nothing", null);
+
+    SmartDashboard.putData("Auto Chooser", chooser);
+    return chooser.getSelected();
   }
 }
