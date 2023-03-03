@@ -103,6 +103,9 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FrontR Angle: ", frontRight.getState().angle.getDegrees());
     SmartDashboard.putNumber("BackL Angle: ", backLeft.getState().angle.getDegrees());
     SmartDashboard.putNumber("BackR Angle: ", backRight.getState().angle.getDegrees());
+    System.out.println("Gyro Pitch:  " + gyro.getPitch());
+    System.out.println("Gyro Roll:  " + gyro.getRoll());
+    //System.out.println("Gyro Yaw:  " + gyro.get);
   }
   //Sets the swerve module states based on the parameters values mainly used for joystick drive
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {

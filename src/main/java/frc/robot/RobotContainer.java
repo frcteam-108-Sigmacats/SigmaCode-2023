@@ -190,8 +190,8 @@ public class RobotContainer {
     chooser.addOption("Red low", fullauto4);
     chooser.setDefaultOption("Nothing", null);
 
-    SmartDashboard.putData("Auto Chooser", chooser);
+    //SmartDashboard.putData("Auto Chooser", chooser);
     //return chooser.getSelected();
-    return fullauto;
+    return fullauto3;
   }
 }

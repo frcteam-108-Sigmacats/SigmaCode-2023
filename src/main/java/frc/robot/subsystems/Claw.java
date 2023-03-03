@@ -109,7 +109,8 @@ public class Claw extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println("Absolute Position " + throughBoreAbs.getPosition());
+    //System.out.println("Absolute Position " + throughBoreAbs.getPosition());
+    System.out.println("Mag Switch: " + cylinderSensor.get());
   }
 
   
