@@ -76,7 +76,7 @@ public class RobotContainer {
     dLeftBumper.whileTrue(new RunIntake(3, -0.75));
     dLeftBumper.whileFalse(new SetClawStates(m_Claw, 7));
     dRightBumper.whileTrue(new RunIntake(4, 0.65));
-    //dRightBumper.whileFalse(new SetClawStates(m_Claw, 7));
+    dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     // dKA.whileTrue(new SetClawStates(m_Claw, 0));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
@@ -149,9 +149,7 @@ public class RobotContainer {
     // List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("Try3", new PathConstraints(4, 4));
     // List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(3, 4));
     List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Blue", new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Red", new PathConstraints(4, 4), 
-    new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(0.5, 0.5));
-    List<PathPlannerTrajectory> try1 = PathPlanner.loadPathGroup("Backup", new PathConstraints(0.5, 0.5));
+    List<PathPlannerTrajectory> low = PathPlanner.loadPathGroup("Blue_down", new PathConstraints(4, 4));
     HashMap<String, Command> eventMap = new HashMap<>();
     
     eventMap.put("intakecone", new RunIntake(1, -0.5));
@@ -163,12 +161,6 @@ public class RobotContainer {
     eventMap.put("lowpos", new SetClawStates(m_Claw, 4));
     eventMap.put("outtakecube", new clawIntakeTester(m_Claw, -0.75));
     eventMap.put("outtakecone", new clawIntakeTester(m_Claw, 0.85));
-
-    eventMap.put("try1", new SetClawStates(m_Claw, 2));
-    eventMap.put("try2", new clawIntakeTester(m_Claw, 0.8));
-    eventMap.put("new", new SetClawStates(m_Claw, 6));
-    eventMap.put("try4", new RunIntake(5, 0.5));
-    eventMap.put("try5", new SetClawStates(m_Claw, 5));
     
 
     // new PPSwerveControllerCommand(tryGroup, swerveSubsystem::getPose, Constants.swerveKinematics, 
@@ -179,10 +171,27 @@ public class RobotContainer {
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command fullauto = autoBuilder.fullAuto(blue);
-    chooser.addOption("Blue", fullauto);
+
+    SwerveAutoBuilder autoBuilder2 = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command fullauto2 = autoBuilder2.fullAuto(blue);
+
+    SwerveAutoBuilder autoBuilder3= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command fullauto3 = autoBuilder3.fullAuto(low);
+
+    SwerveAutoBuilder autoBuilder4= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command fullauto4 = autoBuilder4.fullAuto(low);
+
+    chooser.addOption("Top Blue with Charging", fullauto);
+    chooser.addOption("Top Red with Charging", fullauto2);
+    chooser.addOption("Blue low", fullauto3);
+    chooser.addOption("Red low", fullauto4);
     chooser.setDefaultOption("Nothing", null);
 
     SmartDashboard.putData("Auto Chooser", chooser);
-    return chooser.getSelected();
+    //return chooser.getSelected();
+    return fullauto2;
   }
 }

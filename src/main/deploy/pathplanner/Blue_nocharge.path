@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.44,
-        "y": 4.89
+        "x": 2.3,
+        "y": 4.44
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.426737521092731,
-        "y": 4.8715050925108985
+        "x": 2.068890280334352,
+        "y": 4.44
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,25 +17,25 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ArmOut"
+          "highpos"
         ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "before",
-        "waitTime": 0.5
+        "executionBehavior": "parallel",
+        "waitBehavior": "deadline",
+        "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 1.8778355388379817,
-        "y": 4.860069634547257
+        "x": 1.8996112839353716,
+        "y": 4.4422655227169265
       },
       "prevControl": {
-        "x": 1.8892709968016224,
-        "y": 4.848634176583617
+        "x": 1.936673834707157,
+        "y": 4.4422655227169265
       },
       "nextControl": {
-        "x": 1.8760399655894548,
-        "y": 4.861865207795783
+        "x": 1.862548733163587,
+        "y": 4.4422655227169265
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -44,21 +44,21 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "Score"
+          "outtakecube"
         ],
         "executionBehavior": "parallelDeadline",
-        "waitBehavior": "after",
+        "waitBehavior": "deadline",
         "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.326228686694178,
-        "y": 4.608489559347165
+        "x": 2.3,
+        "y": 4.44
       },
       "prevControl": {
-        "x": 4.244975337311588,
-        "y": 4.768585970838132
+        "x": 2.30654053356397,
+        "y": 4.44
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -68,10 +68,10 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "GamePiece"
+          "drivecube"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "before",
+        "waitBehavior": "deadline",
         "waitTime": 1.0
       }
     }

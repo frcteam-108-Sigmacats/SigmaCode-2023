@@ -124,6 +124,7 @@ public class Claw extends SubsystemBase {
 
       //Cone Ground Intake
       case 1:
+      rotateArmPID.setP(0.006);
       if (clawSensor.get() == true)
       {
       //Rotate the arm to the ground position
@@ -164,6 +165,7 @@ public class Claw extends SubsystemBase {
 
       //Cube Ground Intake
       case 2:
+      rotateArmPID.setP(0.006);
       if (clawSensor.get() == true)
       {
       //Rotate the arm to the ground position
@@ -199,6 +201,7 @@ public class Claw extends SubsystemBase {
 
       //Loading Zone Cone Intake
       case 3:
+      rotateArmPID.setP(0.006);
       if (clawSensor.get() == true)
       {
       //Rotate the arm to the ground position
@@ -252,6 +255,7 @@ public class Claw extends SubsystemBase {
       
       //Loading Zone Cube Intake
       case 4:
+      rotateArmPID.setP(0.006);
       if (clawSensor.get() == true)
       {
       //Rotate the arm to the ground position
@@ -295,6 +299,7 @@ public class Claw extends SubsystemBase {
 
       //Autonomus Cases. Do not touch!!!
       case 5:
+        rotateArmPID.setP(0.006);
         rotateArmPID.setReference(groundIntakeCubePos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
 
@@ -327,6 +332,7 @@ public class Claw extends SubsystemBase {
         break;
       //Drive config state
       case 1:
+        rotateArmPID.setP(0.006);
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         clawIntake.set(-0.1);
@@ -335,6 +341,7 @@ public class Claw extends SubsystemBase {
 
       //Set high arm position used for auto claw
       case 2:
+        rotateArmPID.setP(0.006);
         rotateArmPID.setReference(highPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
@@ -360,6 +367,7 @@ public class Claw extends SubsystemBase {
       //Autonomus Cases Do not touch!!!
       case 5:
         //Stop the intake and if cylinders are in return to driving config
+        rotateArmPID.setP(0.006);
         clawIntake.set(0);
         if(cylinderSensor.get() == true){
           rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
@@ -374,10 +382,18 @@ public class Claw extends SubsystemBase {
         break;
       
       case 7:
-        rotateArmPID.setP(0.006);
+        rotateArmPID.setP(0.003);
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         clawIntake.set(-0.1);
+        // clawIntake.set(-0.02);
+        break;
+
+      case 8:
+        rotateArmPID.setP(0.003);
+        rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
+        rightClawArmMotor.follow(leftClawArmMotor, true);
+        clawIntake.set(0.1);
         // clawIntake.set(-0.02);
         break;
       

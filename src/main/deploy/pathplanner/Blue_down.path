@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.44,
-        "y": 4.89
+        "x": 2.3,
+        "y": 1.05
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.426737521092731,
-        "y": 4.8715050925108985
+        "x": 2.068890280334352,
+        "y": 1.05
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,25 +17,25 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ArmOut"
+          "highpos"
         ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "before",
-        "waitTime": 0.5
+        "executionBehavior": "parallel",
+        "waitBehavior": "deadline",
+        "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 1.8778355388379817,
-        "y": 4.860069634547257
+        "x": 1.8996112839353716,
+        "y": 1.05
       },
       "prevControl": {
-        "x": 1.8892709968016224,
-        "y": 4.848634176583617
+        "x": 1.936673834707157,
+        "y": 1.05
       },
       "nextControl": {
-        "x": 1.8760399655894548,
-        "y": 4.861865207795783
+        "x": 1.862548733163587,
+        "y": 1.05
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -44,25 +44,25 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "Score"
+          "outtakecube"
         ],
         "executionBehavior": "parallelDeadline",
-        "waitBehavior": "after",
+        "waitBehavior": "deadline",
         "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 2.5296566427654965,
-        "y": 4.848634176583617
+        "x": 2.3,
+        "y": 1.05
       },
       "prevControl": {
-        "x": 2.03793195032895,
-        "y": 4.825763260656336
+        "x": 2.3,
+        "y": 1.04345946643603
       },
       "nextControl": {
-        "x": 2.5458113579475725,
-        "y": 4.849385558685109
+        "x": 2.3,
+        "y": 1.0565405335639702
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -71,21 +71,46 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "ArmIn"
+          "drivecube"
         ],
-        "executionBehavior": "parallelDeadline",
-        "waitBehavior": "after",
+        "executionBehavior": "parallel",
+        "waitBehavior": "deadline",
         "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 3.8904761404387282,
-        "y": 2.5958489577464174
+        "x": 2.3,
+        "y": 0.75
       },
       "prevControl": {
-        "x": 1.3174980986195917,
-        "y": 2.1384306392007923
+        "x": 2.3,
+        "y": 0.8932248097065262
+      },
+      "nextControl": {
+        "x": 2.3,
+        "y": 0.6067751902934738
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.17756773316685,
+        "y": 0.75
+      },
+      "prevControl": {
+        "x": 4.30215262712979,
+        "y": 0.7661756835639195
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
