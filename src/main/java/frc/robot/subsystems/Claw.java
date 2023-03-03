@@ -40,7 +40,7 @@ public class Claw extends SubsystemBase {
   public DoubleSolenoid clawExtenders;
   private double groundIntakeConePos = 107;
   private double groundIntakeCubePos = 93;
-  private double loadZoneIntakePos = 195; //10 more degrees from high peg
+  private double loadZoneIntakePos = 189; //10 more degrees from high peg
   private double highPos = 185;
   private double midPos = 130;
   private double lowPos = 99;//switch to 60 later

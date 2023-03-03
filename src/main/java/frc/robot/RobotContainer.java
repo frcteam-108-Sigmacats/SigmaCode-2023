@@ -192,6 +192,6 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auto Chooser", chooser);
     //return chooser.getSelected();
-    return fullauto2;
+    return fullauto;
   }
 }
