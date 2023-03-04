@@ -60,7 +60,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    boolean fieldRelative = false;
+    boolean fieldRelative = true;
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
     //m_Claw.setDefaultCommand(new SetClawStates(m_Claw, 1));
     // Configure the trigger bindings
@@ -77,7 +77,7 @@ public class RobotContainer {
     dLeftBumper.whileFalse(new SetClawStates(m_Claw, 7));
     dRightBumper.whileTrue(new RunIntake(4, 0.65));
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
-    // dKA.whileTrue(new SetClawStates(m_Claw, 0));
+    dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
     // dKX.whileTrue(new SetClawStates(m_Claw, 4));
@@ -148,10 +148,13 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("Try3", new PathConstraints(4, 4));
     // List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(3, 4));
-    List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Blue", new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> low = PathPlanner.loadPathGroup("Blue_down", new PathConstraints(4, 4));
+    //List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Blue", new PathConstraints(4, 4));
+    //List<PathPlannerTrajectory> low = PathPlanner.loadPathGroup("Blue_down", new PathConstraints(4, 4));
     HashMap<String, Command> eventMap = new HashMap<>();
-    
+    //List<PathPlannerTrajectory> knock = PathPlanner.loadPathGroup("Knockout", new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(1, 1), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
+
     eventMap.put("intakecone", new RunIntake(1, -0.5));
     eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
     eventMap.put("drivecone", new SetClawStates(m_Claw, 1));//Cone
@@ -168,30 +171,48 @@ public class RobotContainer {
     // new PIDController(0.3, 0, 0), swerveSubsystem::setModuleStates, swerveSubsystem),
     // new InstantCommand(() -> swerveSubsystem.stopModules()));
     
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    // SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    // Command fullauto = autoBuilder.fullAuto(blue);
+
+    // SwerveAutoBuilder autoBuilder2 = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    // Command fullauto2 = autoBuilder2.fullAuto(blue);
+
+    // SwerveAutoBuilder autoBuilder3= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    // Command fullauto3 = autoBuilder3.fullAuto(low);
+
+    // SwerveAutoBuilder autoBuilder4= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    // Command fullauto4 = autoBuilder4.fullAuto(low);
+
+    // SwerveAutoBuilder autoBuilder5= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    // Command midblue = autoBuilder5.fullAuto(knock);
+
+    // chooser.addOption("Top Blue with Charging", fullauto);
+    // chooser.addOption("Top Red with Charging", fullauto2);
+    // chooser.addOption("Blue low", fullauto3);
+    // chooser.addOption("Red low", fullauto4);
+    // chooser.setDefaultOption("Nothing", null);
+
+    SwerveAutoBuilder autoBlue = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    Command fullauto = autoBuilder.fullAuto(blue);
-
-    SwerveAutoBuilder autoBuilder2 = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    Command loadZoneBlue = autoBlue.fullAuto(blue);
+    
+    SwerveAutoBuilder autoRed= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
-    Command fullauto2 = autoBuilder2.fullAuto(blue);
-
-    SwerveAutoBuilder autoBuilder3= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    Command fullauto3 = autoBuilder3.fullAuto(low);
-
-    SwerveAutoBuilder autoBuilder4= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
-    Command fullauto4 = autoBuilder4.fullAuto(low);
-
-    chooser.addOption("Top Blue with Charging", fullauto);
-    chooser.addOption("Top Red with Charging", fullauto2);
-    chooser.addOption("Blue low", fullauto3);
-    chooser.addOption("Red low", fullauto4);
-    chooser.setDefaultOption("Nothing", null);
+    Command loadZoneRed = autoRed.fullAuto(blue);
 
     //SmartDashboard.putData("Auto Chooser", chooser);
     //return chooser.getSelected();
-    return fullauto3;
+
+    //Blue with taxi
+    //return loadZoneBlue;
+
+
+    //Red with taxi
+    return loadZoneRed;
   }
 }

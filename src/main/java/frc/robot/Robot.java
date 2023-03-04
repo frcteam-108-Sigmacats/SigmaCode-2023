@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +25,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   public static PneumaticHub hub = new PneumaticHub();
+  public static PowerDistribution powerHub= new PowerDistribution();
   Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
 
   /**
@@ -53,7 +55,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    
+    powerHub.setSwitchableChannel(true);
     SmartDashboard.putNumber("Pressure Value: ", hub.getPressure(0));
     
   }
