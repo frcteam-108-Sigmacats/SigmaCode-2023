@@ -40,7 +40,7 @@ public class Claw extends SubsystemBase {
   public DoubleSolenoid clawExtenders;
   private double groundIntakeConePos = 107;
   private double groundIntakeCubePos = 93;
-  private double loadZoneIntakePosCone = 187; //10 more degrees from high peg
+  private double loadZoneIntakePosCone = 196; //10 more degrees from high peg
   private double loadZoneIntakePosCube = 189;
   private double highPos = 185;
   private double midPos = 130;
@@ -111,7 +111,7 @@ public class Claw extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //System.out.println("Absolute Position " + throughBoreAbs.getPosition());
-    System.out.println("Mag Switch: " + cylinderSensor.get());
+    //System.out.println("Mag Switch: " + cylinderSensor.get());
   }
 
   
