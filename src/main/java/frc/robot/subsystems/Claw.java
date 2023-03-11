@@ -40,7 +40,8 @@ public class Claw extends SubsystemBase {
   public DoubleSolenoid clawExtenders;
   private double groundIntakeConePos = 107;
   private double groundIntakeCubePos = 93;
-  private double loadZoneIntakePos = 189; //10 more degrees from high peg
+  private double loadZoneIntakePosCone = 187; //10 more degrees from high peg
+  private double loadZoneIntakePosCube = 189;
   private double highPos = 185;
   private double midPos = 130;
   private double lowPos = 99;//switch to 60 later
@@ -206,11 +207,11 @@ public class Claw extends SubsystemBase {
       if (clawSensor.get() == true)
       {
       //Rotate the arm to the ground position
-        rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
+        rotateArmPID.setReference(loadZoneIntakePosCone, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
 
         //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-        if(throughBoreAbs.getPosition() >= (loadZoneIntakePos - 20)){
+        if(throughBoreAbs.getPosition() >= (loadZoneIntakePosCone - 20)){
           clawIntake.set(speed);
           System.out.println("Picking up cone!");
           //intakeEncPos = clawIntakeEnc.getPosition();
@@ -260,11 +261,11 @@ public class Claw extends SubsystemBase {
       if (clawSensor.get() == true)
       {
       //Rotate the arm to the ground position
-        rotateArmPID.setReference(loadZoneIntakePos, ControlType.kPosition);
+        rotateArmPID.setReference(loadZoneIntakePosCube, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
 
         //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-        if(throughBoreAbs.getPosition() >= (loadZoneIntakePos - 20)){
+        if(throughBoreAbs.getPosition() >= (loadZoneIntakePosCube - 20)){
           clawIntake.set(speed);
           System.out.println("Picking up cube!");
           //intakeEncPos = clawIntakeEnc.getPosition();
