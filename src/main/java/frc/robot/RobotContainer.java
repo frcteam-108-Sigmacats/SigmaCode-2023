@@ -154,6 +154,7 @@ public class RobotContainer {
     //List<PathPlannerTrajectory> knock = PathPlanner.loadPathGroup("Knockout", new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(1, 1), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
     List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("Testing", new PathConstraints(4, 4));
 
     eventMap.put("intakecone", new RunIntake(1, -0.5));
     eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
@@ -205,6 +206,10 @@ public class RobotContainer {
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
     Command loadZoneRed = autoRed.fullAuto(blue);
 
+    SwerveAutoBuilder auto= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.01, 0, 0), new PIDConstants(0.000001, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command test = auto.fullAuto(testing);
+
     //SmartDashboard.putData("Auto Chooser", chooser);
     //return chooser.getSelected();
 
@@ -213,6 +218,6 @@ public class RobotContainer {
 
 
     //Red with taxi
-    return loadZoneRed;
+    return test;
   }
 }

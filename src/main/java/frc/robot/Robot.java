@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Vision;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,10 +24,12 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private Vision limelight;
 
   public static PneumaticHub hub = new PneumaticHub();
   public static PowerDistribution powerHub= new PowerDistribution();
   Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -39,6 +42,7 @@ public class Robot extends TimedRobot {
     powerHub.setSwitchableChannel(false);
     m_robotContainer = new RobotContainer();
     hub.enableCompressorAnalog(90, 120);
+    
     
   }
 

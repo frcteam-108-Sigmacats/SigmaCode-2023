@@ -12,12 +12,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Vision extends SubsystemBase {
   NetworkTable limeLight = NetworkTableInstance.getDefault().getTable("limelight");
   NetworkTableEntry tx = limeLight.getEntry("ty");
-    NetworkTableEntry ty = limeLight.getEntry("tx");
-    NetworkTableEntry ta = limeLight.getEntry("ta");
+  NetworkTableEntry ty = limeLight.getEntry("tx");
+  NetworkTableEntry ta = limeLight.getEntry("ta");
   /** Creates a new Vision. */
   public Vision() {
     limeLight.getEntry("ledMode").setNumber(1);
-    limeLight.getEntry("stream").setNumber(2);
+    limeLight.getEntry("stream").setNumber(1);
   }
 
   @Override
