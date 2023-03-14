@@ -309,6 +309,9 @@ public class Claw extends SubsystemBase {
         if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 20)){
           clawExtenders.set(Value.kForward);
           clawIntake.set(speed);
+          if(clawSensor.get() == false){
+            clawIntake.set(0);
+          }
           
         }
         break;

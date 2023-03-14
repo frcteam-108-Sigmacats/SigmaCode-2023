@@ -78,6 +78,7 @@ public class RobotContainer {
     dRightBumper.whileTrue(new RunIntake(4, 0.65));
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
+    dKY.whileTrue(new SetClawStates(m_Claw, 0));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
     // dKX.whileTrue(new SetClawStates(m_Claw, 4));
@@ -154,7 +155,7 @@ public class RobotContainer {
     //List<PathPlannerTrajectory> knock = PathPlanner.loadPathGroup("Knockout", new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(1, 1), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
     List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("Testing", new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(1, 1), new PathConstraints(4, 4));
 
     eventMap.put("intakecone", new RunIntake(1, -0.5));
     eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
@@ -164,7 +165,7 @@ public class RobotContainer {
     eventMap.put("midpos", new SetClawStates(m_Claw, 3));
     eventMap.put("lowpos", new SetClawStates(m_Claw, 4));
     eventMap.put("outtakecube", new clawIntakeTester(m_Claw, -0.75));
-    eventMap.put("outtakecone", new clawIntakeTester(m_Claw, 0.85));
+    eventMap.put("outtakecone", new clawIntakeTester(m_Claw, 0.8));
     
 
     // new PPSwerveControllerCommand(tryGroup, swerveSubsystem::getPose, Constants.swerveKinematics, 
@@ -207,7 +208,7 @@ public class RobotContainer {
     Command loadZoneRed = autoRed.fullAuto(blue);
 
     SwerveAutoBuilder auto= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.01, 0, 0), new PIDConstants(0.000001, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
     Command test = auto.fullAuto(testing);
 
     //SmartDashboard.putData("Auto Chooser", chooser);
