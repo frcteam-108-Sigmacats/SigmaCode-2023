@@ -7,21 +7,33 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
-  NetworkTable limeLight = NetworkTableInstance.getDefault().getTable("limelight");
-  NetworkTableEntry tx = limeLight.getEntry("ty");
-  NetworkTableEntry ty = limeLight.getEntry("tx");
-  NetworkTableEntry ta = limeLight.getEntry("ta");
+  public NetworkTable limeLight = NetworkTableInstance.getDefault().getTable("limelight");
+  public double tx, ty, ta;
   /** Creates a new Vision. */
   public Vision() {
     limeLight.getEntry("ledMode").setNumber(1);
     limeLight.getEntry("stream").setNumber(1);
+    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    getXValue();
+    getYValue();
+    getAValue();
+  }
+  public void getXValue(){
+    tx = limeLight.getEntry("ty").getDouble(0);
+  }
+  public void getYValue(){
+    ty = limeLight.getEntry("tx").getDouble(0);
+  }
+  public void getAValue(){
+    ta = limeLight.getEntry("ta").getDouble(0);
   }
 }

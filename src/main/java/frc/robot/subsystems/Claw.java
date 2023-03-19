@@ -28,7 +28,7 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import javax.lang.model.util.ElementScanner14;
 
 public class Claw extends SubsystemBase {
-  public CANSparkMax leftClawArmMotor, rightClawArmMotor;
+  public CANSparkMax leftClawArmMotor, rightClawArmMotor, bottomIntakeMotor;
   public SparkMaxPIDController rotateArmPID;
   public AbsoluteEncoder throughBoreAbs;
   public static CANSparkMax clawIntake;
@@ -53,6 +53,7 @@ public class Claw extends SubsystemBase {
   public RelativeEncoder clawIntakeEnc;
   public double intakeEncPos = 0;
   public int armStates;
+  //Testing public RelativeEncoder encoderRelative = leftClawArmMotor.getEncoder();
   public static DigitalInput cylinderSensor = new DigitalInput(1);
 
   int newcounter = 0;
@@ -65,6 +66,7 @@ public class Claw extends SubsystemBase {
     clawExtenders = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 15);
     leftClawArmMotor = new CANSparkMax(11, MotorType.kBrushless);
     rightClawArmMotor = new CANSparkMax(12, MotorType.kBrushless);
+    bottomIntakeMotor = new CANSparkMax(14, MotorType.kBrushless);
     clawIntake = new CANSparkMax(13, MotorType.kBrushless);
 
     leftClawArmMotor.restoreFactoryDefaults();
@@ -112,6 +114,8 @@ public class Claw extends SubsystemBase {
     // This method will be called once per scheduler run
     //System.out.println("Absolute Position " + throughBoreAbs.getPosition());
     //System.out.println("Mag Switch: " + cylinderSensor.get());
+    // System.out.println("Infrared Sensor: " + clawSensor.get());
+    //System.out.println("Test Relative Encoder" );
   }
 
   
@@ -140,11 +144,10 @@ public class Claw extends SubsystemBase {
           System.out.println("Picking up cone!");
           //intakeEncPos = clawIntakeEnc.getPosition();
         }
-        newcounter = 0;
       }
       else
       {
-        newcounter++;
+        counter = 0;
         clawExtenders.set(Value.kReverse);
         // clawIntake.set(-0.1);
         System.out.println("mag = " + cylinderSensor.get() + "counter = " + newcounter);
@@ -157,11 +160,23 @@ public class Claw extends SubsystemBase {
 
         if (cylinderSensor.get() == true)
         {
-          rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-          rightClawArmMotor.follow(leftClawArmMotor, true);
-          
-        }
+          counter++;
+          System.out.println("Checking to see if the counter works" + counter);
+          if(counter > 150){
+            clawIntake.set(0);
+            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+            rightClawArmMotor.follow(leftClawArmMotor, true);
+          }
+        //   rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+        //   rightClawArmMotor.follow(leftClawArmMotor, true);
+        //   counter++;
+        // }
+        // if(counter > 150){
+        //   clawIntake.set(0);
+        // }
+
       }
+    }
 
         break;
 
@@ -481,5 +496,18 @@ public class Claw extends SubsystemBase {
       leftClawArmMotor.set(speed);
       rightClawArmMotor.set(speed);
     }
+  }
+
+  public void testCounter(double speed, int counter){
+    counter = 0;
+    clawIntake.set(speed);
+    if(counter > 150){
+      clawIntake.set(0);
+    }
+  }
+
+  public void stopCounter(double speed){
+    bottomIntakeMotor.set(speed);
+    System.out.println("Motor do not work");
   }
 }

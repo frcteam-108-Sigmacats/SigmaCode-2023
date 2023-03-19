@@ -4,32 +4,32 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Claw;
 
-public class Align extends CommandBase {
-  private boolean fieldRelative;
-  private SwerveSubsystem swerve;
-  private Translation2d translation = new Translation2d(0, 0);
-  private SlewRateLimiter rotationLimit = new SlewRateLimiter(0.5);
-  /** Creates a new Align. */
-  
-  public Align(SwerveSubsystem swerve, boolean fieldRelative) {
-    this.swerve = swerve;
-    this.fieldRelative = fieldRelative;
+public class TestCounter extends CommandBase {
+  private Claw claw = RobotContainer.m_Claw;
+  private int counter;
+  private double speed;
+  /** Creates a new TestCounter. */
+  public TestCounter(double speed) {
+    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve);
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    counter = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    RobotContainer.m_Claw.testCounter(speed, counter);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

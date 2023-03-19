@@ -6,9 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.AlignRobot;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetClawStates;
+import frc.robot.commands.StopCounter;
 import frc.robot.commands.SwerveDriveTeleop;
+import frc.robot.commands.TestCounter;
 import frc.robot.commands.ZeroModules;
 import frc.robot.commands.ClawTesters.HoldArmTester;
 import frc.robot.commands.ClawTesters.MoveArm;
@@ -18,6 +21,7 @@ import frc.robot.commands.ClawTesters.clawIntakeTester;
 import frc.robot.commands.ClawTesters.testingArmExtenders;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Vision;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -47,6 +51,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final Vision visionSub = new Vision();
   private final SendableChooser<Command> chooser = new SendableChooser<>();
   public final static Claw m_Claw = new Claw();
 
@@ -60,7 +65,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    boolean fieldRelative = false;
+    boolean fieldRelative = true;
     swerveSubsystem.setDefaultCommand(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
     //m_Claw.setDefaultCommand(new SetClawStates(m_Claw, 1));
     // Configure the trigger bindings
@@ -69,8 +74,10 @@ public class RobotContainer {
     //Driver's buttons
     dDownPov.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
-    dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
-    dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    // dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
+    // dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    dLeftTrigger.whileTrue(new StopCounter(0.5));
+    dLeftTrigger.whileFalse(new StopCounter(0));
     dRightTrigger.whileTrue(new RunIntake(2, 0.65));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 5));//Sensor needs to be fixed in order to change the state to 2
     dLeftBumper.whileTrue(new RunIntake(3, -0.75));
@@ -79,6 +86,7 @@ public class RobotContainer {
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dKY.whileTrue(new SetClawStates(m_Claw, 0));
+    dKX.whileTrue(new AlignRobot(visionSub, swerveSubsystem));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
     // dKX.whileTrue(new SetClawStates(m_Claw, 4));
@@ -98,6 +106,7 @@ public class RobotContainer {
     oRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
     oDownPov.onTrue(new testingArmExtenders(m_Claw, true));
     oUpPov.onTrue(new testingArmExtenders(m_Claw, false));
+    SmartDashboard.putData("Auto Chooser", chooser);
     
     
   }
@@ -155,7 +164,7 @@ public class RobotContainer {
     //List<PathPlannerTrajectory> knock = PathPlanner.loadPathGroup("Knockout", new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(1, 1), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
     List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(1, 1), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
 
     eventMap.put("intakecone", new RunIntake(1, -0.5));
     eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
@@ -197,28 +206,31 @@ public class RobotContainer {
     // chooser.addOption("Top Red with Charging", fullauto2);
     // chooser.addOption("Blue low", fullauto3);
     // chooser.addOption("Red low", fullauto4);
-    // chooser.setDefaultOption("Nothing", null);
 
     SwerveAutoBuilder autoBlue = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command loadZoneBlue = autoBlue.fullAuto(blue);
+    chooser.addOption("Testing 2 ball auto", loadZoneBlue);
     
     SwerveAutoBuilder autoRed= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
     Command loadZoneRed = autoRed.fullAuto(blue);
+    chooser.addOption("Red Loading Zone", loadZoneRed);
 
     SwerveAutoBuilder auto= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
     Command test = auto.fullAuto(testing);
+    chooser.addOption("Test", test);
+    chooser.setDefaultOption("Nothing", null);
 
-    //SmartDashboard.putData("Auto Chooser", chooser);
-    //return chooser.getSelected();
+    SmartDashboard.putData("Auto Chooser", chooser);
+    return chooser.getSelected();
 
     //Blue with taxi
     //return loadZoneBlue;
 
 
     //Red with taxi
-    return test;
+    //return test;
   }
 }

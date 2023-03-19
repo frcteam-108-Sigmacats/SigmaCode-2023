@@ -60,6 +60,9 @@ public class SwerveDriveTeleop extends CommandBase {
     translation = new Translation2d(yAxis, xAxis).times(SwerveConstants.maxDriveSpeed);
     //rotation = rotAxis * SwerveConstants.maxTurnSpeed;
     swerve.drive(translation, rotAxis, fieldRelative);
+    // if(yAxis == 0 && xAxis == 0 && rotAxis == 0){
+    //   swerve.zeroModules();
+    // // }
   }
 
   // Called once the command ends or is interrupted.
