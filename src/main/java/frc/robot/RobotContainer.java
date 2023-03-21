@@ -7,9 +7,11 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AlignRobot;
+import frc.robot.commands.BottomIntake;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetClawStates;
 import frc.robot.commands.StopCounter;
+import frc.robot.commands.Strafe;
 import frc.robot.commands.SwerveDriveTeleop;
 import frc.robot.commands.TestCounter;
 import frc.robot.commands.ZeroModules;
@@ -74,10 +76,14 @@ public class RobotContainer {
     //Driver's buttons
     dDownPov.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
-    // dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
-    // dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
-    dLeftTrigger.whileTrue(new StopCounter(0.5));
-    dLeftTrigger.whileFalse(new StopCounter(0));
+    dLeftPov.whileTrue(new Strafe(swerveSubsystem, 0.3));
+    dRightPov.whileTrue(new Strafe(swerveSubsystem, -0.3));
+    //dLeftTrigger.whileTrue(new TestCounter(0.5));
+    //dLeftTrigger.whileFalse(new StopCounter(0));
+    //dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
+    //dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    dLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.5, true));
+    dLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, false));
     dRightTrigger.whileTrue(new RunIntake(2, 0.65));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 5));//Sensor needs to be fixed in order to change the state to 2
     dLeftBumper.whileTrue(new RunIntake(3, -0.75));

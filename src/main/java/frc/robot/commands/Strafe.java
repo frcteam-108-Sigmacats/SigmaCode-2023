@@ -4,32 +4,32 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.SwerveSubsystem;
 
-public class TestCounter extends CommandBase {
-  private Claw claw = RobotContainer.m_Claw;
-  private int counter;
+public class Strafe extends CommandBase {
+  private SwerveSubsystem swerve;;
   private double speed;
-  /** Creates a new TestCounter. */
-  public TestCounter(double speed) {
+  private Translation2d translation;
+  /** Creates a new Strafe. */
+  public Strafe(SwerveSubsystem swerveSub, double speed) {
+    swerve = swerveSub;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(claw);
+    addRequirements(swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    counter = 0;
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    counter++;
-    RobotContainer.m_Claw.testCounter(speed, counter);
+    translation = new Translation2d(speed, 0);
+    swerve.drive(translation, 0, false);
   }
 
   // Called once the command ends or is interrupted.
