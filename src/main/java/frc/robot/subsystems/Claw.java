@@ -525,26 +525,30 @@ public class Claw extends SubsystemBase {
   }
 
   public void bottomIntake(double speed, int counter) {
-    intakeArmExt.set(Value.kForward);
-    intakeRotate.set(Value.kForward);
-    bottomIntakeMotor.set(speed);
-
+    clawIntake.set(-0.8);
+    bottomIntakeMotor.set(-0.5);
+    // intakeArmExt.set(Value.kForward);
+    // intakeRotate.set(Value.kForward);
+    // bottomIntakeMotor.set(speed);
+    // rotateArmPID.setReference(lowPos, ControlType.kPosition);
+    // rightClawArmMotor.follow(leftClawArmMotor, true);
   }
 
   public void returnBottomIntake(double speed, int counter) {
-    intakeArmExt.set(Value.kReverse);
-    bottomIntakeMotor.set(speed);
-    rotateArmPID.setReference(lowPos, ControlType.kPosition);
-    rightClawArmMotor.follow(leftClawArmMotor, true);
-    counter = 5;
-    if(counter == 5){
-      clawIntake.set(-0.8);
-      rotateArmPID.setReference(handoff, ControlType.kPosition);
-      rightClawArmMotor.follow(leftClawArmMotor, true);
-      bottomIntakeMotor.set(-0.5);
-      intakeRotate.set(Value.kReverse);
-      }
+    clawIntake.set(0);
+    bottomIntakeMotor.set(0);
+    // intakeArmExt.set(Value.kReverse);
+    // bottomIntakeMotor.set(speed);
+    // counter = 5;
+    // if(counter == 5){
+    //   clawIntake.set(-0.8);
+    //   rotateArmPID.setReference(handoff, ControlType.kPosition);
+    //   rightClawArmMotor.follow(leftClawArmMotor, true);
+    //   bottomIntakeMotor.set(-0.5);
+    //   intakeRotate.set(Value.kReverse);
+    //   }
     
-    }
+    // }
   }
+}
 
