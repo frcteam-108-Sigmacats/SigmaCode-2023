@@ -31,10 +31,12 @@ public class BottomIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(isReturn == true){
+    if(isReturn == false){
+      counter++;
       claw.bottomIntake(speed, counter);
     }
     else{
+      counter++;
       claw.returnBottomIntake(speed, counter);
     }
   }

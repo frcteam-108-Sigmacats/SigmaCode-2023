@@ -509,46 +509,47 @@ public class Claw extends SubsystemBase {
       rightClawArmMotor.set(speed);
     }
   }
-
-  public void testCounter(double speed, int counter){
-    clawIntake.set(speed);
-    System.out.println("Counter" + counter);
-    if(counter > 150){
-      clawIntake.set(0);
-    }
-    counter++;
-  }
-
-  public void stopCounter(double speed){
-    bottomIntakeMotor.set(speed);
-    System.out.println("Motor do not work");
-  }
-
+  //This is to run the bottom intake
   public void bottomIntake(double speed, int counter) {
-    clawIntake.set(-0.8);
-    bottomIntakeMotor.set(-0.5);
-    // intakeArmExt.set(Value.kForward);
-    // intakeRotate.set(Value.kForward);
-    // bottomIntakeMotor.set(speed);
-    // rotateArmPID.setReference(lowPos, ControlType.kPosition);
-    // rightClawArmMotor.follow(leftClawArmMotor, true);
+    intakeArmExt.set(Value.kForward);
+    if(counter > 200){
+      intakeRotate.set(Value.kForward);
+      bottomIntakeMotor.set(speed);
+    }
   }
 
+  //This is to return the bottom intake into the stationary position
   public void returnBottomIntake(double speed, int counter) {
-    clawIntake.set(0);
-    bottomIntakeMotor.set(0);
-    // intakeArmExt.set(Value.kReverse);
-    // bottomIntakeMotor.set(speed);
-    // counter = 5;
-    // if(counter == 5){
-    //   clawIntake.set(-0.8);
-    //   rotateArmPID.setReference(handoff, ControlType.kPosition);
-    //   rightClawArmMotor.follow(leftClawArmMotor, true);
-    //   bottomIntakeMotor.set(-0.5);
-    //   intakeRotate.set(Value.kReverse);
-    //   }
-    
-    // }
+    bottomIntakeMotor.set(speed);
+    intakeRotate.set(Value.kReverse);
+    if(counter > 150){
+      intakeArmExt.set(Value.kReverse);
+    }
+  }
+
+  //This is Outtake command for the bottom intake
+  public void bottomOuttake(double speed, int counter){
+    intakeArmExt.set(Value.kForward);
+    if(counter > 200){
+      intakeRotate.set(Value.kForward);
+      bottomIntakeMotor.set(speed);
+    }
+  }
+
+  public void handOffPosition(double speed, int counter, boolean isReturn){
+    if(isReturn == false){
+      if(clawSensor.get() == true){
+        rotateArmPID.setReference(handoff, ControlType.kPosition);
+        rightClawArmMotor.follow(leftClawArmMotor, true);
+        clawIntake.set(speed);
+        if(throughBoreAbs.getPosition() >= (handoff + 20)){
+          bottomIntakeMotor.set(speed);
+        }
+      }
+    }
+    else if(isReturn == true){
+
+    }
   }
 }
 

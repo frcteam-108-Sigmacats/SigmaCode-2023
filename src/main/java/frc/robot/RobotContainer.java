@@ -8,12 +8,11 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AlignRobot;
 import frc.robot.commands.BottomIntake;
+import frc.robot.commands.BottomOuttake;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetClawStates;
-import frc.robot.commands.StopCounter;
 import frc.robot.commands.Strafe;
 import frc.robot.commands.SwerveDriveTeleop;
-import frc.robot.commands.TestCounter;
 import frc.robot.commands.ZeroModules;
 import frc.robot.commands.ClawTesters.HoldArmTester;
 import frc.robot.commands.ClawTesters.MoveArm;
@@ -78,8 +77,6 @@ public class RobotContainer {
     dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
     dLeftPov.whileTrue(new Strafe(swerveSubsystem, 0.3));
     dRightPov.whileTrue(new Strafe(swerveSubsystem, -0.3));
-    //dLeftTrigger.whileTrue(new TestCounter(0.5));
-    //dLeftTrigger.whileFalse(new StopCounter(0));
     //dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
     //dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     dLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.5, true));
@@ -100,10 +97,14 @@ public class RobotContainer {
     // dRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
 
     //Operator's buttons
+    oLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.75, false));//Positive is Cone Intake for bottom intake
+    oLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, true));
     oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85)); //Positive is Outtake cone
     oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
     oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.5 )); //Negative is Outtake cube
     oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
+    oRightTrigger.whileTrue(new BottomOuttake(m_Claw, -0.8, false));
+    oRightTrigger.whileFalse(new BottomOuttake(m_Claw, 0, true));
     oKA.whileTrue(new SetClawStates(m_Claw, 0));
     oKY.whileTrue(new SetClawStates(m_Claw, 2));
     oKB.whileTrue(new SetClawStates(m_Claw, 3));

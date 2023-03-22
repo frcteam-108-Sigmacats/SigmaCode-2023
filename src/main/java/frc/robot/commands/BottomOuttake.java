@@ -12,8 +12,10 @@ public class BottomOuttake extends CommandBase {
   private Claw claw = RobotContainer.m_Claw;
   private double speed;
   private int counter;
+  private boolean isReturn;
   /** Creates a new BottomOuttake. */
-  public BottomOuttake(Claw claw, double speed) {
+  public BottomOuttake(Claw claw, double speed, boolean isReturn) {
+    this.isReturn = isReturn;
     this.speed = speed;
     this.claw = claw;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,7 +31,15 @@ public class BottomOuttake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    claw.bottomIntake(speed, counter);
+    if(isReturn == false){
+      counter++;
+      claw.bottomOuttake(speed, counter);
+    }
+    else{
+      counter++;
+      claw.returnBottomIntake(speed, counter);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
