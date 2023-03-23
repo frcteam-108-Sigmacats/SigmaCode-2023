@@ -42,7 +42,7 @@ public class Claw extends SubsystemBase {
   private double groundIntakeCubePos = 93;
   private double loadZoneIntakePosCone = 196; //10 more degrees from high peg
   private double loadZoneIntakePosCube = 189;
-  private double handoff = 34;
+  private double handoff = 44;
   private double highPos = 185;
   private double midPos = 130;
   private double lowPos = 99;//switch to 60 later
@@ -133,61 +133,32 @@ public class Claw extends SubsystemBase {
 
       //Cone Ground Intake
       case 1:
-        rotateArmPID.setP(0.006);
+      rotateArmPID.setP(0.006);
+      if (clawSensor.get() == true){
+      //Rotate the arm to the ground position
         rotateArmPID.setReference(groundIntakeConePos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
+
+        //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
         if(throughBoreAbs.getPosition() >= (groundIntakeConePos - 20)){
-          clawExtenders.set(Value.kForward);
+          clawExtenders.set(Value.kReverse);
           clawIntake.set(speed);
-          
-      //     System.out.println("Picking up cone!");
-       }
-      // if (clawSensor.get() == true)
-      // {
-      // //Rotate the arm to the ground position
-      //   rotateArmPID.setReference(groundIntakeConePos, ControlType.kPosition);
-      //   rightClawArmMotor.follow(leftClawArmMotor, true);
+        }
+      }
+      else
+      {
+        clawExtenders.set(Value.kForward);
+        clawIntake.set(-0.3);
+        if (cylinderSensor.get() == true){
+          counter = 0;
+          if(counter > 150){
+            clawIntake.set(0);
+            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+            rightClawArmMotor.follow(leftClawArmMotor, true);
+          }  
 
-      //   //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-      //   if(throughBoreAbs.getPosition() >= (groundIntakeConePos - 20)){
-      //     clawExtenders.set(Value.kForward);
-      //     clawIntake.set(speed);
-      //     System.out.println("Picking up cone!");
-      //     //intakeEncPos = clawIntakeEnc.getPosition();
-      //   }
-      // }
-      // else
-      // {
-      //   counter = 0;
-      //   clawExtenders.set(Value.kReverse);
-      //   // clawIntake.set(-0.1);
-      //   System.out.println("mag = " + cylinderSensor.get() + "counter = " + newcounter);
-      // //    if(newcounter < 300){
-      // //  //    clawIntake.set(0);
-      // //  System.out.println("delay!");
-      // //       clawIntake.set(-.1);
-      //       clawIntake.set(-0.3);
-      // //   }
-
-      //   if (cylinderSensor.get() == true)
-      //   {
-      //     counter++;
-      //     System.out.println("Checking to see if the counter works" + counter);
-      //     if(counter > 150){
-      //       clawIntake.set(0);
-      //       rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-      //       rightClawArmMotor.follow(leftClawArmMotor, true);
-      //     }
-      //   //   rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-      //   //   rightClawArmMotor.follow(leftClawArmMotor, true);
-      //   //   counter++;
-      //   // }
-      //   // if(counter > 150){
-      //   //   clawIntake.set(0);
-      //   // }
-
-      // }
-    
+      }
+      }
 
         break;
 
@@ -202,28 +173,22 @@ public class Claw extends SubsystemBase {
         rightClawArmMotor.follow(leftClawArmMotor, true);
 
         //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-        if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 30)){
+        if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 20)){
           clawExtenders.set(Value.kReverse);
           clawIntake.set(speed);
-          System.out.println("Picking up cube!");
-          //intakeEncPos = clawIntakeEnc.getPosition();
         }
       }
       else
       {
-        counter++;
         clawExtenders.set(Value.kReverse);
         clawIntake.set(0.1);
-        System.out.println("mag = " + cylinderSensor.get());
-
-        if (cylinderSensor.get() == true)
-        {
-          if(counter > 60){
+        if (cylinderSensor.get() == true){
+          counter = 0;
+          if(counter > 150){
             clawIntake.set(0);
+            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+            rightClawArmMotor.follow(leftClawArmMotor, true);
           }
-          rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-          rightClawArmMotor.follow(leftClawArmMotor, true);
-          
         }
       }
         break;
@@ -353,6 +318,7 @@ public class Claw extends SubsystemBase {
     switch(clawStates){
       //Starting config state
       case 0:
+        rotateArmPID.setP(0.003);
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         clawIntake.set(0);
@@ -373,7 +339,7 @@ public class Claw extends SubsystemBase {
 
       //Set high arm position used for auto claw
       case 2:
-        rotateArmPID.setP(0.006);
+        rotateArmPID.setP(0.005);
         rotateArmPID.setReference(highPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
@@ -381,6 +347,7 @@ public class Claw extends SubsystemBase {
 
       //Set mid arm position used for auto claw
       case 3:
+        rotateArmPID.setP(0.006);
         rotateArmPID.setReference(midPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         //clawIntakePID.setReference(intakeEncPos, ControlType.kPosition);
@@ -509,10 +476,17 @@ public class Claw extends SubsystemBase {
       rightClawArmMotor.set(speed);
     }
   }
+
+  public void stopIntakes(double speed){
+    bottomIntakeMotor.set(0);
+    clawIntake.set(0);
+    intakeRotate.set(Value.kReverse);
+  }
+
   //This is to run the bottom intake
   public void bottomIntake(double speed, int counter) {
     intakeArmExt.set(Value.kForward);
-    if(counter > 200){
+    if(counter > 50){
       intakeRotate.set(Value.kForward);
       bottomIntakeMotor.set(speed);
     }
@@ -522,34 +496,32 @@ public class Claw extends SubsystemBase {
   public void returnBottomIntake(double speed, int counter) {
     bottomIntakeMotor.set(speed);
     intakeRotate.set(Value.kReverse);
-    if(counter > 150){
-      intakeArmExt.set(Value.kReverse);
-    }
+    intakeArmExt.set(Value.kReverse);
   }
 
   //This is Outtake command for the bottom intake
   public void bottomOuttake(double speed, int counter){
     intakeArmExt.set(Value.kForward);
-    if(counter > 200){
+    if(counter > 50){
       intakeRotate.set(Value.kForward);
       bottomIntakeMotor.set(speed);
     }
   }
 
-  public void handOffPosition(double speed, int counter, boolean isReturn){
-    if(isReturn == false){
-      if(clawSensor.get() == true){
+  public void handOffPosition(double speed, int counter){
+        clawIntake.set(speed);
         rotateArmPID.setReference(handoff, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
-        clawIntake.set(speed);
-        if(throughBoreAbs.getPosition() >= (handoff + 20)){
+        if(throughBoreAbs.getPosition() >= (handoff - 20) && counter > 50){
           bottomIntakeMotor.set(speed);
-        }
-      }
-    }
-    else if(isReturn == true){
+  }
+}
 
-    }
+  public void stopHandOff(double speed, int counter){
+    clawIntake.set(speed);
+    rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
+    rightClawArmMotor.follow(leftClawArmMotor, true);
+    bottomIntakeMotor.set(speed);
   }
 }
 

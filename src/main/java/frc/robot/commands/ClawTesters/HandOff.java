@@ -2,25 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ClawTesters;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Claw;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-public class RunIntake extends CommandBase {
-  private double speed;
-  private int intakeState;
+public class HandOff extends CommandBase {
   private Claw claw = RobotContainer.m_Claw;
+  private double speed;
   private int counter;
-  /** Creates a new RunIntake. */
-  public RunIntake(int intakeState, double speed) {
+  private boolean isReturn;
+  /** Creates a new HandOff. */
+  public HandOff(double speed, boolean isReturn) {
     this.speed = speed;
-    this.intakeState = intakeState;
-    
+    this.isReturn = isReturn;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.m_Claw);
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
@@ -32,23 +30,23 @@ public class RunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    counter++;
-    RobotContainer.m_Claw.intakeStates(intakeState, speed, counter);
-    System.out.println("Counter is: " + counter);
+    if(isReturn == false){
+      counter++;
+      claw.handOffPosition(speed, counter);
+    }
+    else if(isReturn == true){
+      counter++;
+      claw.stopHandOff(speed, counter);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    claw.clawExtenders.set(Value.kReverse);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // if(Claw.isFinished == true){
-    //   return true;
-    // }
     return false;
   }
 }

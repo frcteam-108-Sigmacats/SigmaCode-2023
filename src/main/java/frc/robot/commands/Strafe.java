@@ -28,7 +28,7 @@ public class Strafe extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    translation = new Translation2d(speed, 0);
+    translation = new Translation2d(0, speed);
     swerve.drive(translation, 0, false);
   }
 

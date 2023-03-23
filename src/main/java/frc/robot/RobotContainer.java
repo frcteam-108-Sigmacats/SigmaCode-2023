@@ -11,9 +11,11 @@ import frc.robot.commands.BottomIntake;
 import frc.robot.commands.BottomOuttake;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetClawStates;
+import frc.robot.commands.StopIntakes;
 import frc.robot.commands.Strafe;
 import frc.robot.commands.SwerveDriveTeleop;
 import frc.robot.commands.ZeroModules;
+import frc.robot.commands.ClawTesters.HandOff;
 import frc.robot.commands.ClawTesters.HoldArmTester;
 import frc.robot.commands.ClawTesters.MoveArm;
 import frc.robot.commands.ClawTesters.clawArmtester;
@@ -77,10 +79,10 @@ public class RobotContainer {
     dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
     dLeftPov.whileTrue(new Strafe(swerveSubsystem, 0.3));
     dRightPov.whileTrue(new Strafe(swerveSubsystem, -0.3));
-    //dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
-    //dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
-    dLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.5, true));
-    dLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, false));
+    dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
+    dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
+    //dLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.5, true));
+    //dLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, false));
     dRightTrigger.whileTrue(new RunIntake(2, 0.65));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 5));//Sensor needs to be fixed in order to change the state to 2
     dLeftBumper.whileTrue(new RunIntake(3, -0.75));
@@ -97,7 +99,7 @@ public class RobotContainer {
     // dRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
 
     //Operator's buttons
-    oLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.75, false));//Positive is Cone Intake for bottom intake
+    oLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.65, false));//Positive is Cone Intake for bottom intake
     oLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, true));
     oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85)); //Positive is Outtake cone
     oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
@@ -109,10 +111,10 @@ public class RobotContainer {
     oKY.whileTrue(new SetClawStates(m_Claw, 2));
     oKB.whileTrue(new SetClawStates(m_Claw, 3));
     oKX.whileTrue(new SetClawStates(m_Claw, 4 ));
-    oLeftPov.whileTrue(new MoveArm(m_Claw, 0.5));
     oRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
-    oDownPov.onTrue(new testingArmExtenders(m_Claw, true));
-    oUpPov.onTrue(new testingArmExtenders(m_Claw, false));
+    oUpPov.whileTrue(new HandOff(-0.8, false));
+    oUpPov.whileFalse(new HandOff(0, true));
+    oDownPov.onTrue(new testingArmExtenders(m_Claw, false));
     SmartDashboard.putData("Auto Chooser", chooser);
     
     
