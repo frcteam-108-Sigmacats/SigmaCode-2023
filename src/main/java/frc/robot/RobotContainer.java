@@ -75,7 +75,7 @@ public class RobotContainer {
     configureBindings();
 
     //Driver's buttons
-    dDownPov.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
+    dDownPov.whileTrue(new StopIntakes());
     dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
     dLeftPov.whileTrue(new Strafe(swerveSubsystem, 0.3));
     dRightPov.whileTrue(new Strafe(swerveSubsystem, -0.3));

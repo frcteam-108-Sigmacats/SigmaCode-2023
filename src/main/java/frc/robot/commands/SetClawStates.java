@@ -13,6 +13,7 @@ public class SetClawStates extends CommandBase {
   private int clawState;
   private Claw clawMech;
   private DigitalInput magnetSensor;
+  private int counter;
   /** Creates a new SetClawStates. */
   public SetClawStates(Claw clawSub, int clawState) {
     this.clawState = clawState;
@@ -25,7 +26,7 @@ public class SetClawStates extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
+  counter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,11 +35,12 @@ public class SetClawStates extends CommandBase {
     
     if(clawState == 1){
       if(magnetSensor.get() == true){
-        clawMech.setClawStates(clawState);
+        counter++;
+        clawMech.setClawStates(clawState, counter);
       }
     }
     else{
-      clawMech.setClawStates(clawState);
+      clawMech.setClawStates(clawState, counter);
     }
   }
 

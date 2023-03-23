@@ -12,9 +12,9 @@ public class StopIntakes extends CommandBase {
   private Claw claw = RobotContainer.m_Claw;
   private double speed;
   /** Creates a new StopIntakes. */
-  public StopIntakes(double speed) {
-    this.speed = speed;
+  public StopIntakes() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +24,7 @@ public class StopIntakes extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    claw.stopIntakes(speed);
+    claw.stopIntakes();
   }
 
   // Called once the command ends or is interrupted.

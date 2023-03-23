@@ -33,16 +33,16 @@ public class AutoClaw extends CommandBase {
     counter++;
     if(Robot.hub.getPressure(0) >= 90){
       if(swerve.canArmExtend() && claw.getGamePiece() == true){
-        claw.setClawStates(claw.armStates);
+        //claw.setClawStates(claw.armStates);
       }
       else if(swerve.canArmExtend() && claw.getGamePiece() == false){
         if(counter > 300){
-          claw.setClawStates(1);
+          //claw.setClawStates(1);
         }
       }
       else if(swerve.canArmExtend() == false && claw.getGamePiece() == true){
         if(counter > 300){
-          claw.setClawStates(1);
+          //claw.setClawStates(1);
         }
       }
     }
