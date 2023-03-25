@@ -103,6 +103,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FrontR Angle: ", frontRight.getState().angle.getDegrees());
     SmartDashboard.putNumber("BackL Angle: ", backLeft.getState().angle.getDegrees());
     SmartDashboard.putNumber("BackR Angle: ", backRight.getState().angle.getDegrees());
+    SmartDashboard.putNumber("Gryo Pitch: " , getPitch().getDegrees());
     //System.out.println("Gyro Pitch:  " + gyro.getPitch());
     //System.out.println("Gyro Roll:  " + gyro.getRoll());
     //System.out.println("Gyro Yaw:  " + gyro.get);
@@ -165,15 +166,16 @@ public class SwerveSubsystem extends SubsystemBase {
     gyro.getYawPitchRoll(ypr);
     return (SwerveSetUp.invertedGyro) ? Rotation2d.fromDegrees(360 - ypr[0]) : Rotation2d.fromDegrees(ypr[0]);
   }
+  public Rotation2d getPitch(){
+    double[] ypr = new double[3];
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees(ypr[2]);
+  }
   public void zeroModules(){
     frontLeft.zeroModules();
     frontRight.zeroModules();
     backLeft.zeroModules();
     backRight.zeroModules();
-  }
-  //Gets the pitch of the gyro needed for auto balance
-  public double getPitch(){
-    return gyro.getPitch();
   }
   //To tell us if we can extend our arm automaticall to the high peg positions
   public boolean canArmExtend(){

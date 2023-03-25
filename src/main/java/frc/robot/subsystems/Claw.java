@@ -75,6 +75,7 @@ public class Claw extends SubsystemBase {
     leftClawArmMotor.restoreFactoryDefaults();
     rightClawArmMotor.restoreFactoryDefaults();
     clawIntake.restoreFactoryDefaults();
+    bottomIntakeMotor.restoreFactoryDefaults();
 
     rotateArmPID = leftClawArmMotor.getPIDController();
     clawIntakePID = clawIntake.getPIDController();
@@ -93,9 +94,11 @@ public class Claw extends SubsystemBase {
 
     leftClawArmMotor.setIdleMode(IdleMode.kBrake);
     rightClawArmMotor.setIdleMode(IdleMode.kBrake);
+    bottomIntakeMotor.setIdleMode(IdleMode.kCoast);
 
     leftClawArmMotor.setSmartCurrentLimit(40);
     rightClawArmMotor.setSmartCurrentLimit(40);
+    bottomIntakeMotor.setSmartCurrentLimit(40);
     clawIntake.setSmartCurrentLimit(40);
 
     throughBoreAbs.setPositionConversionFactor(360);
@@ -106,6 +109,7 @@ public class Claw extends SubsystemBase {
     leftClawArmMotor.burnFlash();
     rightClawArmMotor.burnFlash();
     clawIntake.burnFlash();
+    bottomIntakeMotor.burnFlash();
     clawExtenders.set(Value.kReverse);
 
     

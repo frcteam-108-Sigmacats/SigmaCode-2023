@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AlignRobot;
+import frc.robot.commands.AlignRobotGyro;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.BottomIntake;
 import frc.robot.commands.BottomOuttake;
 import frc.robot.commands.RunIntake;
@@ -91,7 +93,7 @@ public class RobotContainer {
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dKY.whileTrue(new SetClawStates(m_Claw, 0));
-    dKX.whileTrue(new AlignRobot(visionSub, swerveSubsystem));
+    dKX.whileTrue(new AutoBalance(swerveSubsystem));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
     // dKX.whileTrue(new SetClawStates(m_Claw, 4));
@@ -99,7 +101,7 @@ public class RobotContainer {
     // dRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
 
     //Operator's buttons
-    oLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.65, false));//Positive is Cone Intake for bottom intake
+    oLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.85, false));//Positive is Cone Intake for bottom intake
     oLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, true));
     oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85)); //Positive is Outtake cone
     oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));

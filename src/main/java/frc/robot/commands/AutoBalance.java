@@ -20,6 +20,7 @@ public class AutoBalance extends CommandBase {
   private Pose2d maxPos = new Pose2d();
   private Translation2d translation;
   private double ySpeed;
+  private double offset;
   public AutoBalance(SwerveSubsystem swerveSub) {
     swerveMech = swerveSub;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -37,13 +38,14 @@ public class AutoBalance extends CommandBase {
       minPos = redMinPos;
       maxPos = redMaxPos;
     }
+    offset = swerveMech.getPitch().getRadians();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Math.abs(swerveMech.getPitch()) > 0 && (swerveMech.getPose().getX() > minPos.getX() && swerveMech.getPose().getX() < maxPos.getX())){
-      ySpeed = Math.sin(swerveMech.getPitch());
+    if(swerveMech.getPitch().getRadians() >= offset && (swerveMech.getPose().getX() > minPos.getX() && swerveMech.getPose().getX() < maxPos.getX())){
+      ySpeed = Math.sin(swerveMech.getPitch().getRadians());
     }
     else{
       ySpeed = 0;
@@ -59,7 +61,7 @@ public class AutoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(swerveMech.getPitch() == 0){
+    if(ySpeed == 0 && swerveMech.getPitch().getRadians() == offset){
       return true;
     }
     return false;
