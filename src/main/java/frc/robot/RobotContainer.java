@@ -155,7 +155,7 @@ public class RobotContainer {
     oUpPov = operator.povUp();
     oDownPov = operator.povDown();
     oLeftPov = operator.povLeft();
-    oRightPov = operator.povLeft();
+    oRightPov = operator.povRight();
   }
 
   /**
