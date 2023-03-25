@@ -191,6 +191,8 @@ public class RobotContainer {
     eventMap.put("outtakecube", new clawIntakeTester(m_Claw, -0.75));
     eventMap.put("outtakecone", new clawIntakeTester(m_Claw, 0.8));
     eventMap.put("reset", new ZeroModules(swerveSubsystem));
+    eventMap.put("bottomcone", new BottomIntake(m_Claw, 0.85, false));
+    eventMap.put("stopbottomcone", new BottomIntake(m_Claw, 0, true));
     
 
     // new PPSwerveControllerCommand(tryGroup, swerveSubsystem::getPose, Constants.swerveKinematics, 
@@ -234,7 +236,7 @@ public class RobotContainer {
     chooser.addOption("Red Loading Zone", loadZoneRed);
 
     SwerveAutoBuilder auto= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command test = auto.fullAuto(testing);
     chooser.addOption("Test", test);
     chooser.setDefaultOption("Nothing", null);
