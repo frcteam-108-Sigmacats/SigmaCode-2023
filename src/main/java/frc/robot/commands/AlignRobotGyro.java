@@ -4,11 +4,15 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AlignRobotGyro extends CommandBase {
   private SwerveSubsystem swerve;
+  private Translation2d translation= new Translation2d(0, 0);
+  private PIDController pid = new PIDController(0.009, 0.001, 0);
   /** Creates a new AlignRobotGyro. */
   public AlignRobotGyro(SwerveSubsystem swerveSub) {
     swerve = swerveSub;
@@ -23,8 +27,8 @@ public class AlignRobotGyro extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double yaw = swerve.getHeading().getRadians();
-    swerve.drive(null, Math.sin(yaw - 180), false);
+    double yaw = swerve.getYaw().getRadians();
+    swerve.drive(translation, -pid.calculate(yaw, 3.142), false);
   }
 
   // Called once the command ends or is interrupted.
@@ -34,6 +38,12 @@ public class AlignRobotGyro extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(Math.abs(swerve.getHeading().getDegrees()) == 170){
+      return true;
+    }
+    else{
+      return false;
+    }
+    //return false;
   }
 }

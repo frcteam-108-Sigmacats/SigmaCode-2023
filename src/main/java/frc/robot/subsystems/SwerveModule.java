@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule extends SubsystemBase {
+  private SwerveModuleState mDesiredState = new SwerveModuleState();
   private final CANSparkMax driveMotor;
   private final CANSparkMax turnMotor;
 
@@ -108,8 +109,9 @@ public class SwerveModule extends SubsystemBase {
   //Setting modules desired state
   public void setDesiredState(SwerveModuleState desiredState){
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
-    correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
-    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngleOffset));
+    mDesiredState = desiredState;
+    correctedDesiredState.speedMetersPerSecond = mDesiredState.speedMetersPerSecond;
+    correctedDesiredState.angle = mDesiredState.angle.plus(Rotation2d.fromRadians(chassisAngleOffset));
 
     SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState, new Rotation2d(turnEncoder.getPosition()));
 
@@ -119,12 +121,14 @@ public class SwerveModule extends SubsystemBase {
     
   }
 
+
   //Resetting drive motors encoders
   public void resetEncoder(){
     driveEncoder.setPosition(0);
   }
   public void zeroModules(){
-    turningPID.setReference(chassisAngleOffset, ControlType.kPosition);
+    mDesiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(chassisAngleOffset));
+    turningPID.setReference(mDesiredState.angle.getRadians(), ControlType.kPosition);
   }
 
   @Override

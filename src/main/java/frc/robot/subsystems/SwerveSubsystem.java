@@ -177,6 +177,8 @@ public class SwerveSubsystem extends SubsystemBase {
     backLeft.zeroModules();
     backRight.zeroModules();
   }
+
+  
   //To tell us if we can extend our arm automaticall to the high peg positions
   public boolean canArmExtend(){
     //First need to see if we have a game piece

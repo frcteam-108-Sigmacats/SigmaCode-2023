@@ -40,6 +40,8 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -55,6 +57,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final Vision visionSub = new Vision();
   private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -63,6 +66,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+
 
   public Trigger dRightTrigger, dLeftTrigger, dRightBumper, dLeftBumper, dKA, dKB, dKY, dKX, dUpPov, dDownPov, dLeftPov, dRightPov;
   public Trigger oRightTrigger, oLeftTrigger, oRightBumper, oLeftBumper, oKA, oKB, oKY, oKX, oUpPov, oDownPov, oLeftPov, oRightPov;
@@ -93,7 +97,7 @@ public class RobotContainer {
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dKY.whileTrue(new SetClawStates(m_Claw, 0));
-    dKX.whileTrue(new AutoBalance(swerveSubsystem));
+    dKX.whileTrue(new AlignRobotGyro(swerveSubsystem));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
     // dKX.whileTrue(new SetClawStates(m_Claw, 4));
@@ -117,7 +121,7 @@ public class RobotContainer {
     oUpPov.whileTrue(new HandOff(-0.8, false));
     oUpPov.whileFalse(new HandOff(0, true));
     oDownPov.onTrue(new testingArmExtenders(m_Claw, false));
-    SmartDashboard.putData("Auto Chooser", chooser);
+    //SmartDashboard.putData("Auto Chooser", chooser);
     
     
   }
@@ -175,10 +179,10 @@ public class RobotContainer {
     //List<PathPlannerTrajectory> knock = PathPlanner.loadPathGroup("Knockout", new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(1, 1), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
     List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
 
     eventMap.put("intakecone", new RunIntake(1, -0.5));
-    eventMap.put("intakecube", new RunIntake(5, 0.5));//Fix sensor before 2nd case
+    eventMap.put("intakecube", new RunIntake(2, 0.5));//Fix sensor before 2nd case
     eventMap.put("drivecone", new SetClawStates(m_Claw, 1));//Cone
     eventMap.put("drivecube", new SetClawStates(m_Claw, 6));//Cube
     eventMap.put("highpos", new SetClawStates(m_Claw, 2));
@@ -186,6 +190,7 @@ public class RobotContainer {
     eventMap.put("lowpos", new SetClawStates(m_Claw, 4));
     eventMap.put("outtakecube", new clawIntakeTester(m_Claw, -0.75));
     eventMap.put("outtakecone", new clawIntakeTester(m_Claw, 0.8));
+    eventMap.put("reset", new ZeroModules(swerveSubsystem));
     
 
     // new PPSwerveControllerCommand(tryGroup, swerveSubsystem::getPose, Constants.swerveKinematics, 

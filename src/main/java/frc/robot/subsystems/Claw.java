@@ -175,32 +175,39 @@ public class Claw extends SubsystemBase {
       //Cube Ground Intake
       case 2:
       rotateArmPID.setP(0.006);
-
-      if (clawSensor.get() == true)
-      {
-      //Rotate the arm to the ground position
-        rotateArmPID.setReference(groundIntakeCubePos, ControlType.kPosition);
-        rightClawArmMotor.follow(leftClawArmMotor, true);
-
-        //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
-        if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 20)){
-          clawExtenders.set(Value.kReverse);
-          clawIntake.set(speed);
-        }
+      rotateArmPID.setReference(groundIntakeCubePos, ControlType.kPosition);
+      rightClawArmMotor.follow(leftClawArmMotor, true);
+      if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 20)){
+        clawExtenders.set(Value.kForward);
+        clawIntake.set(speed);
       }
-      else
-      {
-        clawExtenders.set(Value.kReverse);
-        clawIntake.set(0.1);
-        if (cylinderSensor.get() == true){
-          counter = 0;
-          if(counter > 150){
-            clawIntake.set(0);
-            rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
-            rightClawArmMotor.follow(leftClawArmMotor, true);
-          }
-        }
-      }
+      // rotateArmPID.setP(0.006);
+
+      // if (clawSensor.get() == true)
+      // {
+      // //Rotate the arm to the ground position
+      //   rotateArmPID.setReference(groundIntakeCubePos, ControlType.kPosition);
+      //   rightClawArmMotor.follow(leftClawArmMotor, true);
+
+      //   //If the arm is at the groud position and the claw sensor doesn't see anything extend pneumatics and run cone intake
+      //   if(throughBoreAbs.getPosition() >= (groundIntakeCubePos - 20)){
+      //     clawExtenders.set(Value.kReverse);
+      //     clawIntake.set(speed);
+      //   }
+      // }
+      // else
+      // {
+      //   clawExtenders.set(Value.kReverse);
+      //   clawIntake.set(0.1);
+      //   if (cylinderSensor.get() == true){
+      //     counter = 0;
+      //     if(counter > 150){
+      //       clawIntake.set(0);
+      //       rotateArmPID.setReference(driveConfigPos, ControlType.kPosition);
+      //       rightClawArmMotor.follow(leftClawArmMotor, true);
+      //     }
+      //   }
+      // }
         break;
 
       //Loading Zone Cone Intake

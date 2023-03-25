@@ -17,11 +17,12 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "highpos"
+          "highpos",
+          "reset"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
@@ -44,11 +45,12 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "outtakecone"
+          "outtakecone",
+          "reset"
         ],
-        "executionBehavior": "parallelDeadline",
+        "executionBehavior": "parallel",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
@@ -68,25 +70,27 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "reset"
+        ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "deadline",
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
-        "x": 7.4,
+        "x": 4.0,
         "y": 5.0
       },
       "prevControl": {
-        "x": 6.038871614609106,
+        "x": 2.639586937296757,
         "y": 5.0
       },
       "nextControl": {
-        "x": 7.935729454435428,
+        "x": 4.53572945443543,
         "y": 5.0
       },
       "holonomicAngle": 180.0,
@@ -103,15 +107,18 @@
     },
     {
       "anchorPoint": {
-        "x": 8.4,
+        "x": 5.4,
         "y": 5.0
       },
       "prevControl": {
-        "x": 8.232009168760873,
+        "x": 5.385175884679264,
         "y": 5.0
       },
-      "nextControl": null,
-      "holonomicAngle": -14.0,
+      "nextControl": {
+        "x": 5.567990831239129,
+        "y": 5.0
+      },
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -124,6 +131,55 @@
         "waitBehavior": "deadline",
         "waitTime": 2.0
       }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.25,
+        "y": 4.6
+      },
+      "prevControl": {
+        "x": 5.781915747587441,
+        "y": 4.6
+      },
+      "nextControl": {
+        "x": 6.718084252412559,
+        "y": 4.6
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.25,
+        "y": 4.6
+      },
+      "prevControl": {
+        "x": 7.069471436907853,
+        "y": 4.6
+      },
+      "nextControl": null,
+      "holonomicAngle": -13.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "intakecube"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     }
   ],
   "markers": [
@@ -134,13 +190,7 @@
       ]
     },
     {
-      "position": 1.2272727272727273,
-      "names": [
-        "outtakecone"
-      ]
-    },
-    {
-      "position": 1.886363636363637,
+      "position": 1.4909090909090923,
       "names": [
         "drivecube"
       ]
