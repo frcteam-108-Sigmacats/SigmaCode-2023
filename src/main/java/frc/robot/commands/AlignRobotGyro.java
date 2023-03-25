@@ -24,7 +24,7 @@ public class AlignRobotGyro extends CommandBase {
   @Override
   public void execute() {
     double yaw = swerve.getHeading().getRadians();
-    swerve.drive(null, Math.sin(yaw), false);
+    swerve.drive(null, Math.sin(yaw - 180), false);
   }
 
   // Called once the command ends or is interrupted.

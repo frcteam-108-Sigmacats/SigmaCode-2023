@@ -4,21 +4,53 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoBalance extends CommandBase {
-  /** Creates a new AutoBalance. */
-  public AutoBalance() {
+  private SwerveSubsystem swerveMech;
+  private Pose2d blueMinPos = new Pose2d(3.44, 0, null);
+  private Pose2d blueMaxPos = new Pose2d(4.33, 0, null);
+  private Pose2d redMinPos = new Pose2d(13.13, 0, null);
+  private Pose2d redMaxPos = new Pose2d(12.18, 0, null);
+  private Pose2d minPos = new Pose2d();
+  private Pose2d maxPos = new Pose2d();
+  private Translation2d translation;
+  private double ySpeed;
+  public AutoBalance(SwerveSubsystem swerveSub) {
+    swerveMech = swerveSub;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(swerveMech);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    if(DriverStation.getAlliance() == DriverStation.Alliance.Blue){
+      minPos = blueMinPos;
+      maxPos = blueMaxPos;
+    }
+    else if(DriverStation.getAlliance() == DriverStation.Alliance.Red){
+      minPos = redMinPos;
+      maxPos = redMaxPos;
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(Math.abs(swerveMech.getPitch()) > 0 && (swerveMech.getPose().getX() > minPos.getX() && swerveMech.getPose().getX() < maxPos.getX())){
+      ySpeed = Math.sin(swerveMech.getPitch());
+    }
+    else{
+      ySpeed = 0;
+    }
+    translation = new Translation2d(ySpeed, 0);
+    swerveMech.drive(translation, 0, true);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -27,6 +59,9 @@ public class AutoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(swerveMech.getPitch() == 0){
+      return true;
+    }
     return false;
   }
 }
