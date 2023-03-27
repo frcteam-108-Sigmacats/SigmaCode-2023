@@ -177,8 +177,14 @@ public class RobotContainer {
     //List<PathPlannerTrajectory> low = PathPlanner.loadPathGroup("Blue_down", new PathConstraints(4, 4));
     HashMap<String, Command> eventMap = new HashMap<>();
     //List<PathPlannerTrajectory> knock = PathPlanner.loadPathGroup("Knockout", new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(4, 4), new PathConstraints(1, 1), new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
-    List<PathPlannerTrajectory> red = PathPlanner.loadPathGroup("Up", new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> topcone = PathPlanner.loadPathGroup("TopCone", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> topcube = PathPlanner.loadPathGroup("TopCube", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> conecharge = PathPlanner.loadPathGroup("ConeCharge", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> cubecharge = PathPlanner.loadPathGroup("CubeCharge", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> bottomcone = PathPlanner.loadPathGroup("BottomCone", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> bottomcube = PathPlanner.loadPathGroup("BottomCube", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> TBN = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+
     List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
 
     eventMap.put("intakecone", new RunIntake(1, -0.5));
@@ -224,16 +230,6 @@ public class RobotContainer {
     // chooser.addOption("Top Red with Charging", fullauto2);
     // chooser.addOption("Blue low", fullauto3);
     // chooser.addOption("Red low", fullauto4);
-
-    SwerveAutoBuilder autoBlue = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    Command loadZoneBlue = autoBlue.fullAuto(blue);
-    chooser.addOption("Testing 2 ball auto", loadZoneBlue);
-    
-    SwerveAutoBuilder autoRed= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
-    Command loadZoneRed = autoRed.fullAuto(blue);
-    chooser.addOption("Red Loading Zone", loadZoneRed);
 
     SwerveAutoBuilder auto= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
