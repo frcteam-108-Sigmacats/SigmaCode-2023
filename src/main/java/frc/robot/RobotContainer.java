@@ -79,6 +79,7 @@ public class RobotContainer {
     //m_Claw.setDefaultCommand(new SetClawStates(m_Claw, 1));
     // Configure the trigger bindings
     configureBindings();
+    makeAuto();
 
     //Driver's buttons
     dDownPov.whileTrue(new StopIntakes());
@@ -170,7 +171,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
-  public Command getAutonomousCommand() {
+  public void makeAuto(){
     // List<PathPlannerTrajectory> pathgroup = PathPlanner.loadPathGroup("Try3", new PathConstraints(4, 4));
     // List<PathPlannerTrajectory> tryGroup = PathPlanner.loadPathGroup("PathTesting", new PathConstraints(3, 4));
     //List<PathPlannerTrajectory> blue = PathPlanner.loadPathGroup("Blue", new PathConstraints(4, 4));
@@ -200,12 +201,6 @@ public class RobotContainer {
     eventMap.put("bottomcone", new BottomIntake(m_Claw, 0.85, false));
     eventMap.put("stopbottomcone", new BottomIntake(m_Claw, 0, true));
     eventMap.put("balance", new AutoBalance(swerveSubsystem));
-
-    // chooser.addOption("Top Blue with Charging", fullauto);
-    // chooser.addOption("Top Red with Charging", fullauto2);
-    // chooser.addOption("Blue low", fullauto3);
-    // chooser.addOption("Red low", fullauto4);
-
 
 
     //Blue Auto Paths. Do not Touch!!!
@@ -261,13 +256,27 @@ public class RobotContainer {
 
 
 
-    SwerveAutoBuilder auto= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    SwerveAutoBuilder auto = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command test = auto.fullAuto(testing);
-    chooser.addOption("Test", test);
+    chooser.addOption("BlueLoadZone Cone", blueConeTop);
+    chooser.addOption("BlueLoadZone Cube", blueCubeTop);
+    chooser.addOption("BlueMid Cone", blueConeCharge);
+    chooser.addOption("BlueMid Cube", blueCubeCharge);
+    chooser.addOption("BlueWall Cone", blueConeBottom);
+    chooser.addOption("BlueWall Cube", blueCubeBottom);
+    chooser.addOption("RedLoadZone Cone", redConeTop);
+    chooser.addOption("RedLoadZone Cube", redCubeTop);
+    chooser.addOption("RedMid Cone", redConeCharge);
+    chooser.addOption("RedMid Cube", redCubeCharge);
+    chooser.addOption("RedWall Cone", redConeBottom);
+    chooser.addOption("RedWall Cube", redCubeBottom); 
     chooser.setDefaultOption("Nothing", null);
 
     SmartDashboard.putData("Auto Chooser", chooser);
+  }
+  public Command getAutonomousCommand() {
+    
     return chooser.getSelected();
 
     //Blue with taxi
