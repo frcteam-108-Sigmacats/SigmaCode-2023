@@ -199,37 +199,67 @@ public class RobotContainer {
     eventMap.put("reset", new ZeroModules(swerveSubsystem));
     eventMap.put("bottomcone", new BottomIntake(m_Claw, 0.85, false));
     eventMap.put("stopbottomcone", new BottomIntake(m_Claw, 0, true));
-    
-
-    // new PPSwerveControllerCommand(tryGroup, swerveSubsystem::getPose, Constants.swerveKinematics, 
-    // new PIDController(0.3, 0, 0), new PIDController(0.3, 0, 0), 
-    // new PIDController(0.3, 0, 0), swerveSubsystem::setModuleStates, swerveSubsystem),
-    // new InstantCommand(() -> swerveSubsystem.stopModules()));
-    
-    // SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    // Command fullauto = autoBuilder.fullAuto(blue);
-
-    // SwerveAutoBuilder autoBuilder2 = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
-    // Command fullauto2 = autoBuilder2.fullAuto(blue);
-
-    // SwerveAutoBuilder autoBuilder3= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    // Command fullauto3 = autoBuilder3.fullAuto(low);
-
-    // SwerveAutoBuilder autoBuilder4= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
-    // Command fullauto4 = autoBuilder4.fullAuto(low);
-
-    // SwerveAutoBuilder autoBuilder5= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
-    // new PIDConstants(0.01, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    // Command midblue = autoBuilder5.fullAuto(knock);
+    eventMap.put("balance", new AutoBalance(swerveSubsystem));
 
     // chooser.addOption("Top Blue with Charging", fullauto);
     // chooser.addOption("Top Red with Charging", fullauto2);
     // chooser.addOption("Blue low", fullauto3);
     // chooser.addOption("Red low", fullauto4);
+
+
+
+    //Blue Auto Paths. Do not Touch!!!
+    SwerveAutoBuilder topCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command  blueConeTop = topCone.fullAuto(topcone);
+
+    SwerveAutoBuilder topCube = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command  blueCubeTop = topCube.fullAuto(topcube);
+
+    SwerveAutoBuilder coneCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command  blueConeCharge = coneCharge.fullAuto(conecharge);
+
+    SwerveAutoBuilder cubeCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command  blueCubeCharge = cubeCharge.fullAuto(cubecharge);
+
+    SwerveAutoBuilder bottomCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command  blueConeBottom = bottomCone.fullAuto(bottomcone);
+
+    SwerveAutoBuilder bottomCube = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command  blueCubeBottom = bottomCube.fullAuto(bottomcube);
+
+
+    //Red Auto Paths. Do not Touch!!!
+    SwerveAutoBuilder topRedCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command  redConeTop = topRedCone.fullAuto(topcone);
+
+    SwerveAutoBuilder topRedCube = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command  redCubeTop = topRedCube.fullAuto(topcube);
+
+    SwerveAutoBuilder coneRedCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command  redConeCharge = coneRedCharge.fullAuto(conecharge);
+
+    SwerveAutoBuilder cubeRedCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command  redCubeCharge = cubeRedCharge.fullAuto(cubecharge);
+
+    SwerveAutoBuilder bottomRedCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command  redConeBottom = bottomRedCone.fullAuto(bottomcone);
+
+    SwerveAutoBuilder bottomRedCube = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command  redCubeBottom = bottomRedCube.fullAuto(bottomcube);
+
+
 
     SwerveAutoBuilder auto= new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
