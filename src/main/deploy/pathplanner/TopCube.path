@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 2.3,
-        "y": 2.7
+        "y": 4.45
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.068890280334352,
-        "y": 2.7
+        "x": 2.31804899614923,
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,25 +17,26 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "highpos"
+          "highpos",
+          "reset"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
-        "x": 1.5,
-        "y": 2.7
+        "x": 1.65,
+        "y": 4.45
       },
       "prevControl": {
-        "x": 1.5370625507717854,
-        "y": 2.7
+        "x": 1.6129374492282147,
+        "y": 4.45
       },
       "nextControl": {
-        "x": 1.4629374492282154,
-        "y": 2.7
+        "x": 1.6870625507717851,
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -44,25 +45,26 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "outtakecube"
+          "outtakecube",
+          "reset"
         ],
-        "executionBehavior": "parallelDeadline",
+        "executionBehavior": "sequential",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
         "x": 2.3,
-        "y": 2.7
+        "y": 4.45
       },
       "prevControl": {
-        "x": 2.30654053356397,
-        "y": 2.7
+        "x": 2.280928620771148,
+        "y": 4.45
       },
       "nextControl": {
-        "x": 2.2934594664360297,
-        "y": 2.7
+        "x": 3.1536509602908303,
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -71,31 +73,31 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "drivecube"
+          "reset"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
-        "x": 3.0,
-        "y": 2.7
+        "x": 4.0,
+        "y": 4.75
       },
       "prevControl": {
-        "x": 2.4963203242674066,
-        "y": 2.7
+        "x": 2.639586937296757,
+        "y": 4.75
       },
       "nextControl": {
-        "x": 3.5036796757325934,
-        "y": 2.7
+        "x": 4.53572945443543,
+        "y": 4.75
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 2.0,
+      "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -105,12 +107,39 @@
     },
     {
       "anchorPoint": {
-        "x": 4.9,
-        "y": 2.698768079419182
+        "x": 4.5,
+        "y": 4.75
       },
       "prevControl": {
-        "x": 4.511454191902423,
-        "y": 2.704485808401003
+        "x": 4.485175884679264,
+        "y": 4.75
+      },
+      "nextControl": {
+        "x": 4.514824115320736,
+        "y": 4.75
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "intakecube"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "deadline",
+        "waitTime": 2.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.5,
+        "y": 4.75
+      },
+      "prevControl": {
+        "x": 4.919272510909323,
+        "y": 4.75
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -122,9 +151,16 @@
         "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
-        "waitTime": 0
+        "waitTime": 1.0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 1.8545454545453497,
+      "names": [
+        "drivecube"
+      ]
+    }
+  ]
 }

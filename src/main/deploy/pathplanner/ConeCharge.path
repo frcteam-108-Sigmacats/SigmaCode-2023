@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 2.3,
-        "y": 4.44
+        "y": 3.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.068890280334352,
-        "y": 4.44
+        "x": 2.31804899614923,
+        "y": 3.25
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,25 +17,26 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "highpos"
+          "highpos",
+          "reset"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
-        "x": 1.5,
-        "y": 4.4422655227169265
+        "x": 1.65,
+        "y": 3.25
       },
       "prevControl": {
-        "x": 1.5370625507717854,
-        "y": 4.4422655227169265
+        "x": 1.6129374492282147,
+        "y": 3.25
       },
       "nextControl": {
-        "x": 1.4629374492282154,
-        "y": 4.4422655227169265
+        "x": 1.6870625507717851,
+        "y": 3.25
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -44,25 +45,26 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "outtakecube"
+          "outtakecone",
+          "reset"
         ],
-        "executionBehavior": "parallelDeadline",
+        "executionBehavior": "sequential",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
         "x": 2.3,
-        "y": 4.44
+        "y": 3.25
       },
       "prevControl": {
-        "x": 2.30654053356397,
-        "y": 4.44
+        "x": 2.280928620771148,
+        "y": 3.25
       },
       "nextControl": {
-        "x": 2.2934594664360297,
-        "y": 4.44
+        "x": 3.1536509602908303,
+        "y": 3.25
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -71,46 +73,21 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "drivecube"
+          "reset"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "deadline",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
-        "x": 2.3,
-        "y": 2.7
+        "x": 3.0,
+        "y": 3.25
       },
       "prevControl": {
-        "x": 2.263837906747785,
-        "y": 2.7
-      },
-      "nextControl": {
-        "x": 2.6574381006061225,
-        "y": 2.7
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 6.5,
-        "y": 2.7
-      },
-      "prevControl": {
-        "x": 5.996320324267407,
-        "y": 2.7
+        "x": 2.9799858475300605,
+        "y": 3.25
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -126,5 +103,18 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "outtakecube"
+      ]
+    },
+    {
+      "position": 1.854545454545351,
+      "names": [
+        "drivecube"
+      ]
+    }
+  ]
 }
