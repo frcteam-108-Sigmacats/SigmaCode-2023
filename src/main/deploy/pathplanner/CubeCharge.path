@@ -99,7 +99,7 @@
         "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
-        "waitTime": 5.0
+        "waitTime": 0.0
       }
     }
   ],

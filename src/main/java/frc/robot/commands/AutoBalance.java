@@ -20,7 +20,7 @@ public class AutoBalance extends CommandBase {
   private Pose2d maxPos = new Pose2d();
   private Translation2d translation;
   public double ySpeed;
-  private double offset = -11;
+  private double offset = -12;
   public boolean rampDone = false;
   public AutoBalance(SwerveSubsystem swerveSub) {
     swerveMech = swerveSub;
@@ -32,6 +32,7 @@ public class AutoBalance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    rampDone = false;
     if(DriverStation.getAlliance() == DriverStation.Alliance.Blue){
       minPos = blueMinPos;
       maxPos = blueMaxPos;
@@ -55,17 +56,15 @@ public class AutoBalance extends CommandBase {
     System.out.println("Degrees " + swerveMech.getPitch().getDegrees() + "offset " + rampDone);
     if(rampDone == false)
     {
-      ySpeed = -0.3;
+      ySpeed = -0.35;
 
-      translation = new Translation2d(ySpeed, 0);
-      swerveMech.drive(translation, 0, true);
+
       
       if(swerveMech.getPitch().getDegrees() >= offset){
         rampDone = true;
 
         ySpeed = 0;
-        translation = new Translation2d(ySpeed, 0);
-        swerveMech.drive(translation, 0, true);
+        
 
         System.out.println("Boolean " + rampDone);
       }
@@ -74,7 +73,10 @@ public class AutoBalance extends CommandBase {
       ySpeed = 0;
       swerveMech.turnModules();
     }
+    translation = new Translation2d(ySpeed, 0);
+    swerveMech.drive(translation, 0, true);
 /* 
+    
     if(Math.abs(swerveMech.getPitch().getDegrees()) >= offset){
 
       //System.out.println("Radians " + swerveMech.getPitch().getRadians());

@@ -89,15 +89,15 @@ public class RobotContainer {
     dUpPov.whileTrue(new ZeroModules(swerveSubsystem));
     dLeftPov.whileTrue(new Strafe(swerveSubsystem, 0.3));
     dRightPov.whileTrue(new Strafe(swerveSubsystem, -0.3));
-    dLeftTrigger.whileTrue(new RunIntake(1, -0.75));//negative is cone
+    dLeftTrigger.whileTrue(new RunIntake(1, 0.75));//negative is cone
     dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     //dLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.5, true));
     //dLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, false));
-    dRightTrigger.whileTrue(new RunIntake(2, 0.65));//positive is cube intake
+    dRightTrigger.whileTrue(new RunIntake(2, -0.65));//positive is cube intake
     dRightTrigger.whileFalse(new SetClawStates(m_Claw, 5));//Sensor needs to be fixed in order to change the state to 2
-    dLeftBumper.whileTrue(new RunIntake(3, -0.75));
+    dLeftBumper.whileTrue(new RunIntake(3, 0.75));
     dLeftBumper.whileFalse(new SetClawStates(m_Claw, 7));
-    dRightBumper.whileTrue(new RunIntake(4, 0.65));
+    dRightBumper.whileTrue(new RunIntake(4, -0.65));
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dKY.whileTrue(new SetClawStates(m_Claw, 0));
@@ -111,9 +111,9 @@ public class RobotContainer {
     //Operator's buttons
     oLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.85, false));//Positive is Cone Intake for bottom intake
     oLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, true));
-    oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, 0.85)); //Positive is Outtake cone
+    oLeftBumper.whileTrue(new clawIntakeTester(m_Claw, -0.85)); //Positive is Outtake cone
     oLeftBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
-    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, -0.5 )); //Negative is Outtake cube
+    oRightBumper.whileTrue(new clawIntakeTester(m_Claw, 0.5 )); //Negative is Outtake cube
     oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
     oRightTrigger.whileTrue(new BottomOuttake(m_Claw, -0.8, false));
     oRightTrigger.whileFalse(new BottomOuttake(m_Claw, 0, true));
@@ -122,7 +122,7 @@ public class RobotContainer {
     oKB.whileTrue(new SetClawStates(m_Claw, 3));
     oKX.whileTrue(new SetClawStates(m_Claw, 4 ));
     oRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
-    oUpPov.whileTrue(new HandOff(-0.8, false));
+    oUpPov.whileTrue(new HandOff(0.8, false));
     oUpPov.whileFalse(new HandOff(0, true));
     oDownPov.onTrue(new testingArmExtenders(m_Claw, false));
     //SmartDashboard.putData("Auto Chooser", chooser);
@@ -191,15 +191,15 @@ public class RobotContainer {
 
     List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
 
-    eventMap.put("intakecone", new RunIntake(1, -0.5));
-    eventMap.put("intakecube", new RunIntake(2, 0.5));//Fix sensor before 2nd case
+    eventMap.put("intakecone", new RunIntake(1, 0.5));
+    eventMap.put("intakecube", new RunIntake(2, -0.5));//Fix sensor before 2nd case
     eventMap.put("drivecone", new SetClawStates(m_Claw, 1));//Cone
     eventMap.put("drivecube", new SetClawStates(m_Claw, 6));//Cube
     eventMap.put("highpos", new SetClawStates(m_Claw, 2));
     eventMap.put("midpos", new SetClawStates(m_Claw, 3));
     eventMap.put("lowpos", new SetClawStates(m_Claw, 4));
-    eventMap.put("outtakecube", new clawIntakeTester(m_Claw, -0.75));
-    eventMap.put("outtakecone", new clawIntakeTester(m_Claw, 0.8));
+    eventMap.put("outtakecube", new clawIntakeTester(m_Claw, 0.75));
+    eventMap.put("outtakecone", new clawIntakeTester(m_Claw, -0.8));
     eventMap.put("reset", new ZeroModules(swerveSubsystem));
     eventMap.put("bottomcone", new BottomIntake(m_Claw, 0.85, false));
     eventMap.put("stopbottomcone", new BottomIntake(m_Claw, 0, true));

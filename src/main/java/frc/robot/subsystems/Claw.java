@@ -352,7 +352,7 @@ public class Claw extends SubsystemBase {
         if(counter > 50){
           rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
           rightClawArmMotor.follow(leftClawArmMotor, true);
-          clawIntake.set(-0.1);
+          clawIntake.set(0.1);
         }
         // clawIntake.set(-0.02);
         break;
@@ -404,7 +404,7 @@ public class Claw extends SubsystemBase {
         rotateArmPID.setP(0.003);
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
-        clawIntake.set(-0.1);
+        clawIntake.set(0.1);
         // clawIntake.set(-0.02);
         break;
 
@@ -412,7 +412,7 @@ public class Claw extends SubsystemBase {
         rotateArmPID.setP(0.003);
         rotateArmPID.setReference(startConfigPos, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
-        clawIntake.set(0.1);
+        //clawIntake.set(0.1);
         // clawIntake.set(-0.02);
         break;
       
@@ -533,7 +533,7 @@ public class Claw extends SubsystemBase {
         rotateArmPID.setReference(handoff, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         if(throughBoreAbs.getPosition() >= (handoff - 20) && counter > 50){
-          bottomIntakeMotor.set(speed);
+          bottomIntakeMotor.set(-0.8);
   }
 }
 
