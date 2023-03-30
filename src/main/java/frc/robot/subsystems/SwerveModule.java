@@ -29,7 +29,7 @@ public class SwerveModule extends SubsystemBase {
 
   private RelativeEncoder driveEncoder;
   private AbsoluteEncoder turnEncoder;
-  private double chassisAngleOffset;
+  private double chassisAngleOffset, autoAngle;
 
   private SwerveModuleState desiredState = new SwerveModuleState();
   /** Creates a new ExampleSubsystem. */
@@ -56,6 +56,7 @@ public class SwerveModule extends SubsystemBase {
 
     //Modules angle relative to the chassis
     chassisAngleOffset = absolutePositionOffset;
+    autoAngle = 45;
 
     turnEncoder.setInverted(true);
 
@@ -128,6 +129,11 @@ public class SwerveModule extends SubsystemBase {
   }
   public void zeroModules(){
     mDesiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(chassisAngleOffset));
+    turningPID.setReference(mDesiredState.angle.getRadians(), ControlType.kPosition);
+  }
+
+  public void turnModules(){
+    mDesiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(autoAngle));
     turningPID.setReference(mDesiredState.angle.getRadians(), ControlType.kPosition);
   }
 

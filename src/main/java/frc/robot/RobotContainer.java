@@ -32,6 +32,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.sound.midi.Sequencer;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -46,6 +48,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -98,7 +101,7 @@ public class RobotContainer {
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dKY.whileTrue(new SetClawStates(m_Claw, 0));
-    dKX.whileTrue(new AlignRobotGyro(swerveSubsystem));
+    dKX.whileTrue(new AutoBalance(swerveSubsystem));
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
     // dKX.whileTrue(new SetClawStates(m_Claw, 4));
@@ -208,6 +211,10 @@ public class RobotContainer {
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command  blueConeTop = topCone.fullAuto(topcone);
 
+    SwerveAutoBuilder twoGamePieceCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command blueTwoPiece = twoGamePieceCone.fullAuto(testing);
+
     SwerveAutoBuilder topCube = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command  blueCubeTop = topCube.fullAuto(topcube);
@@ -218,8 +225,9 @@ public class RobotContainer {
 
     SwerveAutoBuilder cubeCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    Command  blueCubeCharge = cubeCharge.fullAuto(cubecharge);
-
+    //SequentialCommandGroup blueCubeCharge = new SequentialCommandGroup(cubeCharge.fullAuto(cubecharge), new AutoBalance(swerveSubsystem));
+    Command blueCubeCharge = cubeCharge.fullAuto(cubecharge);
+    SequentialCommandGroup BlueCubeCharge = new SequentialCommandGroup(blueCubeCharge, new AutoBalance(swerveSubsystem));
     SwerveAutoBuilder bottomCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command  blueConeBottom = bottomCone.fullAuto(bottomcone);
@@ -229,7 +237,12 @@ public class RobotContainer {
     Command  blueCubeBottom = bottomCube.fullAuto(bottomcube);
 
 
+
     //Red Auto Paths. Do not Touch!!!
+    SwerveAutoBuilder twoPieceGameCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
+    Command redTwoPiece = twoPieceGameCone.fullAuto(testing);
+
     SwerveAutoBuilder topRedCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
     Command  redConeTop = topRedCone.fullAuto(topcone);
@@ -262,28 +275,38 @@ public class RobotContainer {
     chooser.addOption("BlueLoadZone Cone", blueConeTop);
     chooser.addOption("BlueLoadZone Cube", blueCubeTop);
     chooser.addOption("BlueMid Cone", blueConeCharge);
-    chooser.addOption("BlueMid Cube", blueCubeCharge);
+    chooser.addOption("BlueMid Cube", BlueCubeCharge);
     chooser.addOption("BlueWall Cone", blueConeBottom);
     chooser.addOption("BlueWall Cube", blueCubeBottom);
+    chooser.addOption("2 Pieces Load Zone Blue", blueTwoPiece);
     chooser.addOption("RedLoadZone Cone", redConeTop);
     chooser.addOption("RedLoadZone Cube", redCubeTop);
     chooser.addOption("RedMid Cone", redConeCharge);
     chooser.addOption("RedMid Cube", redCubeCharge);
     chooser.addOption("RedWall Cone", redConeBottom);
     chooser.addOption("RedWall Cube", redCubeBottom); 
+    chooser.addOption("2 Piece Load Zone Red", redTwoPiece);
     chooser.setDefaultOption("Nothing", null);
 
     SmartDashboard.putData("Auto Chooser", chooser);
+    //return blueConeTop;
+    //return blueCubeTop;
+    //return blueConeCharge;
+    //return blueCubeCharge;
+    //return blueConeBottom;
+    //return blueCubeBottom;
+    //return redConeTop;
+    //return redCubeTop;
+    //return redConeCharge;
+    //return redCubeCharge;
+    //return redConeBottom;
+    //return redCubeBottom;
+
   }
   public Command getAutonomousCommand() {
     
     return chooser.getSelected();
 
-    //Blue with taxi
-    //return loadZoneBlue;
-
-
-    //Red with taxi
-    //return test;
+    //makeAuto();
   }
 }

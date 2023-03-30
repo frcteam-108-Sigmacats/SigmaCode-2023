@@ -82,11 +82,11 @@
     },
     {
       "anchorPoint": {
-        "x": 3.0,
+        "x": 3.75,
         "y": 2.75
       },
       "prevControl": {
-        "x": 2.9799858475300605,
+        "x": 3.7299858475300605,
         "y": 2.75
       },
       "nextControl": null,
@@ -96,12 +96,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "balance"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
-        "waitTime": 0
+        "waitTime": 5.0
       }
     }
   ],

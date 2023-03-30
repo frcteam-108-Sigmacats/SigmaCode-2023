@@ -178,6 +178,13 @@ public class SwerveSubsystem extends SubsystemBase {
     backRight.zeroModules();
   }
 
+  public void turnModules(){
+    frontLeft.turnModules();
+    frontRight.turnModules();
+    backLeft.turnModules();
+    backRight.turnModules();
+  }
+
   
   //To tell us if we can extend our arm automaticall to the high peg positions
   public boolean canArmExtend(){

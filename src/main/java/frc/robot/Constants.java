@@ -87,7 +87,7 @@ public final class Constants {
             //Motor Set Up
             public static final int fRDriveMotor = 3;
             public static final int fRTurnMotor = 4;
-            public static final boolean isFRDriveMotorReversed = true;
+            public static final boolean isFRDriveMotorReversed = false;
             public static final boolean isFRTurnMotorReversed = false;
             //Absolute Encoder Set Up
             //public static final int fRAbsoluteEnc = 1;
