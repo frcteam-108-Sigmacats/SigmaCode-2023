@@ -83,15 +83,15 @@
     {
       "anchorPoint": {
         "x": 4.0,
-        "y": 4.75
+        "y": 4.45
       },
       "prevControl": {
         "x": 2.639586937296757,
-        "y": 4.75
+        "y": 4.45
       },
       "nextControl": {
         "x": 4.53572945443543,
-        "y": 4.75
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -108,15 +108,15 @@
     {
       "anchorPoint": {
         "x": 4.5,
-        "y": 4.75
+        "y": 4.45
       },
       "prevControl": {
         "x": 4.485175884679264,
-        "y": 4.75
+        "y": 4.45
       },
       "nextControl": {
         "x": 4.514824115320736,
-        "y": 4.75
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -135,15 +135,15 @@
     {
       "anchorPoint": {
         "x": 5.5,
-        "y": 4.75
+        "y": 4.45
       },
       "prevControl": {
         "x": 4.919272510909323,
-        "y": 4.75
+        "y": 4.45
       },
       "nextControl": {
         "x": 6.080727489090677,
-        "y": 4.75
+        "y": 4.45
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -160,11 +160,11 @@
     {
       "anchorPoint": {
         "x": 6.662987160560787,
-        "y": 4.75
+        "y": 4.45
       },
       "prevControl": {
         "x": 6.480153796724315,
-        "y": 4.75
+        "y": 4.45
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -180,12 +180,5 @@
       }
     }
   ],
-  "markers": [
-    {
-      "position": 1.8545454545453497,
-      "names": [
-        "drivecube"
-      ]
-    }
-  ]
+  "markers": []
 }

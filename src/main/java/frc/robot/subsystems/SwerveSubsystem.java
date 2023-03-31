@@ -146,6 +146,10 @@ public class SwerveSubsystem extends SubsystemBase {
     position[3] = backRight.getPosition();
     return position;
   }
+  public void xLock(){
+    SwerveModuleState[] moduleStates = {new SwerveModuleState(0, Rotation2d.fromDegrees(45)), new SwerveModuleState(0, Rotation2d.fromDegrees(135)), new SwerveModuleState(0, Rotation2d.fromDegrees(135)), new SwerveModuleState(0, Rotation2d.fromDegrees(45))};
+    setModuleStates(moduleStates);
+  }
   //Resets odometry ot the specified pose
   public void resetOdometry(Pose2d pose){
     odometry.resetPosition(getHeading(), getModulesPosition(), pose);
@@ -178,11 +182,12 @@ public class SwerveSubsystem extends SubsystemBase {
     backRight.zeroModules();
   }
 
-  public void turnModules(){
-    frontLeft.turnModules();
-    frontRight.turnModules();
-    backLeft.turnModules();
-    backRight.turnModules();
+  public void xFormation(){
+    System.out.println("Works!");
+    frontLeft.setModAngle(45);
+    frontRight.setModAngle(135);
+    backLeft.setModAngle(135);
+    backRight.setModAngle(45);
   }
 
   

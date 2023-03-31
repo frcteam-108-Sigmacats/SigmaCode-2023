@@ -58,23 +58,23 @@ public class AutoBalance extends CommandBase {
     {
       ySpeed = -0.35;
 
-
+      translation = new Translation2d(ySpeed, 0);
+      swerveMech.drive(translation, 0, true);
       
       if(swerveMech.getPitch().getDegrees() >= offset){
         rampDone = true;
 
         ySpeed = 0;
-        
+        translation = new Translation2d(ySpeed, 0);
+        swerveMech.drive(translation, 0, true);
 
         System.out.println("Boolean " + rampDone);
       }
     }
     else{
-      ySpeed = 0;
-      swerveMech.turnModules();
+      swerveMech.xLock();     
     }
-    translation = new Translation2d(ySpeed, 0);
-    swerveMech.drive(translation, 0, true);
+
 /* 
     
     if(Math.abs(swerveMech.getPitch().getDegrees()) >= offset){
@@ -94,8 +94,8 @@ public class AutoBalance extends CommandBase {
     // else if(swerveMech.getPitch().getRadians() <= offset && swerveMech.getPitch().getRadians() >= -1.1){
     //   ySpeed = 0;
     // }
-    translation = new Translation2d(ySpeed, 0);
-    swerveMech.drive(translation, 0, true);
+    // translation = new Translation2d(ySpeed, 0);
+    // swerveMech.drive(translation, 0, true);
   }
 
   // Called once the command ends or is interrupted.

@@ -117,7 +117,9 @@ public class RobotContainer {
     oRightBumper.whileFalse(new clawIntakeHoldTester(m_Claw));
     oRightTrigger.whileTrue(new BottomOuttake(m_Claw, -0.8, false));
     oRightTrigger.whileFalse(new BottomOuttake(m_Claw, 0, true));
-    oKA.whileTrue(new SetClawStates(m_Claw, 0));
+    //oKA.whileTrue(new SetClawStates(m_Claw, 0));
+    oKA.whileTrue(new ZeroModules(swerveSubsystem));
+    //oKA.whileFalse(new InstantCommand(() -> swerveSubsystem.xFormation()));
     oKY.whileTrue(new SetClawStates(m_Claw, 2));
     oKB.whileTrue(new SetClawStates(m_Claw, 3));
     oKX.whileTrue(new SetClawStates(m_Claw, 4 ));
@@ -222,12 +224,14 @@ public class RobotContainer {
     SwerveAutoBuilder coneCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command  blueConeCharge = coneCharge.fullAuto(conecharge);
+    SequentialCommandGroup BlueConeCharge = new SequentialCommandGroup(blueConeCharge, new AutoBalance(swerveSubsystem));
 
     SwerveAutoBuilder cubeCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     //SequentialCommandGroup blueCubeCharge = new SequentialCommandGroup(cubeCharge.fullAuto(cubecharge), new AutoBalance(swerveSubsystem));
     Command blueCubeCharge = cubeCharge.fullAuto(cubecharge);
     SequentialCommandGroup BlueCubeCharge = new SequentialCommandGroup(blueCubeCharge, new AutoBalance(swerveSubsystem));
+
     SwerveAutoBuilder bottomCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command  blueConeBottom = bottomCone.fullAuto(bottomcone);
@@ -254,10 +258,12 @@ public class RobotContainer {
     SwerveAutoBuilder coneRedCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
     Command  redConeCharge = coneRedCharge.fullAuto(conecharge);
+    SequentialCommandGroup RedConeCharge = new SequentialCommandGroup(redConeCharge, new AutoBalance(swerveSubsystem));
 
     SwerveAutoBuilder cubeRedCharge = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
     Command  redCubeCharge = cubeRedCharge.fullAuto(cubecharge);
+    SequentialCommandGroup RedCubeCharge = new SequentialCommandGroup(redCubeCharge, new AutoBalance(swerveSubsystem));
 
     SwerveAutoBuilder bottomRedCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, true, swerveSubsystem);
@@ -274,15 +280,15 @@ public class RobotContainer {
     Command test = auto.fullAuto(testing);
     chooser.addOption("BlueLoadZone Cone", blueConeTop);
     chooser.addOption("BlueLoadZone Cube", blueCubeTop);
-    chooser.addOption("BlueMid Cone", blueConeCharge);
+    chooser.addOption("BlueMid Cone", BlueConeCharge);
     chooser.addOption("BlueMid Cube", BlueCubeCharge);
     chooser.addOption("BlueWall Cone", blueConeBottom);
     chooser.addOption("BlueWall Cube", blueCubeBottom);
     chooser.addOption("2 Pieces Load Zone Blue", blueTwoPiece);
     chooser.addOption("RedLoadZone Cone", redConeTop);
     chooser.addOption("RedLoadZone Cube", redCubeTop);
-    chooser.addOption("RedMid Cone", redConeCharge);
-    chooser.addOption("RedMid Cube", redCubeCharge);
+    chooser.addOption("RedMid Cone", RedConeCharge);
+    chooser.addOption("RedMid Cube", RedCubeCharge);
     chooser.addOption("RedWall Cone", redConeBottom);
     chooser.addOption("RedWall Cube", redCubeBottom); 
     chooser.addOption("2 Piece Load Zone Red", redTwoPiece);

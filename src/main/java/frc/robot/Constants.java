@@ -75,6 +75,7 @@ public final class Constants {
             //Encoder Set Up
             //public static final int fLAbsoluteEnc = 0;
             public static final double fLChassisAngleOffset = 1.571;//Module relative to the chassis
+            public static final double xFormOne = 45;
             //PID Controller Set Up
             public static final double frontLDriveKP = 0.2;
             public static final double frontLDriveKI = 0;
@@ -92,6 +93,7 @@ public final class Constants {
             //Absolute Encoder Set Up
             //public static final int fRAbsoluteEnc = 1;
             public static final double fRChassisAngleOffset = 0;
+            public static final double xFormTwo = 135;
             //PID Controller Set Up
             public static final double frontRDriveKP = 0.2;
             public static final double frontRDriveKI = 0;
@@ -109,6 +111,7 @@ public final class Constants {
             //Absolute Encoder Set Up
             //public static final int bLAbsoluteEnc = 2;
             public static final double bLChassisAngleOffset = 0;
+            public static final double xFormThree = 135;
             //PID Controller Set Up
             public static final double backLDriveKP = 0.2;
             public static final double backLDriveKI = 0;
@@ -127,6 +130,7 @@ public final class Constants {
             //public static final int bRAbsoluteEnc = 3;
 
             public static final double bRChassisAngleOffset = Math.PI / 2;//Module relative to the chassis
+            public static final double xFormFour = 45;
             //PID Controller Set Up
             public static final double backRDriveKP = 0.2;
             public static final double backRDriveKI = 0;

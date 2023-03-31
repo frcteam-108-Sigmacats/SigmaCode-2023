@@ -98,8 +98,8 @@
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 5.0
+        "waitBehavior": "before",
+        "waitTime": 0.0
       }
     }
   ],

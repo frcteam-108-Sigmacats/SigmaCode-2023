@@ -132,8 +132,8 @@ public class SwerveModule extends SubsystemBase {
     turningPID.setReference(mDesiredState.angle.getRadians(), ControlType.kPosition);
   }
 
-  public void turnModules(){
-    mDesiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(autoAngle));
+  public void setModAngle(double angle){
+    mDesiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(angle));
     turningPID.setReference(mDesiredState.angle.getRadians(), ControlType.kPosition);
   }
 

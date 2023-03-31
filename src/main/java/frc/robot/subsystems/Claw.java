@@ -533,7 +533,7 @@ public class Claw extends SubsystemBase {
         rotateArmPID.setReference(handoff, ControlType.kPosition);
         rightClawArmMotor.follow(leftClawArmMotor, true);
         if(throughBoreAbs.getPosition() >= (handoff - 20) && counter > 50){
-          bottomIntakeMotor.set(-0.8);
+          bottomIntakeMotor.set(-0.95);
   }
 }
 
