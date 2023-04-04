@@ -9,6 +9,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AlignRobot;
 import frc.robot.commands.AlignRobotGyro;
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.AutoBalanceFront;
 import frc.robot.commands.BottomIntake;
 import frc.robot.commands.BottomOuttake;
 import frc.robot.commands.RunIntake;
@@ -190,6 +191,7 @@ public class RobotContainer {
     List<PathPlannerTrajectory> bottomcone = PathPlanner.loadPathGroup("BottomCone", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> bottomcube = PathPlanner.loadPathGroup("BottomCube", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> TBN = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
+    List<PathPlannerTrajectory> cubechargetest = PathPlanner.loadPathGroup("CubeChargeTest", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4), new PathConstraints(2, 2));
 
     List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
 
@@ -240,6 +242,11 @@ public class RobotContainer {
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
     Command  blueCubeBottom = bottomCube.fullAuto(bottomcube);
 
+    SwerveAutoBuilder cubeChargeTest = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    //SequentialCommandGroup blueCubeCharge = new SequentialCommandGroup(cubeCharge.fullAuto(cubecharge), new AutoBalance(swerveSubsystem));
+    Command blueCubeChargeTest = cubeChargeTest.fullAuto(cubechargetest);
+    SequentialCommandGroup BlueCubeChargeTest = new SequentialCommandGroup(blueCubeChargeTest, new AutoBalanceFront(swerveSubsystem));
 
 
     //Red Auto Paths. Do not Touch!!!
@@ -292,6 +299,7 @@ public class RobotContainer {
     chooser.addOption("RedWall Cone", redConeBottom);
     chooser.addOption("RedWall Cube", redCubeBottom); 
     chooser.addOption("2 Piece Load Zone Red", redTwoPiece);
+    chooser.addOption("Charge Cube and Taxi Test", BlueCubeChargeTest);
     chooser.setDefaultOption("Nothing", null);
 
     SmartDashboard.putData("Auto Chooser", chooser);
