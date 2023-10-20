@@ -33,7 +33,7 @@ public class SetClawStates extends CommandBase {
   @Override
   public void execute() {
     
-    if(clawState == 1){
+    if(clawState == 1 || clawState == 9){
       if(magnetSensor.get() == true){
         counter++;
         clawMech.setClawStates(clawState, counter);
@@ -47,7 +47,7 @@ public class SetClawStates extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    clawMech.clawExtenders.set(Value.kReverse);
+    //clawMech.clawExtenders.set(Value.kReverse);
     //clawMech.setClawStates(clawState);
   }
 

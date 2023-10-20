@@ -38,7 +38,9 @@ import javax.sound.midi.Sequencer;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -94,15 +96,17 @@ public class RobotContainer {
     dLeftTrigger.whileFalse(new SetClawStates(m_Claw, 1));
     //dLeftTrigger.whileTrue(new BottomIntake(m_Claw, 0.5, true));
     //dLeftTrigger.whileFalse(new BottomIntake(m_Claw, 0, false));
-    dRightTrigger.whileTrue(new RunIntake(2, -0.65));//positive is cube intake
-    dRightTrigger.whileFalse(new SetClawStates(m_Claw, 5));//Sensor needs to be fixed in order to change the state to 2
+    dRightTrigger.whileTrue(new RunIntake(2, -0.35));//positive is cube intake
+    dRightTrigger.whileFalse(new SetClawStates(m_Claw, 9));//Sensor needs to be fixed in order to change the state to 2
     dLeftBumper.whileTrue(new RunIntake(3, 0.75));
     dLeftBumper.whileFalse(new SetClawStates(m_Claw, 7));
-    dRightBumper.whileTrue(new RunIntake(4, -0.65));
+    dRightBumper.whileTrue(new RunIntake(4, -0.45));
     dRightBumper.whileFalse(new SetClawStates(m_Claw, 8));
     dKA.whileTrue(new InstantCommand(()->swerveSubsystem.zeroHeading()));
     dKY.whileTrue(new SetClawStates(m_Claw, 0));
-    dKX.whileTrue(new AutoBalance(swerveSubsystem));
+    //dKX.whileTrue(new AlignRobotGyro(swerveSubsystem));
+    //dKX.whileFalse(new SwerveDriveTeleop(swerveSubsystem, driver, fieldRelative));
+    
     // dKY.whileTrue(new SetClawStates(m_Claw, 2));
     // dKB.whileTrue(new SetClawStates(m_Claw, 3));
     // dKX.whileTrue(new SetClawStates(m_Claw, 4));
@@ -124,6 +128,7 @@ public class RobotContainer {
     oKY.whileTrue(new SetClawStates(m_Claw, 2));
     oKB.whileTrue(new SetClawStates(m_Claw, 3));
     oKX.whileTrue(new SetClawStates(m_Claw, 4 ));
+    oKX.whileFalse(new SetClawStates(m_Claw, 1));
     oRightPov.whileTrue(new MoveArm(m_Claw, -0.5));
     oUpPov.whileTrue(new HandOff(0.8, false));
     oUpPov.whileFalse(new HandOff(0, true));
@@ -192,7 +197,7 @@ public class RobotContainer {
     List<PathPlannerTrajectory> bottomcube = PathPlanner.loadPathGroup("BottomCube", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> TBN = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
     List<PathPlannerTrajectory> cubechargetest = PathPlanner.loadPathGroup("CubeChargeTest", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4), new PathConstraints(2, 2));
-
+    PathPlannerTrajectory testingForPillage = PathPlanner.loadPath("TestForPillage", new PathConstraints(0.5, 0.5));
     List<PathPlannerTrajectory> testing = PathPlanner.loadPathGroup("NotNice", new PathConstraints(0.5, 0.5), new PathConstraints(0.5, 0.5), new PathConstraints(4, 4));
 
     eventMap.put("intakecone", new RunIntake(1, 0.5));
@@ -208,7 +213,6 @@ public class RobotContainer {
     eventMap.put("bottomcone", new BottomIntake(m_Claw, 0.85, false));
     eventMap.put("stopbottomcone", new BottomIntake(m_Claw, 0, true));
     eventMap.put("balance", new AutoBalance(swerveSubsystem));
-
 
     //Blue Auto Paths. Do not Touch!!!
     SwerveAutoBuilder topCone = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
@@ -244,9 +248,12 @@ public class RobotContainer {
 
     SwerveAutoBuilder cubeChargeTest = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
     new PIDConstants(0.000001, 0.006, 0.00001), new PIDConstants(0.001, 0.006, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
-    //SequentialCommandGroup blueCubeCharge = new SequentialCommandGroup(cubeCharge.fullAuto(cubecharge), new AutoBalance(swerveSubsystem));
     Command blueCubeChargeTest = cubeChargeTest.fullAuto(cubechargetest);
     SequentialCommandGroup BlueCubeChargeTest = new SequentialCommandGroup(blueCubeChargeTest, new AutoBalanceFront(swerveSubsystem));
+    //SequentialCommandGroup blueCubeCharge = new SequentialCommandGroup(cubeCharge.fullAuto(cubecharge), new AutoBalance(swerveSubsystem));
+    SwerveAutoBuilder testingSwerve = new SwerveAutoBuilder(swerveSubsystem::getPose, swerveSubsystem::resetOdometry, SwerveConstants.swerveKinematics,
+    new PIDConstants(0, 0, 0), new PIDConstants(0, 0, 0), swerveSubsystem::setModuleStates, eventMap, false, swerveSubsystem);
+    Command testSwerve = testingSwerve.fullAuto(testingForPillage);
 
 
     //Red Auto Paths. Do not Touch!!!

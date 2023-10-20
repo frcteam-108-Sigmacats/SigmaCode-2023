@@ -6,8 +6,10 @@ package frc.robot.subsystems;
 
 import java.util.Timer;
 
+import com.ctre.phoenix.sensors.Pigeon2_Faults;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -45,6 +47,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private static SwerveDriveOdometry odometry;
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(1);
+  private Pigeon2_Faults pigeonFaults = new Pigeon2_Faults();
+  public PIDController alignmentController = new PIDController(0.004, 0.0004, 0);
   //Getting community zone points to make auto claw
   private Pose2d bAllCommFarPos = new Pose2d(4.67, 0, null);
   private Pose2d bAllCommMinPos = new Pose2d(0,5.25, null);
@@ -64,11 +68,12 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     zeroHeading();
     gyro.configFactoryDefault();
+    gyro.clearStickyFaults();
     odometry = new SwerveDriveOdometry(SwerveConstants.swerveKinematics, new Rotation2d(), getModulesPosition());
   }
   //Gets the robots heading based on gyro
   public Rotation2d getHeading(){
-    return Rotation2d.fromDegrees(Math.IEEEremainder(gyro.getAngle(), 360));
+    return Rotation2d.fromDegrees(Math.IEEEremainder(gyro.getAngle(), 362));
   }
   public Pose2d getPose(){
     return odometry.getPoseMeters();
@@ -104,6 +109,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("BackL Angle: ", backLeft.getState().angle.getDegrees());
     SmartDashboard.putNumber("BackR Angle: ", backRight.getState().angle.getDegrees());
     SmartDashboard.putNumber("Gryo Pitch: " , getPitch().getDegrees());
+    SmartDashboard.putNumber("PID for gyro angle:", alignmentController.calculate(getHeading().getRadians(), 3.08923));
     //System.out.println("Gyro Pitch:  " + gyro.getPitch());
     //System.out.println("Gyro Roll:  " + gyro.getRoll());
     //System.out.println("Gyro Yaw:  " + gyro.get);

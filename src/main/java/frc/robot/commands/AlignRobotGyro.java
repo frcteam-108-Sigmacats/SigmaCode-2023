@@ -12,7 +12,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class AlignRobotGyro extends CommandBase {
   private SwerveSubsystem swerve;
   private Translation2d translation= new Translation2d(0, 0);
-  private PIDController pid = new PIDController(0.009, 0.001, 0);
+  private double yaw, yawDeg;
+  private double desiredAngle = 3.142;
   /** Creates a new AlignRobotGyro. */
   public AlignRobotGyro(SwerveSubsystem swerveSub) {
     swerve = swerveSub;
@@ -22,13 +23,21 @@ public class AlignRobotGyro extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double yaw = swerve.getYaw().getRadians();
-    swerve.drive(translation, -pid.calculate(yaw, 3.142), false);
+    yaw = swerve.getHeading().getRadians();
+    yawDeg = swerve.getHeading().getDegrees();
+    if(yawDeg >= 0){
+      swerve.drive(translation, -swerve.alignmentController.calculate(yaw, desiredAngle), false);
+    }
+    else{
+      swerve.drive(translation, swerve.alignmentController.calculate(yaw, -desiredAngle), false);
+    }
+    System.out.println("PID: " + -swerve.alignmentController.calculate(yaw, desiredAngle));
   }
 
   // Called once the command ends or is interrupted.
@@ -38,12 +47,11 @@ public class AlignRobotGyro extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(Math.abs(swerve.getHeading().getDegrees()) == 170){
+    if((yawDeg >= 0 && yaw >= desiredAngle) || (yawDeg <= 0 && yaw <= -desiredAngle)){
       return true;
     }
     else{
       return false;
     }
-    //return false;
   }
 }

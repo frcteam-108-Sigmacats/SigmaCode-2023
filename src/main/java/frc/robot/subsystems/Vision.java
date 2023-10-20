@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import org.opencv.videoio.VideoCapture;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -14,11 +17,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Vision extends SubsystemBase {
   public NetworkTable limeLight = NetworkTableInstance.getDefault().getTable("limelight");
   public double tx, ty, ta;
+  
   /** Creates a new Vision. */
   public Vision() {
     limeLight.getEntry("ledMode").setNumber(1);
-    limeLight.getEntry("stream").setNumber(1);
-    CameraServer.startAutomaticCapture();
+    limeLight.getEntry("stream").setNumber(2);
+    
     
   }
 
